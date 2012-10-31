@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.mobicents.gmlc</groupId>
+		<artifactId>slee</artifactId>
+		<version>1.0.0-SNAPSHOT</version> 
+	</parent>
+
+	<artifactId>library</artifactId>
+	<name>Core : SLEE : Library</name>
+
+
+
+	<dependencies>
+		<dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>gmlc-domain</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mobicents.tools</groupId>
+				<artifactId>maven-library-plugin</artifactId>
+				<version>1.0.0.FINAL</version>
+				<configuration>
+					<library-name>library-gmlc</library-name>
+					<library-vendor>org.mobicents</library-vendor>
+					<library-version>2.0</library-version>
+					
+					<library-ref>
+						<library-name>library-map</library-name>
+						<library-vendor>library-map</library-vendor>
+						<library-version>2.0</library-version>
+					</library-ref>
+								
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>copy-dependencies</goal>
+							<goal>generate-descriptor</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+

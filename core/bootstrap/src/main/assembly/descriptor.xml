@@ -1,0 +1,57 @@
+<assembly>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/lib</outputDirectory>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<includes>
+				<!-- GMLC libraries -->
+				<include>org.mobicents.gmlc:gmlc-bootstrap</include>
+
+				<!-- domain library -->
+				<include>org.mobicents.gmlc:gmlc-domain</include>
+
+
+				<!-- Not strictly SS7, But needed by SS7 -->
+				<include>javolution:javolution</include>
+				<include>org.mobicents.protocols.sctp:sctp-api</include>
+				<include>org.mobicents.protocols.sctp:sctp-impl</include>
+				<include>org.mobicents.commons:commons</include>
+				<include>org.mobicents.protocols.stream:stream</include>
+				<include>org.mobicents.protocols.asn:asn</include>
+
+				<!-- SS7 Libraries -->
+				<include>org.mobicents.protocols.ss7.scheduler:scheduler</include>
+				<include>org.mobicents.protocols.ss7.sccp:sccp-api</include>
+				<include>org.mobicents.protocols.ss7.sccp:sccp-impl</include>
+				<include>org.mobicents.protocols.ss7.isup:isup-api</include>
+				<include>org.mobicents.protocols.ss7.isup:isup-impl</include>
+				<include>org.mobicents.protocols.ss7.tcap:tcap-api</include>
+				<include>org.mobicents.protocols.ss7.tcap:tcap-impl</include>
+				<include>org.mobicents.protocols.ss7.map:map-api</include>
+				<include>org.mobicents.protocols.ss7.map:map-impl</include>
+				<include>org.mobicents.protocols.ss7.m3ua:m3ua-api</include>
+				<include>org.mobicents.protocols.ss7.m3ua:m3ua-impl</include>
+				<include>org.mobicents.protocols.ss7.mtp:mtp</include>
+				<include>org.mobicents.protocols.ss7.mtp:mtp-api</include>
+				<include>org.mobicents.protocols.ss7.management:shell</include>
+				<include>org.mobicents.protocols.ss7.hardware:linkset</include>
+				<!-- <include>org.mobicents.protocols.ss7.hardware:mobicents-dahdi</include> -->
+				<include>org.mobicents.protocols.ss7.hardware:mobicents-dialogic
+				</include>
+				<include>org.mobicents.protocols.ss7.congestion:congestion</include>
+
+			</includes>
+		</dependencySet>
+	</dependencySets>
+	<componentDescriptors>
+		<componentDescriptor>
+			src/main/assembly/common.xml
+		</componentDescriptor>
+	</componentDescriptors>
+</assembly>
