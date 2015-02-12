@@ -76,7 +76,7 @@ public class GmlcManagement {
 				GmlcPropertiesManagementMBean.class, true);
 		this.mbeanServer.registerMBean(ussdPropMxBean, ussdPropObjNname);
 
-		logger.info("Started UssdManagement");
+		logger.info("Started GMLC Management");
 	}
 
 	public void stop() throws Exception {

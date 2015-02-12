@@ -159,12 +159,12 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 					.append("_").append(PERSIST_FILE_NAME);
 		}
 
-		logger.info(String.format("Loading USSD Properties from %s", persistFile.toString()));
+		logger.info(String.format("Loading GMLC Properties from %s", persistFile.toString()));
 
 		try {
 			this.load();
 		} catch (FileNotFoundException e) {
-			logger.warn(String.format("Failed to load the USSD configuration file. \n%s", e.getMessage()));
+			logger.warn(String.format("Failed to load the GMLC configuration file. \n%s", e.getMessage()));
 		}
 
 	}
