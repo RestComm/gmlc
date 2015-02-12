@@ -99,11 +99,11 @@ mvn clean install
 
 You can view the various included web consoles here:
 
-* http://yourserver:8080/admin-console/
-** user: admin
-** password: admin
-* http://yourserver:8080/slee-management-console
-* http://yourserver:8080/jmx-console/
+1. http://yourserver:8080/admin-console/
+  * user: admin
+  * password: admin
+2. http://yourserver:8080/slee-management-console
+3. http://yourserver:8080/jmx-console/
 
 Want to Contribute ? 
 ========
