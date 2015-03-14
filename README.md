@@ -119,12 +119,12 @@ You can view the various included web consoles here:
 
 Back-end
 ========
-ATI: Any-Time-Interrogation, to gather MSC and Cell-ID from HLR
-PSI: Provide-Subscriber-Information, to gather Cell-ID directly from MSC
+* ATI: Any-Time-Interrogation, to gather MSC and Cell-ID from HLR
+* PSI: Provide-Subscriber-Information, to gather Cell-ID directly from MSC
 
 Operator Backend Requirements
 ========
-Connectivity to the operator's HLR(s) is needed (SIGTRAN or legacy E1 links). The GMLC will send MAP ATI request to the HLR(s) and HLR(s) will respond with cell-id, state and life for which this location was updated. 
+Connectivity to the operator's HLR(s) is needed (SIGTRAN or legacy E1 links). The GMLC will send a MAP ATI request to the HLR(s) and HLR(s) will respond with cell-id, state and life for which this location was updated. 
 
 OMA MLP Support (based on MLP v3.1)
 ========
@@ -138,6 +138,7 @@ At present, the GMLC only supports a limited subset of MLP, allowing a simple po
 Requests are to be sent over HTTP POST.
 
 Example Request:
+```
 <?xml version="1.0" encoding="UTF-8"?>
  <!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.dtd">
  <svc_init xmlns="MLP_SVC_INIT_310.dtd">
@@ -157,8 +158,10 @@ Example Request:
      </eqop>
    </slir>
  </svc_init>
+```
 
 Example Successful Response:
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
 <svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
@@ -180,8 +183,10 @@ Example Successful Response:
         </pos>
     </slia>
 </svc_result>
+```
 
 Example System Error Response:
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.dtd">
 <svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
@@ -190,8 +195,10 @@ Example System Error Response:
     <add_info>Internal IO or parsing error occurred</add_info>
   </slia>
 </svc_result>
+```
 
 Example Position Error Response:
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
 <svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
@@ -205,14 +212,19 @@ Example Position Error Response:
         </pos>
     </slia>
 </svc_result>
+```
 
 Request a Location from the GMLC
 ========
-via HTTP GET (for simple testing)
+1. via HTTP GET (for simple testing)
+```
 http://yourserver:8080/mobicents?msisdn=<msisdn>
+```
 
-via HTTP POST (using MLP)
+2. via HTTP POST (using MLP)
+```
 POST XML request to http://yourserver:8080/mobicents
+```
 
 Send a sample MLP request using cURL to the localhost:
 ```
@@ -220,6 +232,7 @@ sudo apt-get install curl
 vi ./req.txt
 # Paste in the above example MLP request
 curl -X POST -d @req.txt http://yourserver:8080/mobicents
+```
 
 MLP Result Codes
 ========
@@ -244,12 +257,13 @@ gmlc/core/slee/sbbs/src/main/java/org/mobicents/gmlc/slee
 
 That's where you'll find the guts of the application.
 
-TODO
+TODO (v1.0)
 ========
-Add support for multiple MSISDN requests
-Add MLP error codes for:
-Invalid MSISDN
-Network timeout waiting for response
+1. Add MLP error/handling code for network timeout
+2. Simple Cell ID -> lat/lon conversion database
+3. Basic username/password authentication system
+4. Add SS7 back-end support for 3G & LTE (system currently only works with GSM)
+5. Basic cell triangulation support to improve accuracy beyond purely cell-id
 
 Road-map
 ========
@@ -267,6 +281,7 @@ v1.1
 * Privacy management
 * Triangulation/accuracy improvements
 * Replace location timestamp with actual network timestamp
+* Add support for multiple MSISDN requests
 
 Want to Contribute ? 
 ========
