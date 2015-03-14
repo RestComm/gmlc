@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="MLP_SVC_RESULT_310.dtd" xmlns:wmh="http://www.wmhelp.com/2003/eGenerator" elementFormDefault="qualified" targetNamespace="MLP_SVC_RESULT_310.dtd">
+  <xs:element name="svc_result">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="hdr" minOccurs="0"/>
+        <xs:choice>
+          <xs:element ref="slia"/>
+          <xs:element ref="slirep"/>
+          <xs:element ref="slrep"/>
+          <xs:element ref="eme_lia"/>
+          <xs:element ref="emerep"/>
+          <xs:element ref="tlra"/>
+          <xs:element ref="tlrep"/>
+          <xs:element ref="tlrsa"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.1.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="client">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="id"/>
+        <xs:element ref="pwd" minOccurs="0"/>
+        <xs:element ref="serviceid" minOccurs="0"/>
+        <xs:element ref="requestmode" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sessionid" type="xs:string"/>
+  <xs:element name="id" type="xs:string"/>
+  <xs:element name="requestor">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="id"/>
+        <xs:element ref="serviceid" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="pwd" type="xs:string"/>
+  <xs:element name="serviceid" type="xs:string"/>
+  <xs:element name="requestmode">
+    <xs:complexType>
+      <xs:attribute name="type" default="PASSIVE">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="ACTIVE"/>
+            <xs:enumeration value="PASSIVE"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="subclient">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="id"/>
+        <xs:element ref="pwd" minOccurs="0"/>
+        <xs:element ref="serviceid" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="last_client" default="NO">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="YES"/>
+            <xs:enumeration value="NO"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="msid">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="type" default="MSISDN">
+            <xs:simpleType>
+              <xs:restriction base="xs:NMTOKEN">
+                <xs:enumeration value="MSISDN"/>
+                <xs:enumeration value="IMSI"/>
+                <xs:enumeration value="IMEI"/>
+                <xs:enumeration value="MIN"/>
+                <xs:enumeration value="MDN"/>
+                <xs:enumeration value="EME_MSID"/>
+                <xs:enumeration value="ASID"/>
+                <xs:enumeration value="OPE_ID"/>
+                <xs:enumeration value="IPV4"/>
+                <xs:enumeration value="IPV6"/>
+                <xs:enumeration value="SESSID"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="enc" default="ASC">
+            <xs:simpleType>
+              <xs:restriction base="xs:NMTOKEN">
+                <xs:enumeration value="ASC"/>
+                <xs:enumeration value="CRP"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="msid_range">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="start_msid"/>
+        <xs:element ref="stop_msid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="msids">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+          <xs:sequence>
+            <xs:element ref="msid"/>
+            <xs:element ref="codeword" minOccurs="0"/>
+            <xs:element ref="session" minOccurs="0"/>
+          </xs:sequence>
+          <xs:sequence>
+            <xs:element ref="msid_range"/>
+            <xs:element ref="codeword" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="codeword" type="xs:string"/>
+  <xs:element name="esrd">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="type" default="NA">
+            <xs:simpleType>
+              <xs:restriction base="xs:NMTOKEN">
+                <xs:enumeration value="NA"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="esrk">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="type" default="NA">
+            <xs:simpleType>
+              <xs:restriction base="xs:NMTOKEN">
+                <xs:enumeration value="NA"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="session">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:NMTOKEN">
+                <xs:enumeration value="APN"/>
+                <xs:enumeration value="DIAL"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="start_msid">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="msid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stop_msid">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="msid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="eme_event">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="eme_pos" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="eme_trigger" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="EME_ORG"/>
+            <xs:enumeration value="EME_REL"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tlrr_event">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ms_action"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ms_action">
+    <xs:complexType>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="MS_AVAIL"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="interval" type="xs:string"/>
+  <xs:element name="loc_type">
+    <xs:complexType>
+      <xs:attribute name="type" default="CURRENT">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="CURRENT"/>
+            <xs:enumeration value="LAST"/>
+            <xs:enumeration value="CURRENT_OR_LAST"/>
+            <xs:enumeration value="INITIAL"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="prio">
+    <xs:complexType>
+      <xs:attribute name="type" default="NORMAL">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="NORMAL"/>
+            <xs:enumeration value="HIGH"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="pushaddr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="url"/>
+        <xs:element ref="id" minOccurs="0"/>
+        <xs:element ref="pwd" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="req_id" type="xs:string"/>
+  <xs:element name="start_time">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="utc_off" type="xs:string" default="0000"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stop_time">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="utc_off" type="xs:string" default="0000"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="url" type="xs:string"/>
+  <xs:element name="time_remaining" type="xs:string"/>
+  <xs:element name="eqop">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="resp_req" minOccurs="0"/>
+        <xs:element ref="resp_timer" minOccurs="0"/>
+        <xs:choice minOccurs="0">
+          <xs:element ref="ll_acc"/>
+          <xs:element ref="hor_acc"/>
+        </xs:choice>
+        <xs:element ref="alt_acc" minOccurs="0"/>
+        <xs:element ref="max_loc_age" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="qop">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs="0">
+          <xs:element ref="ll_acc"/>
+          <xs:element ref="hor_acc"/>
+        </xs:choice>
+        <xs:element ref="alt_acc" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ll_acc" type="xs:string"/>
+  <xs:element name="hor_acc" type="xs:string"/>
+  <xs:element name="max_loc_age" type="xs:string"/>
+  <xs:element name="resp_req">
+    <xs:complexType>
+      <xs:attribute name="type" default="DELAY_TOL">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="NO_DELAY"/>
+            <xs:enumeration value="LOW_DELAY"/>
+            <xs:enumeration value="DELAY_TOL"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="resp_timer" type="xs:string"/>
+  <xs:element name="pos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="msid"/>
+        <xs:choice>
+          <xs:element ref="pd"/>
+          <xs:element ref="poserr"/>
+        </xs:choice>
+        <xs:element ref="gsm_net_param" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="eme_pos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="msid"/>
+        <xs:choice>
+          <xs:element ref="pd"/>
+          <xs:element ref="poserr"/>
+        </xs:choice>
+        <xs:element ref="esrd" minOccurs="0"/>
+        <xs:element ref="esrk" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="trl_pos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="msid"/>
+        <xs:choice>
+          <xs:element ref="pd"/>
+          <xs:element ref="poserr"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="trl_trigger" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="PERIODIC"/>
+            <xs:enumeration value="MS_AVAIL"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="pd">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="time"/>
+        <xs:element ref="shape"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="alt"/>
+          <xs:element ref="alt_acc" minOccurs="0"/>
+        </xs:sequence>
+        <xs:element ref="speed" minOccurs="0"/>
+        <xs:element ref="direction" minOccurs="0"/>
+        <xs:element ref="lev_conf" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="poserr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="result"/>
+        <xs:element ref="add_info" minOccurs="0"/>
+        <xs:element ref="time"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="time">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="utc_off" type="xs:string" default="0000"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="alt" type="xs:string"/>
+  <xs:element name="alt_acc" type="xs:string"/>
+  <xs:element name="direction" type="xs:string"/>
+  <xs:element name="speed" type="xs:string"/>
+  <xs:element name="lev_conf" type="xs:string"/>
+  <xs:element name="geo_info">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CoordinateReferenceSystem"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CoordinateReferenceSystem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Identifier"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Identifier">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="code"/>
+        <xs:element ref="codeSpace"/>
+        <xs:element ref="edition"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="code" type="xs:string"/>
+  <xs:element name="codeSpace" type="xs:string"/>
+  <xs:element name="edition" type="xs:string"/>
+  <xs:element name="add_info" type="xs:string"/>
+  <xs:element name="result">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="resid" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="shape">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="Point"/>
+        <xs:element ref="LineString"/>
+        <xs:element ref="Polygon"/>
+        <xs:element ref="Box"/>
+        <xs:element ref="CircularArea"/>
+        <xs:element ref="CircularArcArea"/>
+        <xs:element ref="EllipticalArea"/>
+        <xs:element ref="MultiLineString"/>
+        <xs:element ref="MultiPoint"/>
+        <xs:element ref="MultiPolygon"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="distanceUnit" type="xs:string"/>
+  <xs:element name="angularUnit" type="xs:string"/>
+  <xs:element name="angle" type="xs:string"/>
+  <xs:element name="coord">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="X"/>
+        <xs:element ref="Y" minOccurs="0"/>
+        <xs:element ref="Z" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="X" type="xs:string"/>
+  <xs:element name="Y" type="xs:string"/>
+  <xs:element name="Z" type="xs:string"/>
+  <xs:element name="Point">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="coord"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LineString">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="coord"/>
+        <xs:element ref="coord" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Box">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="coord"/>
+        <xs:element ref="coord"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LinearRing">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="coord"/>
+        <xs:element ref="coord"/>
+        <xs:element ref="coord"/>
+        <xs:element ref="coord" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Polygon">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="outerBoundaryIs"/>
+        <xs:element ref="innerBoundaryIs" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="outerBoundaryIs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="LinearRing"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="innerBoundaryIs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="LinearRing"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CircularArcArea">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="coord"/>
+        <xs:element ref="inRadius"/>
+        <xs:element ref="outRadius"/>
+        <xs:element ref="startAngle"/>
+        <xs:element ref="stopAngle"/>
+        <xs:element ref="angularUnit" minOccurs="0"/>
+        <xs:element ref="distanceUnit" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CircularArea">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="coord"/>
+        <xs:element ref="radius"/>
+        <xs:element ref="distanceUnit" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EllipticalArea">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="coord"/>
+        <xs:element ref="angle"/>
+        <xs:element ref="semiMajor"/>
+        <xs:element ref="semiMinor"/>
+        <xs:element ref="angularUnit" minOccurs="0"/>
+        <xs:element ref="distanceUnit" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="inRadius" type="xs:string"/>
+  <xs:element name="outRadius" type="xs:string"/>
+  <xs:element name="radius" type="xs:string"/>
+  <xs:element name="semiMajor" type="xs:string"/>
+  <xs:element name="semiMinor" type="xs:string"/>
+  <xs:element name="startAngle" type="xs:string"/>
+  <xs:element name="stopAngle" type="xs:string"/>
+  <xs:element name="MultiLineString">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="LineString" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MultiPoint">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Point" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MultiPolygon">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="Polygon"/>
+          <xs:element ref="Box"/>
+          <xs:element ref="CircularArea"/>
+          <xs:element ref="CircularArcArea"/>
+          <xs:element ref="EllipticalArea"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="gid" type="xs:string"/>
+      <xs:attribute name="srsName" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="gsm_net_param">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="cgi" minOccurs="0"/>
+        <xs:element ref="neid" minOccurs="0"/>
+        <xs:element ref="nmr" minOccurs="0"/>
+        <xs:element ref="ta" minOccurs="0"/>
+        <xs:element ref="lmsi" minOccurs="0"/>
+        <xs:element ref="imsi" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cgi">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="mcc"/>
+        <xs:element ref="mnc"/>
+        <xs:element ref="lac"/>
+        <xs:element ref="cellid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="neid">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="vmscid"/>
+        <xs:element ref="vlrid"/>
+        <xs:sequence>
+          <xs:element ref="vmscid"/>
+          <xs:element ref="vlrid"/>
+        </xs:sequence>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="vmscid">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="cc" minOccurs="0"/>
+        <xs:element ref="ndc" minOccurs="0"/>
+        <xs:element ref="vmscno"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="vlrid">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="cc" minOccurs="0"/>
+        <xs:element ref="ndc" minOccurs="0"/>
+        <xs:element ref="vlrno"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nmr" type="xs:string"/>
+  <xs:element name="mcc" type="xs:string"/>
+  <xs:element name="mnc" type="xs:string"/>
+  <xs:element name="ndc" type="xs:string"/>
+  <xs:element name="cc" type="xs:string"/>
+  <xs:element name="vmscno" type="xs:string"/>
+  <xs:element name="vlrno" type="xs:string"/>
+  <xs:element name="lac" type="xs:string"/>
+  <xs:element name="cellid" type="xs:string"/>
+  <xs:element name="ta" type="xs:string"/>
+  <xs:element name="lmsi" type="xs:string"/>
+  <xs:element name="imsi" type="xs:string"/>
+  <xs:element name="hdr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="client"/>
+          <xs:element ref="sessionid"/>
+          <xs:sequence>
+            <xs:element ref="client"/>
+            <xs:element ref="sessionid"/>
+          </xs:sequence>
+        </xs:choice>
+        <xs:element ref="subclient" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="requestor" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="slia">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="pos" maxOccurs="unbounded"/>
+          <xs:element ref="req_id"/>
+          <xs:sequence>
+            <xs:element ref="result"/>
+            <xs:element ref="add_info" minOccurs="0"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="slirep">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="req_id"/>
+        <xs:element ref="pos" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="slrep">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pos" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="eme_lia">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="eme_pos" maxOccurs="unbounded"/>
+          <xs:sequence>
+            <xs:element ref="result"/>
+            <xs:element ref="add_info" minOccurs="0"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="emerep">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="eme_event"/>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tlra">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="req_id"/>
+          <xs:sequence>
+            <xs:element ref="result"/>
+            <xs:element ref="add_info" minOccurs="0"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tlrep">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="req_id"/>
+        <xs:element ref="trl_pos" maxOccurs="unbounded"/>
+        <xs:element ref="time_remaining" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tlrsa">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="req_id"/>
+          <xs:sequence>
+            <xs:element ref="result"/>
+            <xs:element ref="add_info" minOccurs="0"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="ver" type="xs:string" fixed="3.0.0"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:documentation> MLP_SVC_RESULT </xs:documentation>
+    <xs:documentation>
+MLP V3.1 Document Type Definition
+
+Copyright Open Mobile Alliance Ltd., 2002
+          All rights reserved
+
+MLP is an XML language. Typical usage:
+   &lt;?xml version="1.0"?&gt;
+   &lt;!DOCTYPE svc_result PUBLIC "-//OMA//DTD {abbrev x.y}//EN"
+             "http://www.openmobilealliance.org/DTD/{filename}"
+             [&lt;?oma-{ref}-ver supported-versions="{versions}"?&gt;]&gt;
+   &lt;svc_result&gt;
+      ...
+   &lt;/svc_result}&gt;
+
+Terms and conditions of use are available from the 
+Open Mobile Alliance Ltd. web site at
+http://www.openmobilealliance.org/useterms.html
+</xs:documentation>
+  </xs:annotation>
+</xs:schema>

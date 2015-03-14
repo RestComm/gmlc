@@ -55,10 +55,7 @@
 		<module>core</module>
 	</modules>
 	<dependencies>
-
 	</dependencies>
-
-
 
 	<!-- RELEASE STUFF -->
 
@@ -81,7 +78,7 @@
 							</autoVersionSubmodules>
 
 							<tagBase>
-								https://mobicents.googlecode.com/svn/tags/applications/ussdgateway
+								https://github.com/Mobicents/gmlc
 							</tagBase>
 							<resume>false</resume>
 							<preparationGoals>
@@ -100,16 +97,16 @@
 
 		</profile>
 	</profiles>
-
+	
 	<scm>
 		<connection>
-			scm:svn:https://mobicents.googlecode.com/svn/trunk/applications/ussdgateway
+			scm:git:https://github.com/Mobicents/gmlc
 		</connection>
 		<developerConnection>
-			scm:svn:https://mobicents.googlecode.com/svn/trunk/applications/ussdgateway
+			scm:git:https://github.com/Mobicents/gmlc
 		</developerConnection>
 		<url>
-			http://mobicents.googlecode.com/svn/trunk/applications/ussdgateway
+			https://github.com/Mobicents/gmlc
 		</url>
 	</scm>
 
@@ -147,11 +144,8 @@
 					<debug>${compile.debug}</debug>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
-
-
 
 	<!-- define repository so we dont have to checkout parent edit settings.xml -->
 	<repositories>

@@ -10,8 +10,56 @@
 
 	<artifactId>sbbs</artifactId>
 	<name>Core : SLEE : Sbbs</name>
+	
+	<!-- -->
+	<build>
+		<plugins>
+			<!-- JiBX bind process -->
+            <plugin>
+                <groupId>org.jibx</groupId>
+                <artifactId>jibx-maven-plugin</artifactId>
+                <version>1.2.6</version>
+                <configuration>
+					<schemaLocation>${basedir}/src/main/config</schemaLocation>
+					<schemaBindingDirectory>${basedir}/target/generated-sources</schemaBindingDirectory>
+                    <customizations>
+                        <customizations>${basedir}/src/main/config/custom.xml</customizations>
+                    </customizations>
+				</configuration>
+                <executions>
+                    <execution>
+                        <id>generate-code</id>
+                        <goals>
+                            <goal>schema-codegen</goal>
+                        </goals>
+                        <configuration>
+                            <includeSchemas>
+                                <includeSchema>mlp_svc_result_310.xsd</includeSchema>
+                                <includeSchema>mlp_svc_init_310.xsd</includeSchema>
+                            </includeSchemas>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-binding</id>
+                        <goals>
+                            <goal>bind</goal>
+                        </goals>
+						<configuration>
+                            <includeSchemaBindings>
+                                <includeSchemaBinding>binding.xml</includeSchemaBinding>
+                            </includeSchemaBindings>
+                            <load>true</load>
+                            <validate>false</validate>
+                            <!--<verbose>true</verbose>-->
+                            <verify>false</verify>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+	</build>
+	
 	<dependencies>
-
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>library</artifactId>
@@ -31,6 +79,12 @@
 			<groupId>org.mobicents.resources</groupId>
 			<artifactId>http-servlet-ratype</artifactId>
 			<version>${mobicents.resources.http.servlet.version}</version>
+		</dependency>
+		<!-- JiBX for XML binding-->
+		<dependency>
+		  <groupId>org.jibx</groupId>
+		  <artifactId>jibx-run</artifactId>
+		  <version>1.2.6</version>
 		</dependency>
 	</dependencies>
 </project>

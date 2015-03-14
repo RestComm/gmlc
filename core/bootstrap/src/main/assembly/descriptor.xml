@@ -16,6 +16,8 @@
 				<!-- domain library -->
 				<include>org.mobicents.gmlc:gmlc-domain</include>
 
+				<!-- JiBX for XML binding -->
+				<include>org.jibx:jibx-run</include>
 
 				<!-- Not strictly SS7, But needed by SS7 -->
 				<include>javolution:javolution</include>

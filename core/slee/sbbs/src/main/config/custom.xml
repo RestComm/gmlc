@@ -1,0 +1,4 @@
+<schema-set>
+	<schema name="mlp_svc_result_310.xsd" package="org.oma.protocols.mlp.svc_result"/>
+	<schema name="mlp_svc_init_310.xsd" package="org.oma.protocols.mlp.svc_init"/>
+</schema-set>
