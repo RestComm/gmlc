@@ -6,6 +6,8 @@ In one PLMN (Public Land Mobile Network), there may be more than one GMLC. The G
 
 GMLC is built on [Mobicents jSS7](https://github.com/Mobicents/jSS7).
 
+NOTE: Requires Maven 3 and will not build with Maven 2.
+
 Install on Ubuntu 14.04 from Source
 ========
 You can run these instructions as a normal user (root shouldn't be required).
@@ -26,7 +28,7 @@ sudo apt-get install oracle-java7-set-default
 java -version
 ```
 
-Install Maven
+Install Maven 3
 ```
 add-apt-repository "deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main"
 apt-get update
@@ -97,7 +99,7 @@ vi ~/mobicents/jboss-5.1.0.GA/server/default/data/GmlcManagement_gmlcproperties.
 Now deploy the GMLC
 ```
 cd ~
-git clone https://github.com/Mobicents/gmlc.git
+git clone -b mlp https://github.com/Mobicents/gmlc.git
 cd gmlc
 mvn clean install
 ```
