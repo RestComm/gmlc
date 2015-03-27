@@ -16,6 +16,12 @@ import java.util.List;
 
 /**
  * Created by angrygreenfrogs on 3/24/2015.
+ * This is a helper for generating MLP XML responses to send to a MLP client.
+ * It uses the JiBX generated XML bound classes in org.oma.protocols.mlp
+ * It exists to generates consistent XML output using the JiBX marshaller
+ * It supports generating a result only for a single MSISDN that has a single Point (X/Y - lat/lon) result
+ * In the future, it will likely be replaced by a more complex structure for handling the full variety of MLP
+ * results, but I wanted to keep it simple and clear for the first version.
  */
 public class MLPResponse {
     public enum MLPResultType {
@@ -114,11 +120,6 @@ public class MLPResponse {
 
     /**
      * Use JiBX marshalling to generate the MLP XML result data for a single successful position look-up
-     * This is a wrapper around the JiBX generated XML bound classes in org.oma.protocols.mlp
-     * It exists to centralize and assist with the generation of consistent MLP XML output using the JiBX
-     * marshaller
-     * It's fairly simplistic and straightforward at the moment as it supports generating a result only
-     * for a single MSISDN that has a single Point (X/Y - lat/lon) result
      * @param x X coordinate in WGS84 DMS format
      * @param y Y coordinate in WGS84 DMS format
      * @param radius Position radius in meters (e.g. 5000 for 5km of accuracy)
@@ -235,24 +236,7 @@ public class MLPResponse {
         mlpSvcResult.setSlia(mlpSlia);
         mlpSvcResult.setVer(ver);
 
-        IBindingFactory jc = BindingDirectory.getFactory(org.oma.protocols.mlp.svc_result.SvcResult.class);
-        IMarshallingContext marshaller = jc.createMarshallingContext();
-        ByteArrayOutputStream lOutputStream = new ByteArrayOutputStream();
-        marshaller.setOutput(lOutputStream, "UTF-8");
-        IXMLWriter ix = marshaller.getXmlWriter();
-
-        // Add XML and DOCTYPE headers
-        ix.writeXMLDecl("1.0", "UTF-8", null);
-        ix.writeDocType("svc_result", "MLP_SVC_RESULT_310.DTD", null, null);
-
-        // Set 4 spaces as the default indenting
-        marshaller.setIndent(4);
-
-        // Generate the XML
-        marshaller.marshalDocument(mlpSvcResult);
-
-        // Convert the stream to a string
-        lXml = new String(lOutputStream.toByteArray(), "UTF-8");
+        lXml = marshalMlpResult(mlpSvcResult);
 
         // Return our XML string result
         return lXml;
@@ -435,6 +419,23 @@ public class MLPResponse {
         mlpSlia.setVer(ver);
         mlpSvcResult.setSlia(mlpSlia);
         mlpSvcResult.setVer(ver);
+
+        lXml = marshalMlpResult(mlpSvcResult);
+
+        // Return our XML string result
+        return lXml;
+    }
+
+    /**
+     * Create the svc_result XML result for any type of result (error or success)
+     * @param mlpSvcResult Fully filled in SvcResult object to marshal (convert to XML)
+     * @return String of XML result to send to client
+     * @throws org.jibx.runtime.JiBXException JiBX had an internal failure of some kind while marshalling the XML
+     * @throws IOException IO error occurred while generating the XML result
+     */
+    private String marshalMlpResult(org.oma.protocols.mlp.svc_result.SvcResult mlpSvcResult)
+            throws org.jibx.runtime.JiBXException, IOException {
+        String lXml = null;
 
         IBindingFactory jc = BindingDirectory.getFactory(org.oma.protocols.mlp.svc_result.SvcResult.class);
         IMarshallingContext marshaller = jc.createMarshallingContext();

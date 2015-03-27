@@ -10,7 +10,7 @@ import java.io.InputStream;
 
 /**
  * Created by angrygreenfrogs on 3/24/2015.
- * Container for the
+ * Helper class to handle an incoming MLP XML request
  */
 public class MLPRequest {
 
@@ -19,13 +19,22 @@ public class MLPRequest {
      */
     private Tracer logger;
 
+    /**
+     * Default constructor
+     * @param logger Logger from the calling SBB
+     */
     public MLPRequest(Tracer logger) {
         this.logger = logger;
     }
 
+    /**
+     * Parse incoming XML request data via JiBX's unmarshaller and return only the MSISDN being requested
+     * @param requestStream InputStream (likely directly from the HTTP POST) of the XML input data
+     * @return MSISDN of device to locate
+     * @throws MLPException
+     */
     public String parseRequest(InputStream requestStream) throws MLPException {
         // Result XML
-        String svcResultXml = null;
         String requestingMSISDN = null;
 
         // Process the request
