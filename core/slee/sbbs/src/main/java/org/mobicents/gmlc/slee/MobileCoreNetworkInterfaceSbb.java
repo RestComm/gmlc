@@ -60,7 +60,13 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformatio
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
-import org.mobicents.protocols.ss7.sccp.parameter.GT0100;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
+/*import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;*/
+import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle0100;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.slee.SbbContextExt;
 import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
@@ -244,7 +250,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	/**
 	 * ATI Events
 	 */
-	public void onAnyTimeInterrofationRequest(
+	public void onAnyTimeInterrogationRequest(
 			org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
 
@@ -258,7 +264,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 			SubscriberInfo si = event.getSubscriberInfo();
 			CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = si.getLocationInformation()
 					.getCellGlobalIdOrServiceAreaIdOrLAI();
-            this.responseCellId = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getCellId();
+            this.responseCellId = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getCellIdOrServiceAreaCode();
 			SubscriberState ss = si.getSubscriberState();
 
             // Handle successfully having retried the device's cell-id
@@ -388,9 +394,8 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
 	protected SccpAddress getServiceCenterSccpAddress() {
 		if (this.serviceCenterSCCPAddress == null) {
-			GT0100 gt = new GT0100(0, NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL,
-					gmlcPropertiesManagement.getGmlcGt());
-			this.serviceCenterSCCPAddress = new SccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, 0, gt,
+			GlobalTitle0100 gt = new GlobalTitle0100Impl(gmlcPropertiesManagement.getGmlcGt(),0,BCDEvenEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY,NatureOfAddress.INTERNATIONAL);
+			this.serviceCenterSCCPAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
 					gmlcPropertiesManagement.getGmlcSsn());
 		}
 		return this.serviceCenterSCCPAddress;
@@ -405,8 +410,8 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	}
 
 	private SccpAddress convertAddressFieldToSCCPAddress(String address) {
-		GT0100 gt = new GT0100(0, NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL, address);
-		return new SccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, 0, gt,
+		GlobalTitle0100 gt = new GlobalTitle0100Impl(address, 0, BCDEvenEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
+		return new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
 				gmlcPropertiesManagement.getHlrSsn());
 	}
 

@@ -131,7 +131,7 @@
 			<initial-event-selector-method-name />
 		</event>
 		<event event-direction="Receive" initial-event="False">
-			<event-name>AnyTimeInterrofationRequest</event-name>
+			<event-name>AnyTimeInterrogationRequest</event-name>
 			<event-type-ref>
 				<event-type-name>ss7.map.service.mobility.subscriberinfo.ANY_TIME_INTERROGATION_REQUEST</event-type-name>
 				<event-type-vendor>org.mobicents</event-type-vendor>

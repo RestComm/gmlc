@@ -76,6 +76,11 @@
 			<version>${mobicents.resources.map.version}</version>
 		</dependency>
 		<dependency>
+            <artifactId>sccp-impl</artifactId>
+            <groupId>org.mobicents.protocols.ss7.sccp</groupId>
+            <version>${ss7.version}</version>
+        </dependency>
+		<dependency>
 			<groupId>org.mobicents.resources</groupId>
 			<artifactId>http-servlet-ratype</artifactId>
 			<version>${mobicents.resources.http.servlet.version}</version>
