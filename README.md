@@ -6,10 +6,13 @@ In one PLMN (Public Land Mobile Network), there may be more than one GMLC. The G
 
 GMLC is built on [RestComm jSS7](https://github.com/RestComm/jSS7).
 
-NOTE: Requires Maven 3 and will not build with Maven 2.
+Download source code and build from [here](https://github.com/RestComm/gmlc/releases) or Continuous Delivery binary from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-GMLC/)
 
 Install on Ubuntu 14.04 from Source
 ========
+
+*NOTE: Requires Maven 3 and will not build with Maven 2.*
+
 You can run these instructions as a normal user (root shouldn't be required).
 
 Where relevant you may have to replace "user" with your username, and "/home/user" with your own home directory.
