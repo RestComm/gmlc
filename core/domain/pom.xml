@@ -21,11 +21,39 @@
 
 	<dependencies>
 		<!-- SS7 Shell -->
-		<dependency>
+<!--		<dependency>
 			<artifactId>shell</artifactId>
 			<groupId>org.mobicents.protocols.ss7.management</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
+-->
+                        <!-- Management Shell -->
+                        <dependency>
+                                <artifactId>shell-transport</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <dependency>
+                                <artifactId>shell-client</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <dependency>
+                                <artifactId>shell-server-api</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <dependency>
+                                <artifactId>shell-server-impl</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <!-- Management linkset -->
+                        <dependency>
+                                <artifactId>linkset</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.hardware</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
 		<!-- javolution -->
 		<dependency>
 			<groupId>javolution</groupId>
@@ -56,6 +84,9 @@
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
+				  <excludes>
+					<exclude>**/shell-transport-2.2.0-SNAPSHOT.jar</exclude>
+				  </excludes>
 				</configuration>
 			</plugin>
 		</plugins>

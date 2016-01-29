@@ -80,12 +80,39 @@
 			<version>${ss7.version}</version>
 		</dependency>
 
-		<!-- Management Shell -->
-		<dependency>
-			<artifactId>shell</artifactId>
-			<groupId>org.mobicents.protocols.ss7.management</groupId>
-			<version>${ss7.version}</version>
-		</dependency>
+<!--            <dependency>
+                        <artifactId>shell</artifactId>
+                        <groupId>org.mobicents.protocols.ss7.management.management</groupId>
+                        <version>${ss7.version}</version>
+                </dependency>
+-->
+                        <!-- Management Shell -->
+                        <dependency>
+                                <artifactId>shell-transport</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <dependency>
+                                <artifactId>shell-client</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <dependency>
+                                <artifactId>shell-server-api</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <dependency>
+                                <artifactId>shell-server-impl</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.management</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
+                        <!-- Management linkset -->
+                        <dependency>
+                                <artifactId>linkset</artifactId>
+                                <groupId>org.mobicents.protocols.ss7.hardware</groupId>
+                                <version>${ss7.version}</version>
+                        </dependency>
 
 		<!-- Management linkset -->
 		<dependency>
