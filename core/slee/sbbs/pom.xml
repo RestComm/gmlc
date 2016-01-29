@@ -68,12 +68,12 @@
 		<dependency>
 			<groupId>org.mobicents.servers.jainslee.api</groupId>
 			<artifactId>jain-slee-11-ext</artifactId>
-			<version>${mobicents.core.ext.version}</version>
+			<version>${restcomm.core.ext.version}</version>
 		</dependency>
 		<dependency>
 			<artifactId>mobicents-slee-ra-map-ratype</artifactId>
 			<groupId>org.mobicents.resources</groupId>
-			<version>${mobicents.resources.map.version}</version>
+			<version>${restcomm.resources.map.version}</version>
 		</dependency>
 		<dependency>
             <artifactId>sccp-impl</artifactId>
@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>org.mobicents.resources</groupId>
 			<artifactId>http-servlet-ratype</artifactId>
-			<version>${mobicents.resources.http.servlet.version}</version>
+			<version>${restcomm.resources.http.servlet.version}</version>
 		</dependency>
 		<!-- JiBX for XML binding-->
 		<dependency>

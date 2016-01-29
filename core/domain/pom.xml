@@ -20,13 +20,6 @@
 	<description>GMLC Domain</description>
 
 	<dependencies>
-		<!-- SS7 Shell -->
-<!--		<dependency>
-			<artifactId>shell</artifactId>
-			<groupId>org.mobicents.protocols.ss7.management</groupId>
-			<version>${ss7.version}</version>
-		</dependency>
--->
                         <!-- Management Shell -->
                         <dependency>
                                 <artifactId>shell-transport</artifactId>
@@ -85,7 +78,7 @@
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
 				  <excludes>
-					<exclude>**/shell-transport-2.2.0-SNAPSHOT.jar</exclude>
+					<exclude>**/shell-transport-${ss7.version}.jar</exclude>
 				  </excludes>
 				</configuration>
 			</plugin>
