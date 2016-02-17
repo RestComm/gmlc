@@ -8,8 +8,6 @@
             <parameter>SCTPManagement</parameter>
         </constructor>
         <property name="persistDir">${jboss.server.data.dir}/GMLC</property>
-        <property name="singleThread">true</property>
-        <property name="connectDelay">30000</property>
     </bean>
 
     <bean name="GMLC_SCTPShellExecutor"
@@ -146,7 +144,7 @@
     <!-- Shell Service -->
     <!-- ==================================================================== -->
     <!-- Define Shell Executor -->
-    <bean name="GMLC_ShellExecutor" class="com.telscale.ss7.management.console.ShellServer">
+    <bean name="GMLC_ShellExecutor" class="org.mobicents.ss7.management.console.ShellServer">
         <constructor>
             <parameter>
                 <inject bean="GMLC_SS7Scheduler" />
