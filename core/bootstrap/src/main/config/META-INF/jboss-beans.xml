@@ -7,7 +7,7 @@
         <constructor>
             <parameter>SCTPManagement</parameter>
         </constructor>
-        <property name="persistDir">${jboss.server.data.dir}/GMLC</property>
+        <property name="persistDir">${jboss.server.data.dir}</property>
     </bean>
 
     <bean name="GMLC_SCTPShellExecutor"
@@ -34,7 +34,7 @@
             <parameter>Mobicents-GMLC</parameter>
         </constructor>
         <property name="maxSequenceNumber">256</property>
-        <property name="persistDir">${jboss.server.data.dir}/GMLC</property>
+        <property name="persistDir">${jboss.server.data.dir}</property>
         <property name="transportManagement">
             <inject bean="GMLC_SCTPManagement" />
         </property>
@@ -82,8 +82,7 @@
         <constructor>
             <parameter>SccpStack</parameter>
         </constructor>
-        <property name="persistDir">${jboss.server.data.dir}/GMLC</property>
-        <property name="removeSpc">true</property>
+        <property name="persistDir">${jboss.server.data.dir}</property>
         <property name="mtp3UserParts">
             <map keyClass="java.lang.Integer" valueClass="org.mobicents.protocols.ss7.mtp.Mtp3UserPart">
                 <entry>
@@ -183,7 +182,7 @@
         <constructor>
             <parameter>GmlcManagement</parameter>
         </constructor>
-        <property name="persistDir">${jboss.server.data.dir}/GMLC</property>
+        <property name="persistDir">${jboss.server.data.dir}</property>
     </bean>
 
     <bean name="GmlcShellExecutor" class="org.mobicents.gmlc.GmlcShellExecutor">
