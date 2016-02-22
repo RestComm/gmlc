@@ -125,7 +125,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     /**
      * For debugging - fake location data
      */
-    private boolean useFakeLocation = true;
+    private boolean useFakeLocation = false;
     private MLPResponse.MLPResultType fakeLocationType = MLPResponse.MLPResultType.OK;
     private String fakeLocationAdditionalInfoErrorString = "Internal positioning failure occurred";
     private int fakeCellId = 300;
