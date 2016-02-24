@@ -22,9 +22,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>${pom.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>gmlc-domain</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- javolution -->
@@ -80,40 +80,46 @@
 			<version>${ss7.version}</version>
 		</dependency>
 
-                        <!-- Management Shell -->
-                        <dependency>
-                                <artifactId>shell-transport</artifactId>
-                                <groupId>org.mobicents.protocols.ss7.management</groupId>
-                                <version>${ss7.version}</version>
-                        </dependency>
-                        <dependency>
-                                <artifactId>shell-client</artifactId>
-                                <groupId>org.mobicents.protocols.ss7.management</groupId>
-                                <version>${ss7.version}</version>
-                        </dependency>
-                        <dependency>
-                                <artifactId>shell-server-api</artifactId>
-                                <groupId>org.mobicents.protocols.ss7.management</groupId>
-                                <version>${ss7.version}</version>
-                        </dependency>
-                        <dependency>
-                                <artifactId>shell-server-impl</artifactId>
-                                <groupId>org.mobicents.protocols.ss7.management</groupId>
-                                <version>${ss7.version}</version>
-                        </dependency>
-                        <!-- Management linkset -->
-                        <dependency>
-                                <artifactId>linkset</artifactId>
-                                <groupId>org.mobicents.protocols.ss7.hardware</groupId>
-                                <version>${ss7.version}</version>
-                        </dependency>
-
-		<!-- Hardware Dialogic Java -->
+		<!-- Management Shell -->
 		<dependency>
-			<artifactId>mobicents-dialogic</artifactId>
+			<artifactId>shell-transport</artifactId>
+			<groupId>org.mobicents.protocols.ss7.management</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>shell-client</artifactId>
+			<groupId>org.mobicents.protocols.ss7.management</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>shell-server-api</artifactId>
+			<groupId>org.mobicents.protocols.ss7.management</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>shell-server-impl</artifactId>
+			<groupId>org.mobicents.protocols.ss7.management</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		
+		<!-- Management linkset -->
+		<dependency>
+			<artifactId>linkset</artifactId>
 			<groupId>org.mobicents.protocols.ss7.hardware</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
+
+		<!-- Hardware Dialogic Java -->
+		<dependency>
+			<artifactId>restcomm-dialogic</artifactId>
+			<groupId>org.mobicents.protocols.ss7.hardware</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vendor.dialogic</groupId>
+			<artifactId>gctapi</artifactId>
+			<version>${dialogic.version}</version>
+		</dependency>		
 
 		<!-- MTP -->
 		<dependency>
@@ -186,6 +192,59 @@
 			<groupId>org.mobicents.protocols.ss7.isup</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
+
+		<!-- JSS7 Management -->
+		<dependency>
+			<artifactId>jmx</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>alarm</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>jmxss7</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>sctp-oam</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>m3ua-oam</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>sccp-oam</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>linkset-oam</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		
+		<dependency>
+			<artifactId>statistics-oam-api</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>statistics-oam-impl</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>tcap-oam</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${ss7.version}</version>
+		</dependency>	
 		
 		<!-- JiBX -->
 		<dependency>
