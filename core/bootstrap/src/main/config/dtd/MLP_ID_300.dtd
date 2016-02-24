@@ -1,0 +1,42 @@
+<!-- MLP_ID -->
+<!--
+MLP V3.0 Document Type Definition
+
+Copyright Open Mobile Alliance Ltd., 2002
+          All rights reserved
+
+MLP is an XML language. Typical usage:
+   <?xml version="1.0"?>
+   <!DOCTYPE svc_xxx PUBLIC "-//OMA//DTD {abbrev x.y}//EN"
+             "http://www.openmobilealliance.org/DTD/{filename}"
+             [<?oma-{ref}-ver supported-versions="{versions}"?>]>
+   <svc_xxx>
+      ...
+   </svc_xxx>
+
+Terms and conditions of use are available from the 
+Open Mobile Alliance Ltd. web site at
+http://www.openmobilealliance.org/useterms.html
+-->
+		
+<!ELEMENT	msid	(#PCDATA)>
+<!ATTLIST	msid	
+	type (MSISDN | IMSI | IMEI | MIN | MDN |
+      EME_MSID | ASID | OPE_ID | IPV4 | IPV6 |
+      SESSID)	"MSISDN"
+	enc (ASC | CRP)	"ASC">
+<!ELEMENT	msid_range	(start_msid, stop_msid)>
+<!ELEMENT	msids	(((msid, codeword?, session?) |
+ (msid_range, codeword*))+)>
+<!ELEMENT	codeword	(#PCDATA)>
+<!ELEMENT	esrd	(#PCDATA)>
+<!ATTLIST	esrd	
+	type (NA)	"NA">
+<!ELEMENT	esrk	(#PCDATA)>
+<!ATTLIST	esrk	
+	type (NA)	"NA">
+<!ELEMENT	session	(#PCDATA)>
+<!ATTLIST	session	
+	type (APN | DIAL)	#REQUIRED>
+<!ELEMENT	start_msid	(msid)>
+<!ELEMENT	stop_msid	(msid)>

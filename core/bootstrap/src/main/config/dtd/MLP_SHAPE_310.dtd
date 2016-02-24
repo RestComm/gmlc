@@ -1,0 +1,88 @@
+<!-- MLP_SHAPE -->
+<!--
+MLP V3.1 Document Type Definition
+
+Copyright Open Mobile Alliance Ltd., 2002
+          All rights reserved
+
+MLP is an XML language. Typical usage:
+   <?xml version="1.0"?>
+   <!DOCTYPE svc_result PUBLIC "-//OMA//DTD {abbrev x.y}//EN"
+             "http://www.openmobilealliance.org/DTD/{filename}"
+             [<?oma-{ref}-ver supported-versions="{versions}"?>]>
+   <svc_result>
+      ...
+   </svc_result>
+
+Terms and conditions of use are available from the 
+Open Mobile Alliance Ltd. web site at
+http://www.openmobilealliance.org/useterms.html
+-->
+		
+<!ELEMENT	shape	(Point | LineString | Polygon | Box | CircularArea | CircularArcArea | EllipticalArea | MultiLineString | MultiPoint | MultiPolygon)>
+<!ELEMENT	distanceUnit	(#PCDATA)>
+<!ELEMENT	angularUnit	(#PCDATA)>
+<!ELEMENT	angle	(#PCDATA)>
+<!ELEMENT	coord	(X, Y?, Z?)>
+<!ELEMENT	X	(#PCDATA)>
+<!ELEMENT	Y	(#PCDATA)>
+<!ELEMENT	Z	(#PCDATA)>
+<!ELEMENT	Point	(coord)>
+<!ATTLIST	Point	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	LineString	(coord, coord+)>
+<!ATTLIST	LineString	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	Box	(coord, coord)>
+<!ATTLIST	Box	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	LinearRing	(coord, coord, coord, coord*)>
+<!ATTLIST	LinearRing	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	Polygon	(outerBoundaryIs, innerBoundaryIs*)>
+<!ATTLIST	Polygon	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	outerBoundaryIs	(LinearRing)>
+<!ELEMENT	innerBoundaryIs	(LinearRing)>
+<!ELEMENT	CircularArcArea	(coord, inRadius, outRadius,
+ startAngle, stopAngle,
+ angularUnit?, distanceUnit?)>
+<!ATTLIST	CircularArcArea	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	CircularArea	(coord, radius, distanceUnit?)>
+<!ATTLIST	CircularArea	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	EllipticalArea	(coord, angle, semiMajor,
+ semiMinor, angularUnit?,
+ distanceUnit?)>
+<!ATTLIST	EllipticalArea	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	inRadius	(#PCDATA)>
+<!ELEMENT	outRadius	(#PCDATA)>
+<!ELEMENT	radius	(#PCDATA)>
+<!ELEMENT	semiMajor	(#PCDATA)>
+<!ELEMENT	semiMinor	(#PCDATA)>
+<!ELEMENT	startAngle	(#PCDATA)>
+<!ELEMENT	stopAngle	(#PCDATA)>
+<!ELEMENT	MultiLineString	(LineString+)>
+<!ATTLIST	MultiLineString	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	MultiPoint	(Point+)>
+<!ATTLIST	MultiPoint	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	MultiPolygon	((Polygon| Box | CircularArea |
+ CircularArcArea |
+ EllipticalArea)+)>
+<!ATTLIST	MultiPolygon	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>

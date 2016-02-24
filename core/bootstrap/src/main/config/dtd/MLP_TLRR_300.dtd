@@ -1,0 +1,28 @@
+<!-- MLP_TLRR -->
+<!--
+MLP V3.0 Document Type Definition
+
+Copyright Open Mobile Alliance Ltd., 2002
+          All rights reserved
+
+MLP is an XML language. Typical usage:
+   <?xml version="1.0"?>
+   <!DOCTYPE svc_init PUBLIC "-//OMA//DTD {abbrev x.y}//EN"
+             "http://www.openmobilealliance.org/DTD/{filename}"
+             [<?oma-{ref}-ver supported-versions="{versions}"?>]>
+   <svc_init>
+      ...
+   </svc_init>
+
+Terms and conditions of use are available from the 
+Open Mobile Alliance Ltd. web site at
+http://www.openmobilealliance.org/useterms.html
+-->
+		
+<!ENTITY	% extension.param	"">
+		
+<!ELEMENT	tlrr	(msids, interval?, start_time?, stop_time?, tlrr_event?,
+ qop?, geo_info?, pushaddr?, loc_type?, prio?
+ %extension.param;)>
+<!ATTLIST	tlrr 	
+	ver CDATA	#FIXED "3.0.0">

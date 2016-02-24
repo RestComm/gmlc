@@ -1,0 +1,50 @@
+<!-- MLP_FUNC -->
+<!--
+MLP V3.0 Document Type Definition
+
+Copyright Open Mobile Alliance Ltd., 2002
+          All rights reserved
+
+MLP is an XML language. Typical usage:
+   <?xml version="1.0"?>
+   <!DOCTYPE svc_init PUBLIC "-//OMA//DTD {abbrev x.y}//EN"
+             "http://www.openmobilealliance.org/DTD/{filename}"
+             [<?oma-{ref}-ver supported-versions="{versions}"?>]>
+   <svc_init>
+      ...
+   </svc_init>
+
+Terms and conditions of use are available from the 
+Open Mobile Alliance Ltd. web site at
+http://www.openmobilealliance.org/useterms.html
+-->
+<!ELEMENT eme_event (eme_pos+)>
+<!ATTLIST eme_event
+	eme_trigger (EME_ORG | EME_REL) #REQUIRED
+>
+<!ELEMENT tlrr_event (ms_action)>
+<!ELEMENT ms_action EMPTY>
+<!ATTLIST ms_action
+	type (MS_AVAIL) #REQUIRED
+>
+<!ELEMENT interval (#PCDATA)>
+<!ELEMENT loc_type EMPTY>
+<!ATTLIST loc_type
+	type (CURRENT | LAST | CURRENT_OR_LAST | INITIAL) "CURRENT"
+>
+<!ELEMENT prio EMPTY>
+<!ATTLIST prio
+	type (NORMAL | HIGH) "NORMAL"
+>
+<!ELEMENT pushaddr (url, id?, pwd?)>
+<!ELEMENT req_id (#PCDATA)>
+<!ELEMENT start_time (#PCDATA)>
+<!ATTLIST start_time
+	utc_off CDATA "0000"
+>
+<!ELEMENT stop_time (#PCDATA)>
+<!ATTLIST stop_time
+	utc_off CDATA "0000"
+>
+<!ELEMENT url (#PCDATA)>
+<!ELEMENT time_remaining (#PCDATA)>

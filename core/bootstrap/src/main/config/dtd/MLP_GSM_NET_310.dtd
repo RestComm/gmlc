@@ -1,0 +1,40 @@
+<!-- MLP_GSM_NET -->
+<!--
+MLP V3.1 Document Type Definition
+
+Copyright Open Mobile Alliance Ltd., 2002
+          All rights reserved
+
+MLP is an XML language. Typical usage:
+   <?xml version="1.0"?>
+   <!DOCTYPE svc_xxx PUBLIC "-//OMA//DTD {abbrev x.y}//EN"
+             "http://www.openmobilealliance.org/DTD/{filename}"
+             [<?oma-{ref}-ver supported-versions="{versions}"?>]>
+   <svc_xxx>
+      ...
+   </svc_xxx>
+
+Terms and conditions of use are available from the 
+Open Mobile Alliance Ltd. web site at
+http://www.openmobilealliance.org/useterms.html
+-->
+		
+<!ELEMENT	gsm_net_param	(cgi?, neid?, nmr?, ta?,
+ lmsi?, imsi?)>
+<!ELEMENT	cgi	(mcc, mnc, lac, cellid)>
+<!ELEMENT	neid	(vmscid | vlrid |
+ (vmscid, vlrid))>
+<!ELEMENT	vmscid	(cc?, ndc?, vmscno)>
+<!ELEMENT	vlrid	(cc?, ndc?, vlrno)>
+<!ELEMENT	nmr	(#PCDATA)>
+<!ELEMENT	mcc	(#PCDATA)>
+<!ELEMENT	mnc	(#PCDATA)>
+<!ELEMENT	ndc	(#PCDATA)>
+<!ELEMENT	cc	(#PCDATA)>
+<!ELEMENT	vmscno	(#PCDATA)>
+<!ELEMENT	vlrno	(#PCDATA)>
+<!ELEMENT	lac	(#PCDATA)>
+<!ELEMENT	cellid	(#PCDATA)>
+<!ELEMENT	ta	(#PCDATA)>
+<!ELEMENT	lmsi	(#PCDATA)>
+<!ELEMENT	imsi	(#PCDATA)>

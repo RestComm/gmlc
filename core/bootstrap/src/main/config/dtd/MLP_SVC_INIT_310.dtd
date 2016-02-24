@@ -1,0 +1,52 @@
+<!-- MLP_SVC_INIT -->
+<!--
+MLP V3.1 Document Type Definition
+
+Copyright Open Mobile Alliance Ltd., 2002
+          All rights reserved
+
+MLP is an XML language. Typical usage:
+   <?xml version="1.0"?>
+   <!DOCTYPE svc_init PUBLIC "-//OMA//DTD {abbrev x.y}//EN"
+             "http://www.openmobilealliance.org/DTD/{filename}"
+             [<?oma-{ref}-ver supported-versions="{versions}"?>]>
+   <svc_init>
+      ...
+   </svc_init>
+
+Terms and conditions of use are available from the 
+Open Mobile Alliance Ltd. web site at
+http://www.openmobilealliance.org/useterms.html
+-->
+		
+<!ENTITY	% extension.message	"">
+		
+<!ELEMENT	svc_init	(hdr, (slir | eme_lir | tlrr | tlrsr %extension.message;))>
+<!ATTLIST	svc_init 	
+	ver CDATA	#FIXED "3.1.0">
+		
+<!ENTITY	% mlp_ctxt.dtd	SYSTEM "MLP_CTXT_300.DTD">
+%mlp_ctxt.dtd;
+<!ENTITY	% mlp_id.dtd	SYSTEM "MLP_ID_300.DTD">
+%mlp_id.dtd;
+<!ENTITY	% mlp_func.dtd	SYSTEM "MLP_FUNC_300.DTD">
+%mlp_func.dtd;
+<!ENTITY	% mlp_qop.dtd	SYSTEM "MLP_QOP_300.DTD">
+%mlp_qop.dtd;
+<!ENTITY	% mlp_loc.dtd	SYSTEM "MLP_LOC_310.DTD">
+%mlp_loc.dtd;
+<!ENTITY	% mlp_shape.dtd	SYSTEM "MLP_SHAPE_310.DTD">
+%mlp_shape.dtd;
+<!ENTITY	% mlp_gsm_net_param.dtd	SYSTEM "MLP_GSM_NET_310.DTD">
+%mlp_gsm_net_param.dtd;
+		
+<!ENTITY	% mlp_hdr.dtd	SYSTEM "MLP_HDR_300.DTD">
+%mlp_hdr.dtd;
+<!ENTITY	% mlp_slir.dtd	SYSTEM "MLP_SLIR_300.DTD">
+%mlp_slir.dtd;
+<!ENTITY	% mlp_eme_lir.dtd	SYSTEM "MLP_EME_LIR_310.DTD">
+%mlp_eme_lir.dtd;
+<!ENTITY	% mlp_tlrr.dtd	SYSTEM "MLP_TLRR_300.DTD">
+%mlp_tlrr.dtd;
+<!ENTITY	% mlp_tlrsr.dtd	SYSTEM "MLP_TLRSR_300.DTD">
+%mlp_tlrsr.dtd;
