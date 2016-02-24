@@ -61,9 +61,9 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>${pom.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>library</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mobicents.servers.jainslee.api</groupId>
@@ -71,7 +71,7 @@
 			<version>${restcomm.core.ext.version}</version>
 		</dependency>
 		<dependency>
-			<artifactId>mobicents-slee-ra-map-ratype</artifactId>
+			<artifactId>restcomm-slee-ra-map-ratype</artifactId>
 			<groupId>org.mobicents.resources</groupId>
 			<version>${restcomm.resources.map.version}</version>
 		</dependency>

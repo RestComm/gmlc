@@ -24,7 +24,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>${pom.artifactId}-${pom.version}</finalName>
+		<finalName>${project.artifactId}-${project.version}</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources/archive-files</directory>
@@ -57,7 +57,7 @@
 								<configuration>
 									<tasks>
 										<copy todir="${jboss.home}/lib"
-											file="${project.build.directory}/${build.finalName}.jar" />
+											file="${project.build.directory}/${project.build.finalName}.jar" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -70,7 +70,7 @@
 								<configuration>
 									<tasks>
 										<delete failonerror="fals"
-											file="${jboss.home}/lib/${build.finalName}.jar" />
+											file="${jboss.home}/lib/${project.build.finalName}.jar" />
 									</tasks>
 								</configuration>
 							</execution>
