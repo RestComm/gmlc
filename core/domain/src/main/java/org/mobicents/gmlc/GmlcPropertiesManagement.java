@@ -61,10 +61,10 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 
 	private final TextBuilder persistFile = TextBuilder.newInstance();
 
-	private String gmlcGt = null;
-	private int gmlcSsn = -1;
-	private int hlrSsn = -1;
-	private int mscSsn = -1;
+	private String gmlcGt = "000000";
+	private int gmlcSsn = 145;
+	private int hlrSsn = 6;
+	private int mscSsn = 8;
 	private int maxMapVersion = 3;
 
 	private GmlcPropertiesManagement(String name) {
@@ -103,6 +103,7 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 	@Override
 	public void setGmlcGt(String gmlcGt) {
 		this.gmlcGt = gmlcGt;
+        this.store();
 	}
 
 	@Override
@@ -113,6 +114,7 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 	@Override
 	public void setGmlcSsn(int gmlcSsn) {
 		this.gmlcSsn = gmlcSsn;
+        this.store();
 	}
 
 	@Override
@@ -123,6 +125,7 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 	@Override
 	public void setHlrSsn(int hlrSsn) {
 		this.hlrSsn = hlrSsn;
+        this.store();
 	}
 
 	@Override
@@ -133,6 +136,7 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 	@Override
 	public void setMscSsn(int mscSsn) {
 		this.mscSsn = mscSsn;
+        this.store();
 	}
 
 	@Override
@@ -143,6 +147,7 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 	@Override
 	public void setMaxMapVersion(int maxMapVersion) {
 		this.maxMapVersion = maxMapVersion;
+        this.store();
 	}
 
 	public void start() throws Exception {
@@ -170,7 +175,6 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 	}
 
 	public void stop() throws Exception {
-		this.store();
 	}
 
 	/**
