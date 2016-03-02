@@ -146,7 +146,7 @@ Requests are to be sent over HTTP POST.
 Example Request:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
- <!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.dtd">
+ <!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.DTD">
  <svc_init xmlns="MLP_SVC_INIT_310.dtd">
    <hdr>
      <client>
