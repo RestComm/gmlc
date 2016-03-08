@@ -122,6 +122,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     private int responseLAC = -1;
     private int responseAOL = -1;
     private int responseSS = -1;
+    private String responseVLR = "-1";
 
 
     /**
@@ -278,12 +279,24 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 			CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = si.getLocationInformation()
 					.getCellGlobalIdOrServiceAreaIdOrLAI();
 
-			this.responseMCC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getMCC();
-			this.responseMNC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getMNC();
-			this.responseLAC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getLac();		
-            this.responseCellId = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getCellIdOrServiceAreaCode();
-			this.responseAOL = si.getLocationInformation().getAgeOfLocationInformation().intValue();
-			this.responseSS = si.getSubscriberState().getSubscriberStateChoice().ordinal();
+			if (cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength() != null) {
+				this.responseMCC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getMCC();
+				this.responseMNC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getMNC();
+				this.responseLAC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getLac();
+				this.responseCellId = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getCellIdOrServiceAreaCode();
+			}
+
+			if (si.getLocationInformation().getAgeOfLocationInformation() != null) {
+				this.responseAOL = si.getLocationInformation().getAgeOfLocationInformation().intValue();
+			}
+
+			if (si.getLocationInformation().getVlrNumber() != null) {
+				this.responseVLR = si.getLocationInformation().getVlrNumber().getAddress();
+			}
+
+			if (si.getSubscriberState().getSubscriberStateChoice() != null) {
+				this.responseSS = si.getSubscriberState().getSubscriberStateChoice().ordinal();
+			}
 
             // Handle successfully having retried the device's cell-id
             this.handleLocationResponse(MLPResponse.MLPResultType.OK, null);
@@ -447,7 +460,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 if (mlpResultType == MLPResponse.MLPResultType.OK) {
                     this.sendHTTPResult("mcc=" + this.responseMCC + ",mnc=" + this.responseMNC
                     		+ ",lac=" + this.responseLAC + ",cellid=" + this.responseCellId
-                    			+ ",aol=" + this.responseAOL + ",ss=" +this.responseSS, true);
+                    			+ ",aol=" + this.responseAOL + ",subscriberState=" +this.responseSS + ",vlrNumber=" + this.responseVLR, true);
                 }
                 else {
                     this.sendHTTPResult(mlpClientErrorMessage, false);
