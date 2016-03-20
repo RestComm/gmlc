@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+<chapter id="overview">
+
+    <title>Overview </title>
+
+    <section id="GMLC_overview">
+        <title>GMLC</title>
+		<para>
+			GMLC stands for Gateway Mobile Location Centre enables you to offer Location Based Services (LBS) to mobile subscribers in GSM and UMTS network.
+		</para>
+		<para>
+            In one PLMN (Public Land Mobile Network), there may be more than one GMLC. The GMLC is the first node an external LCS client accesses in a GSM or UMTS network. The GMLC may request routing information from the HLR (Home Location register) or HSS (Home Subscriber Server). After performing registration authorization, it sends positioning requests to either the VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node) or MSC (Mobile Switching Centre) Server and receives final location estimates from the corresponding entity.
+		</para>
+	</section>
+	<section id="GMLC_session">
+		<title>GMLC Session</title>
+		<para>
+			GMLC establishes a real time session between the mobile handset and the application handling the service and the information from the mobile handset is sent directly to the service. 
+			The concept of a real time session is very useful for constructing an interactive menu driven application. Refer to the figure below depicting the working of a real time session.
+		</para>
+	    <!--mediaobject>
+	        <imageobject>
+	            <imagedata width="300px" align="center"
+	                fileref="images/GMLC-arch.png" format="PNG" />
+	        </imageobject>
+	        <caption>
+	            <para>General interworking diagram</para>
+	        </caption>
+    	</mediaobject-->
+		<para>
+			A user dialing an GMLC service number (short code) initiates a dialog with the GMLC handling application deployed on the &THIS.PLATFORM; Platform as shown in the above figure.  
+			The "Network Node" in the figure could be a MSC, HLR or VLR. The &THIS.PLATFORM; Platform integrates with the "Network Node" using the MAP protocol. 
+		</para>
+	</section>
+	<section id="MAP_message_flow">
+		<title>MAP Message Flow</title>
+    	<para>
+    		The diagram below depicts a typical MAP message flow for data transfer between the "Network Node" and the &THIS.PLATFORM; platform to implement a menu driven application. 
+    		If you would like to read more about mobile-intiated (and network-initated) GMLC operations and the use of MAP GMLC services, please refer to [3GPPTS 24.090] in the references section.
+   		</para>
+   
+		<!--mediaobject>
+		    <imageobject>
+		        <imagedata width="300px" align="center"
+		            fileref="images/GMLC-map.png" format="PNG" />
+		    </imageobject>
+		    <caption>
+		        <para>MAP Message flow</para>
+		    </caption>
+		</mediaobject-->
+    	<para>
+    		GMLC service begins when the network send an HTTP (GET/POST) request tp GMLC Gateway. The message flow involves the following steps: 
+    	</para>
+		<orderedlist>
+		    <listitem>
+		        <para>The Network sends a 'TCAP Begin' message with the Component 'ANY_TIME_INTERROGATION_REQUEST' to the &THIS.PLATFORM; platform. The &THIS.PLATFORM; platform invokes GMLC application logic. </para>
+		    </listitem>
+		    <listitem>
+		        <para>The HLR receives the mobile msisdn.</para>
+		    </listitem>
+		    <listitem>
+		        <para>Based on the msisdn, the HLR performs the predefined logic and sends a response back to the GMLC Gateway by 'ANY_TIME_INTERROGATION_REQSPONSE' and terminates the 'TCAP dialogue'.</para>
+		    </listitem>
+		</orderedlist>
+	</section>
+    <section id="GMLC_gateway_desc">
+ 		<title>GMLC Gateway</title>
+        <para>
+        	Existing MSC, VLR, and HLR network elements are proprietary and run on non-standard operating environments located in trusted operator's zones that make it difficult to build and deploy new applications. 
+        	Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over the Internet. 
+        	The GMLC Gateway connects to the MSC, VLR, or HLR and enables the flow of GMLC messages to be extended to an open, standards-based application server located in the IP network. 
+        	The AS also provides the tools and interfaces to enable access to the content providers through the Internet.
+        </para>
+	</section>
+    <section id="mobicents_GMLC_overview">
+	<title>&THIS.PLATFORM; &THIS.APPLICATION;</title>
+	<section id="mobicents_GMLC_overview_features">
+        <title>Major Features</title>
+		<para>
+			&THIS.PLATFORM;'s implementation of GMLC Gateway is the first and only open source GMLC Gateway with a host of rich features and advantages.
+		</para>
+
+            <variablelist>
+                <varlistentry>
+                    <term>Java-based:</term>
+                    <listitem>
+                    	<para>
+                    		&THIS.PLATFORM; &THIS.APPLICATION; is the only Java based GMLC Gateway. It is robust and reliable and can be installed on any Operating System that supports Java (JDK 7 and SCTP).
+                    	</para>
+                    </listitem>
+                </varlistentry>               
+                <varlistentry>
+                    <term>Open Source:</term>
+                    <listitem>
+                    	<para>
+                    		The Software is open-source, giving you the freedom to understand the code and customise it to your enterprise needs. It is supported by a vibrant Open source community.
+                   		</para>
+               		</listitem>
+                </varlistentry>
+                
+                <varlistentry>
+                    <term>Carrier Grade Performance:</term>
+                    <listitem>
+                    	<para>
+                    		&THIS.PLATFORM; &THIS.APPLICATION;  has been deployed at telecom
+							operators around the world and is processing billions of GMLC transactions each day.
+							A single RestComm GMLC node can process 1500's of GMLC/sec and can be adapted
+							to the needs of telecom service providers of different sizes in any country reducing
+							your CAPEX and OPEX costs.
+                   		</para>
+               		</listitem>
+                </varlistentry>                
+                                   
+                <varlistentry>
+                    <term>Cloud Ready:</term>
+                    <listitem>
+                    	<para>
+                    		&THIS.PLATFORM; &THIS.APPLICATION; is Cloud-ready. It can be deployed on dedicated
+							hardware, private cloud infrastructure or public IaaS such as AWS.
+                   		</para>
+               		</listitem>
+                </varlistentry>                                     
+                   
+                <varlistentry>
+                    <term>Network Push:</term>
+                    <listitem>
+                    	<para>
+                    		&THIS.PLATFORM; &THIS.APPLICATION; supports network/application/service initiated GMLC request. The request can be just HTTP PUSH.
+                   		</para>
+               		</listitem>
+                </varlistentry>  
+                <varlistentry>
+                    <term>SS7 Hardware Cards:</term>
+                    <listitem>
+                    	<para>
+                    		&THIS.PLATFORM; &THIS.APPLICATION; can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma). 
+                    		For production its recommended to use Dialogic boards only.
+                   		</para>
+               		</listitem>
+                </varlistentry>               
+                <varlistentry>
+                    <term>SIGTRAN (M3UA):</term>
+                    <listitem>
+                    	<para>
+                    		It also has in-built support for SIGTRAN (M3UA using SCTP).
+                   		</para>
+               		</listitem>
+                </varlistentry>               
+                <varlistentry>
+                    <term>HTTP interface:</term>
+                    <listitem>
+                        <para>
+                            HTTP interface is a common interface that can be used for connection with service applications.
+                        </para>
+                    </listitem>
+                </varlistentry>               
+                <varlistentry>
+                    <term>Easy Configuration and Management:</term>
+                    <listitem>
+                        <para>&THIS.PLATFORM; &THIS.APPLICATION; comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the 
+                        Gateway at run-time and manage it using simple commands rather than do everything manually. 
+                        &THIS.PLATFORM; &THIS.APPLICATION; also comes with a Graphical User Interface that will allow you to configure,
+						monitor and manage the Gateway through a convenient user-friendly interface.
+                        </para>
+                    </listitem>
+                </varlistentry>   
+            </variablelist>   
+	</section>	
+        <section id="mobicents_GMLC_overview_tech_spec">
+        <title>Technical Specifications</title>
+                      <para>&THIS.PLATFORM; &THIS.APPLICATION; is not restricted by Transaction Per Second model. The only restricting factor is memory + CPU capacity of the host servers,
+                        third-party applications or the underlying database service.
+                        <itemizedlist>
+                        <listitem><para>&THIS.PLATFORM; &THIS.APPLICATION; supports as many as 1073741823 incoming and 1073741823 outgoing concurrent sessions/dialogs.</para></listitem>
+                        <listitem><para>&THIS.PLATFORM; &THIS.APPLICATION; supports unlimited E1 links and the only limiting factor is the underlying TDM board used.</para></listitem>
+                        <listitem><para>&THIS.PLATFORM; &THIS.APPLICATION; SCTP supports as many associations as supported by the underlying Operating System. Can be setup in multihome.</para></listitem>
+                        <listitem><para>&THIS.PLATFORM; &THIS.APPLICATION; M3UA can be confgured to have as many ASP's / IPSP's as needed by the system.</para></listitem>
+                        <listitem><para>&THIS.PLATFORM; &THIS.APPLICATION; SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.</para></listitem>
+                        </itemizedlist>       
+                    </para>
+	</section>	
+        <section id="mobicents_GMLC_overview_http">
+        <title>HTTP Transfer Mechanism</title>        
+                  <para>The &THIS.PLATFORM; GMLC Gateway makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). &THIS.PLATFORM; GMLC Gateway receives the GMLC request from the third-party applications and then translates these requests to SS7 MAP and route to a corresponding HLR.
+                  <!--</para>  <para>&THIS.PLATFORM; &THIS.APPLICATION; supports implementation of HTTP 1.1 standards and acts as a HTTP Client invoking (HTTP POST) the HTTP Application deployed on the third-party Application Server. The HTTP Request carries an XML payload with GMLC specific information.</para>
+                        <para>-->
+                        The HTTP callback mechanism allows the third-party Application to be agnostic to Operating System, Programming Language and Framework. The third-party Application can be either of the following technologies on any Operating System:
+                        <itemizedlist>
+                        <listitem><para>Apache Tomcat, JBoss AS, Oracle Application Server, IBM Websphere etc for JSP/Servlet on Java </para></listitem>
+                        <listitem><para>PHP</para></listitem>
+                        <listitem><para>Microsoft IIS for ASP</para></listitem>
+                        </itemizedlist>       
+                    </para>
+	</section>
+    </section>
+
+</chapter>
+
+

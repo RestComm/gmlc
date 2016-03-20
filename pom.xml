@@ -58,9 +58,9 @@
 		<profile>
 			<id>maven-release</id>
 			<!-- No docs modules yet -->
-			<!--modules>
+			<modules>
 				<module>docs</module>
-			</modules-->
+			</modules>
 			<build>
 				<plugins>
 					<plugin>
@@ -78,9 +78,9 @@
 		<profile>
 			<id>release</id>
 			<!-- No docs modules yet -->
-			<!--modules>
+			<modules>
 				<module>docs</module>
-			</modules-->
+			</modules>
 
 		</profile>
 	</profiles>
