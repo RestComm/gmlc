@@ -49,6 +49,7 @@ import org.mobicents.protocols.ss7.map.api.MAPApplicationContextVersion;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPParameterFactory;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
+import org.mobicents.protocols.ss7.map.api.errors.MAPErrorCode;
 import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressNature;
 import org.mobicents.protocols.ss7.map.api.primitives.CellGlobalIdOrServiceAreaIdOrLAI;
@@ -57,16 +58,12 @@ import org.mobicents.protocols.ss7.map.api.primitives.SubscriberIdentity;
 import org.mobicents.protocols.ss7.map.api.service.mobility.MAPDialogMobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.RequestedInfo;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberInfo;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberState;
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
-/*import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;*/
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle0100;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.slee.SbbContextExt;
@@ -75,6 +72,7 @@ import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
 /**
  * 
  * @author amit bhayani
+ * @author sergey vetyutnev
  */
 public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
@@ -198,67 +196,91 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	 */
 
 	public void onDialogTimeout(org.mobicents.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {
-		if (logger.isWarningEnabled()) {
-			this.logger.warning("Rx :  onDialogTimeout" + evt);
-		}
+        this.logger.severe("\nRx :  onDialogTimeout " + evt);
 
-		this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "MAP Dialog timeout");
+		this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogTimeout");
 	}
 
 	public void onDialogDelimiter(org.mobicents.slee.resource.map.events.DialogDelimiter event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
-
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("\nReceived onDialogDelimiter = " + event);
+        }
 	}
 
 	public void onDialogAccept(org.mobicents.slee.resource.map.events.DialogAccept event, ActivityContextInterface aci) {
-
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("\nReceived onDialogAccept = " + event);
+        }
 	}
 
 	public void onDialogReject(org.mobicents.slee.resource.map.events.DialogReject event, ActivityContextInterface aci) {
+        this.logger.severe("\nRx :  onDialogReject " + event);
 
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogReject: " + event);
 	}
 
 	public void onDialogUserAbort(org.mobicents.slee.resource.map.events.DialogUserAbort event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
+        this.logger.severe("\nRx :  onDialogUserAbort " + event);
 
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogUserAbort: " + event);
 	}
 
 	public void onDialogProviderAbort(org.mobicents.slee.resource.map.events.DialogProviderAbort event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
+        this.logger.severe("\nRx :  onDialogProviderAbort " + event);
 
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogProviderAbort: " + event);
 	}
 
 	public void onDialogClose(org.mobicents.slee.resource.map.events.DialogClose event, ActivityContextInterface aci) {
-
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("\nReceived onDialogClose = " + event);
+        }
 	}
 
 	public void onDialogNotice(org.mobicents.slee.resource.map.events.DialogNotice event, ActivityContextInterface aci) {
-
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("\nReceived onDialogNotice = " + event);
+        }
 	}
 
 	public void onDialogRelease(org.mobicents.slee.resource.map.events.DialogRelease event, ActivityContextInterface aci) {
-
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("\nReceived onDialogRelease = " + event);
+        }
 	}
 
 	/**
 	 * Component Events
 	 */
 	public void onInvokeTimeout(org.mobicents.slee.resource.map.events.InvokeTimeout event, ActivityContextInterface aci) {
-
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("\nReceived onInvokeTimeout = " + event);
+        }
 	}
 
 	public void onErrorComponent(org.mobicents.slee.resource.map.events.ErrorComponent event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("\nReceived onErrorComponent = " + event);
+        }
 
 		MAPErrorMessage mapErrorMessage = event.getMAPErrorMessage();
 		long error_code = mapErrorMessage.getErrorCode().longValue();
 
-		this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "ReturnErrorr: " + String.valueOf(error_code));
+        this.handleLocationResponse(
+                (error_code == MAPErrorCode.unknownSubscriber ? MLPResponse.MLPResultType.UNKNOWN_SUBSCRIBER
+                        : MLPResponse.MLPResultType.SYSTEM_FAILURE), "ReturnError: " + String.valueOf(error_code) + " : "
+                        + event.getMAPErrorMessage());
 	}
 
 	public void onRejectComponent(org.mobicents.slee.resource.map.events.RejectComponent event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
+        this.logger.severe("\nRx :  onRejectComponent " + event);
 
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "RejectComponent: " + event);
 	}
 
 	/**
@@ -267,14 +289,18 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	public void onAnyTimeInterrogationRequest(
 			org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
-
+        this.logger.severe("\nReceived onAnyTimeInterrogationRequest = " + event);
 	}
 
 	public void onAnyTimeInterrogationResponse(
 			org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationResponse event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
 		try {
-			MAPDialogMobility mapDialogMobility = event.getMAPDialog();
+	        if (this.logger.isFineEnabled()) {
+	            this.logger.fine("\nReceived onAnyTimeInterrogationResponse = " + event);
+	        }
+
+	        MAPDialogMobility mapDialogMobility = event.getMAPDialog();
 			SubscriberInfo si = event.getSubscriberInfo();
 
 			if (si != null) { /* return all parameters with -1 */
@@ -308,8 +334,9 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             this.handleLocationResponse(MLPResponse.MLPResultType.OK, null);
 
 		} catch (Exception e) {
-			logger.severe(String.format("Error while trying to process AnyTimeInterrogationResponse=%s", event), e);
-            this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Internal failure occurred while processing network response");
+            logger.severe(String.format("Error while trying to process AnyTimeInterrogationResponse=%s", event), e);
+            this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE,
+                    "Internal failure occurred while processing network response: " + e.getMessage());
 		}
 	}
 
@@ -342,11 +369,11 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             // getSingleMSISDNLocation()
         }
         catch(MLPException e) {
-            this.handleLocationResponse(e.getMlpClientErrorType(), e.getMlpClientErrorMessage());
+            this.handleLocationResponse(e.getMlpClientErrorType(), "System Failure: " + e.getMlpClientErrorMessage());
         }
         catch (IOException e) {
             e.printStackTrace();
-            this.handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "Failed to read from server input stream");
+            this.handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "System Failure: Failed to read from server input stream");
         }
     }
 
@@ -369,7 +396,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             getSingleMSISDNLocation();
         } else {
             this.logger.info("MSISDN is null, sending back -1 for cellid");
-            this.handleLocationResponse(MLPResponse.MLPResultType.UNKNOWN_SUBSCRIBER, "Invalid MSISDN specified");
+            this.handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "Invalid MSISDN specified");
         }
 	}
 
@@ -410,10 +437,12 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 mapDialogMobility.send();
             } catch (MAPException e) {
                 this.logger.severe("MAPException while trying to send ATI request for MSISDN=" + this.requestingMSISDN, e);
-                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Failed to send request to network for position");
+                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE,
+                        "System Failure: Failed to send request to network for position: " + e.getMessage());
             } catch (Exception e) {
                 this.logger.severe("Exception while trying to send ATI request for MSISDN=" + this.requestingMSISDN, e);
-                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Failed to send request to network for position");
+                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE,
+                        "System Failure: Failed to send request to network for position: " + e.getMessage());
             }
         }
         else {
@@ -478,10 +507,10 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 					getResponse.append(",vlrNumber=");
 					getResponse.append(this.responseVLR);
 
-                    this.sendHTTPResult(getResponse.toString(), true);
+                    this.sendHTTPResult(getResponse.toString());
                 }
                 else {
-                    this.sendHTTPResult(mlpClientErrorMessage, false);
+                    this.sendHTTPResult(mlpClientErrorMessage);
                 }
                 break;
 
@@ -500,7 +529,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 }
 
                 this.logger.info("Generated response XML: "+svcResultXml);
-                this.sendHTTPResult(svcResultXml, true);
+                this.sendHTTPResult(svcResultXml);
                 break;
         }
     }
@@ -508,12 +537,18 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     /**
      * Return the specified response data to the HTTP client
      * @param responseData Response data to send to client
-     * @param resumeEventDelivery If true, ctx.resumeDelivery() will be called
      */
-	private void sendHTTPResult(String responseData, boolean resumeEventDelivery) {
+	private void sendHTTPResult(String responseData) {
 		try {
 			EventContext ctx = this.getEventContext();
-			HttpServletRequestEvent event = (HttpServletRequestEvent) ctx.getEvent();
+            if (ctx == null) {
+                if (logger.isWarningEnabled()) {
+                    logger.warning("When responding to HTTP no pending HTTP request is found, responseData=" + responseData);
+                    return;
+                }
+            }
+
+	        HttpServletRequestEvent event = (HttpServletRequestEvent) ctx.getEvent();
 
 			HttpServletResponse response = event.getResponse();
             PrintWriter w = null;
@@ -522,7 +557,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 			w.flush();
 			response.flushBuffer();
 
-			if (resumeEventDelivery) {
+			if (ctx.isSuspended()) {
 				ctx.resumeDelivery();
 			}
 
