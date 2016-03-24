@@ -1,0 +1,28 @@
+[[_design_overview]]
+= Architecture
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+&THIS.PLATFORM;&THIS.APPLICATION;is based on robust and proven &THIS.PLATFORM;JAIN SLEE 1.1 Server and &THIS.PLATFORM;jSS7 Stack. 
+
+&THIS.PLATFORM;JAIN SLEE Server is a highly scalable event-driven application server with a robust component model and fault tolerant execution environment.
+It provides a set of connectors to a variety of networks elements: SS7 MAP, TCAP, INAP, ISUP, SMPP, XMPP, SIP, MGCP, HTTP, XDM, XCAP, Diameter and many others.
+It is fully compliant with JSR 240 (JSLEE 1.1). 
+
+&THIS.PLATFORM;jSS7 is a software based implementation of the SS7 protocol.
+It provides implementation for Level 2 and above in the SS7 protocol Stack. &THIS.PLATFORM;jSS7 Stack User Guide is bundled within and you can refer to the guide for more details on the Stack. 
+
+The diagram below depicts top design overview:
+
+
+image::images/GMLC-application-design-overview.png[]
+
+[IMPORTANT]
+====
+As of now, the Gateway supports the following protocols for proxying: 
+
+====
