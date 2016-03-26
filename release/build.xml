@@ -57,12 +57,8 @@
 		</classpath>
 	</taskdef>
 
-	<target name="release" depends="clean,get-deps,extract-deps,clean-up-restcomm-slee,build-gmlc,copy-gmlc,make-final-zip" />
-	<target name="release-no-clean" depends="get-deps,extract-deps,clean-up-restcomm-slee, build-gmlc,copy-gmlc,make-final-zip" />
-<!-- we will following when gmlc docs are ready :
 	<target name="release" depends="clean,get-deps,extract-deps,clean-up-restcomm-slee,build-gmlc,copy-gmlc,build-docs,copy-docs,make-final-zip,bundle-documentation" />
 	<target name="release-no-clean" depends="get-deps,extract-deps,clean-up-restcomm-slee, build-gmlc,copy-gmlc,build-docs,copy-docs,make-final-zip,bundle-documentation" />
--->
 
 	<target name="deploy">
 		<ant antfile="${ant.file.restcomm.gmlc.release}" target="release">
@@ -375,13 +371,6 @@
 		<delete dir="${docs.dir}/resources/http-servlet" />
 		<copy todir="${docs.dir}/resources/http-servlet" failonerror="true" flatten="true">
 			<fileset dir="${release.http-servlet.dir}/docs/">
-				<include name="**/*User_Guide.pdf" />
-			</fileset>
-		</copy>
-
-		<delete dir="${docs.dir}/resources/jdbc" />
-		<copy todir="${docs.dir}/resources/jdbc" failonerror="true" flatten="true">
-			<fileset dir="${release.jdbc.dir}/docs/">
 				<include name="**/*User_Guide.pdf" />
 			</fileset>
 		</copy>
