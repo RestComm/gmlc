@@ -440,13 +440,6 @@
 			</fileset>
 		</copy>
 
-		<delete dir="${bundle.docs.dir}/slee/resources/jdbc" />
-		<copy todir="${bundle.docs.dir}/slee/resources/jdbc" failonerror="true">
-			<fileset dir="${release.jdbc.dir}/docs/">
-				<include name="**" />
-			</fileset>
-		</copy>
-
 		<delete dir="${bundle.docs.dir}/slee/tools/slee-management-console" />
 		<mkdir dir="${bundle.docs.dir}/jss7" />
 		<mkdir dir="${bundle.docs.dir}/gmlc" />
