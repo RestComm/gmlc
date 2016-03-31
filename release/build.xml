@@ -43,6 +43,7 @@
 	<property name="restcomm-jss7.distro.zip.path" value="${checkout.dir}/${restcomm-jss7.download.distro.file}" />
 
 	<property name="release.build.goals" value="clean install" />
+	<property name="release.build.profiles" value="default" />
 	<property name="release.ts.deploy.goals" value="clean deploy" />
 
 
@@ -197,6 +198,7 @@
 	<target name="build-gmlc">
 		<exec failonerror="true" executable="${mvn.executable}" dir="${base.dir}/../">
 			<arg line="${release.build.goals}" />
+			<arg line="-P ${release.build.profiles}" />
 		</exec>
 	</target>
 
@@ -347,7 +349,7 @@
 
 	<target name="build-docs">
 		<exec failonerror="true" executable="${mvn.executable}" dir="${base.dir}/../docs">
-			<arg line="${release.build.goals} -Dmaven.test.skip=true" />
+			<arg line="${release.build.goals} -P ${release.build.profiles} -Dmaven.test.skip=true" />
 		</exec>
 	</target>
 
@@ -458,12 +460,12 @@
 				<include name="**" />
 			</fileset>
 		</copy>
-		<copy todir="${bundle.docs.dir}/gmlc/adminguide/pdf" failonerror="true">
+		<copy todir="${bundle.docs.dir}/gmlc/adminguide/pdf" failonerror="false">
 			<fileset dir="${restcomm.gmlc.dir}/docs/adminguide/sources-asciidoc/target/generated-docs/pdf/">
 				<include name="**" />
 			</fileset>
 		</copy>
-		<copy todir="${bundle.docs.dir}/gmlc/installationguide/pdf" failonerror="true">
+		<copy todir="${bundle.docs.dir}/gmlc/installationguide/pdf" failonerror="false">
 			<fileset dir="${restcomm.gmlc.dir}/docs/installationguide/sources-asciidoc/target/generated-docs/pdf/">
 				<include name="**" />
 			</fileset>
