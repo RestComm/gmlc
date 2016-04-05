@@ -29,6 +29,7 @@ public class MLPResponse {
         SYSTEM_FAILURE,
         FORMAT_ERROR,
         UNKNOWN_SUBSCRIBER,
+        ABSENT_SUBSCRIBER,
         QOP_NOT_ATTAINABLE,
         POSITION_METHOD_FAILURE,
     }
@@ -67,6 +68,8 @@ public class MLPResponse {
                 return "1";
             case UNKNOWN_SUBSCRIBER:
                 return "4";
+            case ABSENT_SUBSCRIBER:
+                return "5";
             case FORMAT_ERROR:
                 return "105";
             case QOP_NOT_ATTAINABLE:
@@ -91,6 +94,8 @@ public class MLPResponse {
                 return "SYSTEM FAILURE";
             case UNKNOWN_SUBSCRIBER:
                 return "UNKNOWN SUBSCRIBER";
+            case ABSENT_SUBSCRIBER:
+                return "ABSENT SUBSCRIBER";
             case FORMAT_ERROR:
                 return "FORMAT ERROR";
             case QOP_NOT_ATTAINABLE:
@@ -111,6 +116,7 @@ public class MLPResponse {
         switch(t) {
             case SYSTEM_FAILURE:
             case UNKNOWN_SUBSCRIBER:
+            case ABSENT_SUBSCRIBER:
             case FORMAT_ERROR:
                 return true;
         }

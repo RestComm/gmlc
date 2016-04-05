@@ -302,36 +302,48 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
 	        MAPDialogMobility mapDialogMobility = event.getMAPDialog();
 			SubscriberInfo si = event.getSubscriberInfo();
+            MLPResponse.MLPResultType result;
+            String mlpClientErrorMessage = null;
 
-			if (si != null) { /* return all parameters with -1 */
-				if(si.getLocationInformation() != null) {
-					if (si.getLocationInformation().getCellGlobalIdOrServiceAreaIdOrLAI() != null) {
-						CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = si.getLocationInformation()
-																							.getCellGlobalIdOrServiceAreaIdOrLAI();
-						if (cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength() != null) {
-							this.responseMCC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getMCC();
-							this.responseMNC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getMNC();
-							this.responseLAC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getLac();
-							this.responseCellId = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength().getCellIdOrServiceAreaCode();
-						}
-					}
+            if (si != null) {
+                if (si.getLocationInformation() != null) {
+                    result = MLPResponse.MLPResultType.OK;
+                    if (si.getLocationInformation().getCellGlobalIdOrServiceAreaIdOrLAI() != null) {
+                        CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = si.getLocationInformation()
+                                .getCellGlobalIdOrServiceAreaIdOrLAI();
+                        if (cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength() != null) {
+                            this.responseMCC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                                    .getMCC();
+                            this.responseMNC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                                    .getMNC();
+                            this.responseLAC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                                    .getLac();
+                            this.responseCellId = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                                    .getCellIdOrServiceAreaCode();
+                        }
+                    }
 
-					if (si.getLocationInformation().getAgeOfLocationInformation() != null) {
-						this.responseAOL = si.getLocationInformation().getAgeOfLocationInformation().intValue();
-					}
+                    if (si.getLocationInformation().getAgeOfLocationInformation() != null) {
+                        this.responseAOL = si.getLocationInformation().getAgeOfLocationInformation().intValue();
+                    }
 
-					if (si.getLocationInformation().getVlrNumber() != null) {
-						this.responseVLR = si.getLocationInformation().getVlrNumber().getAddress();
-					}
-				}
-				// keep it for future use
-				//if(si.getSubscriberState() != null) {
-				//		this.responseSS = si.getSubscriberState().toString();
-				//}
-			}
+                    if (si.getLocationInformation().getVlrNumber() != null) {
+                        this.responseVLR = si.getLocationInformation().getVlrNumber().getAddress();
+                    }
+                } else if (si.getSubscriberState() != null) {
+                    result = MLPResponse.MLPResultType.ABSENT_SUBSCRIBER;
+                    mlpClientErrorMessage = "SubscriberState: " + si.getSubscriberState();
+                } else {
+                    result = MLPResponse.MLPResultType.SYSTEM_FAILURE;
+                    mlpClientErrorMessage = "Bad SubscriberInfo received: " + si;
+                }
+            } else {
+                result = MLPResponse.MLPResultType.SYSTEM_FAILURE;
+                mlpClientErrorMessage = "Bad AnyTimeInterrogationResponse received: " + event;
+            }
 
             // Handle successfully having retried the device's cell-id
-            this.handleLocationResponse(MLPResponse.MLPResultType.OK, null);
+            this.handleLocationResponse(result, mlpClientErrorMessage);
 
 		} catch (Exception e) {
             logger.severe(String.format("Error while trying to process AnyTimeInterrogationResponse=%s", event), e);
