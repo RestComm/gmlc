@@ -62,6 +62,7 @@ import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDOddEncodingScheme;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle0100;
@@ -73,6 +74,7 @@ import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
  * 
  * @author amit bhayani
  * @author sergey vetyutnev
+ * @author Loay Dawoud
  */
 public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
@@ -472,7 +474,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
 	protected SccpAddress getServiceCenterSccpAddress() {
 		if (this.serviceCenterSCCPAddress == null) {
-			GlobalTitle0100 gt = new GlobalTitle0100Impl(gmlcPropertiesManagement.getGmlcGt(),0,BCDEvenEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY,NatureOfAddress.INTERNATIONAL);
+			GlobalTitle0100 gt = new GlobalTitle0100Impl(gmlcPropertiesManagement.getGmlcGt(),0,BCDOddEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY,NatureOfAddress.INTERNATIONAL);
 			this.serviceCenterSCCPAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
 					gmlcPropertiesManagement.getGmlcSsn());
 		}
@@ -488,7 +490,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	}
 
 	private SccpAddress convertAddressFieldToSCCPAddress(String address) {
-		GlobalTitle0100 gt = new GlobalTitle0100Impl(address, 0, BCDEvenEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
+		GlobalTitle0100 gt = new GlobalTitle0100Impl(address, 0, BCDOddEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
 		return new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
 				gmlcPropertiesManagement.getHlrSsn());
 	}
