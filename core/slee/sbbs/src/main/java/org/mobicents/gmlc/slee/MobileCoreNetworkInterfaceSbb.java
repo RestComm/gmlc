@@ -40,6 +40,7 @@ import org.mobicents.gmlc.GmlcPropertiesManagement;
 import org.mobicents.gmlc.slee.mlp.MLPException;
 import org.mobicents.gmlc.slee.mlp.MLPRequest;
 import org.mobicents.gmlc.slee.mlp.MLPResponse;
+import org.mobicents.protocols.ss7.indicator.GlobalTitleIndicator;
 import org.mobicents.protocols.ss7.indicator.NatureOfAddress;
 import org.mobicents.protocols.ss7.indicator.NumberingPlan;
 import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
@@ -61,11 +62,10 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformatio
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDOddEncodingScheme;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
+import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
-import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle0100;
+import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
+import org.mobicents.protocols.ss7.sccp.parameter.ParameterFactory;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.slee.SbbContextExt;
 import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
@@ -78,22 +78,22 @@ import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
  */
 public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
-	protected SbbContextExt sbbContext;
+    protected SbbContextExt sbbContext;
+    protected ParameterFactory sccpParameterFact;
+    private static Tracer logger;
 
-	private Tracer logger;
+    protected MAPContextInterfaceFactory mapAcif;
+    protected MAPProvider mapProvider;
+    protected MAPParameterFactory mapParameterFactory;
 
-	protected MAPContextInterfaceFactory mapAcif;
-	protected MAPProvider mapProvider;
-	protected MAPParameterFactory mapParameterFactory;
+    protected static final ResourceAdaptorTypeID mapRATypeID = new ResourceAdaptorTypeID("MAPResourceAdaptorType",
+            "org.mobicents", "2.0");
+    protected static final String mapRaLink = "MAPRA";
 
-	protected static final ResourceAdaptorTypeID mapRATypeID = new ResourceAdaptorTypeID("MAPResourceAdaptorType",
-			"org.mobicents", "2.0");
-	protected static final String mapRaLink = "MAPRA";
+    private static final GmlcPropertiesManagement gmlcPropertiesManagement = GmlcPropertiesManagement.getInstance();
 
-	private static final GmlcPropertiesManagement gmlcPropertiesManagement = GmlcPropertiesManagement.getInstance();
-
-	private SccpAddress serviceCenterSCCPAddress = null;
-	private MAPApplicationContext anyTimeEnquiryContext = null;
+    private SccpAddress serviceCenterSCCPAddress = null;
+    private MAPApplicationContext anyTimeEnquiryContext = null;
 
     /**
      * HTTP Request Types (GET or MLP)
@@ -141,169 +141,170 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     private String fakeLocationY = "153 01 43.00E";
     private String fakeLocationRadius = "5000";
 
-	/** Creates a new instance of CallSbb */
-	public MobileCoreNetworkInterfaceSbb() {
-	}
+    /** Creates a new instance of CallSbb */
+    public MobileCoreNetworkInterfaceSbb() {
+    }
 
-	public void setSbbContext(SbbContext sbbContext) {
-		this.sbbContext = (SbbContextExt) sbbContext;
-		this.logger = sbbContext.getTracer(MobileCoreNetworkInterfaceSbb.class.getSimpleName());
-		try {
-			this.mapAcif = (MAPContextInterfaceFactory) this.sbbContext.getActivityContextInterfaceFactory(mapRATypeID);
-			this.mapProvider = (MAPProvider) this.sbbContext.getResourceAdaptorInterface(mapRATypeID, mapRaLink);
-			this.mapParameterFactory = this.mapProvider.getMAPParameterFactory();
-		} catch (Exception ne) {
-			logger.severe("Could not set SBB context:", ne);
-		}
-	}
+    public void setSbbContext(SbbContext sbbContext) {
+        this.sbbContext = (SbbContextExt) sbbContext;
+        this.logger = sbbContext.getTracer(MobileCoreNetworkInterfaceSbb.class.getSimpleName());
+        try {
+            this.mapAcif = (MAPContextInterfaceFactory) this.sbbContext.getActivityContextInterfaceFactory(mapRATypeID);
+            this.mapProvider = (MAPProvider) this.sbbContext.getResourceAdaptorInterface(mapRATypeID, mapRaLink);
+            this.mapParameterFactory = this.mapProvider.getMAPParameterFactory();
+            this.sccpParameterFact = new ParameterFactoryImpl();
+        } catch (Exception ne) {
+            logger.severe("Could not set SBB context:", ne);
+        }
+    }
 
-	public void unsetSbbContext() {
-		this.sbbContext = null;
-		this.logger = null;
-	}
+    public void unsetSbbContext() {
+        this.sbbContext = null;
+        this.logger = null;
+    }
 
-	public void sbbCreate() throws CreateException {
-		if (this.logger.isFineEnabled()) {
-			this.logger.fine("Created KnowledgeBase");
-		}
-	}
+    public void sbbCreate() throws CreateException {
+        if (this.logger.isFineEnabled()) {
+            this.logger.fine("Created KnowledgeBase");
+        }
+    }
 
-	public void sbbPostCreate() throws CreateException {
+    public void sbbPostCreate() throws CreateException {
 
-	}
+    }
 
-	public void sbbActivate() {
-	}
+    public void sbbActivate() {
+    }
 
-	public void sbbPassivate() {
-	}
+    public void sbbPassivate() {
+    }
 
-	public void sbbLoad() {
-	}
+    public void sbbLoad() {
+    }
 
-	public void sbbStore() {
-	}
+    public void sbbStore() {
+    }
 
-	public void sbbRemove() {
-	}
+    public void sbbRemove() {
+    }
 
-	public void sbbExceptionThrown(Exception exception, Object object, ActivityContextInterface activityContextInterface) {
-	}
+    public void sbbExceptionThrown(Exception exception, Object object, ActivityContextInterface activityContextInterface) {
+    }
 
-	public void sbbRolledBack(RolledBackContext rolledBackContext) {
-	}
+    public void sbbRolledBack(RolledBackContext rolledBackContext) {
+    }
 
-	/**
-	 * DIALOG Events
-	 */
+    /**
+     * DIALOG Events
+     */
 
-	public void onDialogTimeout(org.mobicents.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {
+    public void onDialogTimeout(org.mobicents.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {
         this.logger.severe("\nRx :  onDialogTimeout " + evt);
 
-		this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogTimeout");
-	}
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogTimeout");
+    }
 
-	public void onDialogDelimiter(org.mobicents.slee.resource.map.events.DialogDelimiter event,
-			ActivityContextInterface aci/* , EventContext eventContext */) {
+    public void onDialogDelimiter(org.mobicents.slee.resource.map.events.DialogDelimiter event,
+            ActivityContextInterface aci/* , EventContext eventContext */) {
         if (this.logger.isFineEnabled()) {
             this.logger.fine("\nReceived onDialogDelimiter = " + event);
         }
-	}
+    }
 
-	public void onDialogAccept(org.mobicents.slee.resource.map.events.DialogAccept event, ActivityContextInterface aci) {
+    public void onDialogAccept(org.mobicents.slee.resource.map.events.DialogAccept event, ActivityContextInterface aci) {
         if (this.logger.isFineEnabled()) {
             this.logger.fine("\nReceived onDialogAccept = " + event);
         }
-	}
+    }
 
-	public void onDialogReject(org.mobicents.slee.resource.map.events.DialogReject event, ActivityContextInterface aci) {
+    public void onDialogReject(org.mobicents.slee.resource.map.events.DialogReject event, ActivityContextInterface aci) {
         this.logger.severe("\nRx :  onDialogReject " + event);
 
         this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogReject: " + event);
-	}
+    }
 
-	public void onDialogUserAbort(org.mobicents.slee.resource.map.events.DialogUserAbort event,
-			ActivityContextInterface aci/* , EventContext eventContext */) {
+    public void onDialogUserAbort(org.mobicents.slee.resource.map.events.DialogUserAbort event,
+            ActivityContextInterface aci/* , EventContext eventContext */) {
         this.logger.severe("\nRx :  onDialogUserAbort " + event);
 
         this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogUserAbort: " + event);
-	}
+    }
 
-	public void onDialogProviderAbort(org.mobicents.slee.resource.map.events.DialogProviderAbort event,
-			ActivityContextInterface aci/* , EventContext eventContext */) {
+    public void onDialogProviderAbort(org.mobicents.slee.resource.map.events.DialogProviderAbort event,
+            ActivityContextInterface aci/* , EventContext eventContext */) {
         this.logger.severe("\nRx :  onDialogProviderAbort " + event);
 
         this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogProviderAbort: " + event);
-	}
+    }
 
-	public void onDialogClose(org.mobicents.slee.resource.map.events.DialogClose event, ActivityContextInterface aci) {
+    public void onDialogClose(org.mobicents.slee.resource.map.events.DialogClose event, ActivityContextInterface aci) {
         if (this.logger.isFineEnabled()) {
             this.logger.fine("\nReceived onDialogClose = " + event);
         }
-	}
+    }
 
-	public void onDialogNotice(org.mobicents.slee.resource.map.events.DialogNotice event, ActivityContextInterface aci) {
+    public void onDialogNotice(org.mobicents.slee.resource.map.events.DialogNotice event, ActivityContextInterface aci) {
         if (this.logger.isFineEnabled()) {
             this.logger.fine("\nReceived onDialogNotice = " + event);
         }
-	}
+    }
 
-	public void onDialogRelease(org.mobicents.slee.resource.map.events.DialogRelease event, ActivityContextInterface aci) {
+    public void onDialogRelease(org.mobicents.slee.resource.map.events.DialogRelease event, ActivityContextInterface aci) {
         if (this.logger.isFineEnabled()) {
             this.logger.fine("\nReceived onDialogRelease = " + event);
         }
-	}
+    }
 
-	/**
-	 * Component Events
-	 */
-	public void onInvokeTimeout(org.mobicents.slee.resource.map.events.InvokeTimeout event, ActivityContextInterface aci) {
+    /**
+     * Component Events
+     */
+    public void onInvokeTimeout(org.mobicents.slee.resource.map.events.InvokeTimeout event, ActivityContextInterface aci) {
         if (this.logger.isFineEnabled()) {
             this.logger.fine("\nReceived onInvokeTimeout = " + event);
         }
-	}
+    }
 
-	public void onErrorComponent(org.mobicents.slee.resource.map.events.ErrorComponent event,
-			ActivityContextInterface aci/* , EventContext eventContext */) {
+    public void onErrorComponent(org.mobicents.slee.resource.map.events.ErrorComponent event,
+            ActivityContextInterface aci/* , EventContext eventContext */) {
         if (this.logger.isFineEnabled()) {
             this.logger.fine("\nReceived onErrorComponent = " + event);
         }
 
-		MAPErrorMessage mapErrorMessage = event.getMAPErrorMessage();
-		long error_code = mapErrorMessage.getErrorCode().longValue();
+        MAPErrorMessage mapErrorMessage = event.getMAPErrorMessage();
+        long error_code = mapErrorMessage.getErrorCode().longValue();
 
         this.handleLocationResponse(
                 (error_code == MAPErrorCode.unknownSubscriber ? MLPResponse.MLPResultType.UNKNOWN_SUBSCRIBER
                         : MLPResponse.MLPResultType.SYSTEM_FAILURE), "ReturnError: " + String.valueOf(error_code) + " : "
                         + event.getMAPErrorMessage());
-	}
+    }
 
-	public void onRejectComponent(org.mobicents.slee.resource.map.events.RejectComponent event,
-			ActivityContextInterface aci/* , EventContext eventContext */) {
+    public void onRejectComponent(org.mobicents.slee.resource.map.events.RejectComponent event,
+            ActivityContextInterface aci/* , EventContext eventContext */) {
         this.logger.severe("\nRx :  onRejectComponent " + event);
 
         this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "RejectComponent: " + event);
-	}
+    }
 
-	/**
-	 * ATI Events
-	 */
-	public void onAnyTimeInterrogationRequest(
-			org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest event,
-			ActivityContextInterface aci/* , EventContext eventContext */) {
+    /**
+     * ATI Events
+     */
+    public void onAnyTimeInterrogationRequest(
+            org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest event,
+            ActivityContextInterface aci/* , EventContext eventContext */) {
         this.logger.severe("\nReceived onAnyTimeInterrogationRequest = " + event);
-	}
+    }
 
-	public void onAnyTimeInterrogationResponse(
-			org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationResponse event,
-			ActivityContextInterface aci/* , EventContext eventContext */) {
-		try {
-	        if (this.logger.isFineEnabled()) {
-	            this.logger.fine("\nReceived onAnyTimeInterrogationResponse = " + event);
-	        }
+    public void onAnyTimeInterrogationResponse(
+            org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationResponse event,
+            ActivityContextInterface aci/* , EventContext eventContext */) {
+        try {
+            if (this.logger.isFineEnabled()) {
+                this.logger.fine("\nReceived onAnyTimeInterrogationResponse = " + event);
+            }
 
-	        MAPDialogMobility mapDialogMobility = event.getMAPDialog();
-			SubscriberInfo si = event.getSubscriberInfo();
+            MAPDialogMobility mapDialogMobility = event.getMAPDialog();
+            SubscriberInfo si = event.getSubscriberInfo();
             MLPResponse.MLPResultType result;
             String mlpClientErrorMessage = null;
 
@@ -347,12 +348,12 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             // Handle successfully having retried the device's cell-id
             this.handleLocationResponse(result, mlpClientErrorMessage);
 
-		} catch (Exception e) {
+        } catch (Exception e) {
             logger.severe(String.format("Error while trying to process AnyTimeInterrogationResponse=%s", event), e);
             this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE,
                     "Internal failure occurred while processing network response: " + e.getMessage());
-		}
-	}
+        }
+    }
 
     /**
      * Handle HTTP POST request, used for processing MLP location request
@@ -398,13 +399,13 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
      * @param aci
      * @param eventContext
      */
-	public void onGet(net.java.slee.resource.http.events.HttpServletRequestEvent event, ActivityContextInterface aci,
-			EventContext eventContext) {
-		this.setEventContext(eventContext);
+    public void onGet(net.java.slee.resource.http.events.HttpServletRequestEvent event, ActivityContextInterface aci,
+            EventContext eventContext) {
+        this.setEventContext(eventContext);
         this.httpRequestType = this.httpRequestType.HTTP_REQUEST_GET;
 
-		HttpServletRequest httpServletRequest = event.getRequest();
-		this.requestingMSISDN = httpServletRequest.getParameter("msisdn");
+        HttpServletRequest httpServletRequest = event.getRequest();
+        this.requestingMSISDN = httpServletRequest.getParameter("msisdn");
         if (this.requestingMSISDN != null) {
             eventContext.suspendDelivery();
             getSingleMSISDNLocation();
@@ -412,18 +413,18 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             this.logger.info("MSISDN is null, sending back -1 for cellid");
             this.handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "Invalid MSISDN specified");
         }
-	}
+    }
 
-	/**
-	 * CMP
-	 */
-	public abstract void setEventContext(EventContext cntx);
+    /**
+     * CMP
+     */
+    public abstract void setEventContext(EventContext cntx);
 
-	public abstract EventContext getEventContext();
+    public abstract EventContext getEventContext();
 
-	/**
-	 * Private helper methods
-	 */
+    /**
+     * Private helper methods
+     */
 
     /**
      * Retrieve the location for the specified MSISDN via ATI request to the HLR
@@ -433,12 +434,12 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             try {
                 MAPDialogMobility mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(
                         this.getSRIMAPApplicationContext(), this.getServiceCenterSccpAddress(), null,
-                        convertAddressFieldToSCCPAddress(this.requestingMSISDN), null);
+                        getHlrSccpAddress(this.requestingMSISDN), null);
 
                 ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, this.requestingMSISDN);
                 SubscriberIdentity subsId = new SubscriberIdentityImpl(isdnAdd);
-                RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
+                RequestedInfo requestedInfo = new RequestedInfoImpl(true,true, null, false, null, true, false, false);
                 ISDNAddressString gscmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN,
                         gmlcPropertiesManagement.getGmlcGt());
@@ -471,29 +472,78 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             }
         }
     }
+    
+    ////// get Gmlc SccpAddress
+    public static SccpAddress getGmlcSccpAddress(ParameterFactory sccpParameterFact, String address,int ssn, GlobalTitleIndicator gti,int translationType) {
+        NumberingPlan np = NumberingPlan.ISDN_TELEPHONY;
+        NatureOfAddress na = NatureOfAddress.INTERNATIONAL;
+        GlobalTitle gt = null;
+                    
+        switch (gti) {           
+        case GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_ONLY:
+            gt = sccpParameterFact.createGlobalTitle(address, translationType);
+            break;
+        case GLOBAL_TITLE_INCLUDES_NATURE_OF_ADDRESS_INDICATOR_ONLY:
+            gt = sccpParameterFact.createGlobalTitle(address, na);
+            break;    
+        case GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_NUMBERING_PLAN_AND_ENCODING_SCHEME:
+            gt = sccpParameterFact.createGlobalTitle(address, translationType, np, null);
+            break;
+        case GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_NUMBERING_PLAN_ENCODING_SCHEME_AND_NATURE_OF_ADDRESS:
+            gt = sccpParameterFact.createGlobalTitle(address, translationType, np,null, na);
+             break;                
+        default:
+            gt = sccpParameterFact.createGlobalTitle(address, translationType, np, null, na);
+            break;
+        }
+       
+        return sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0, ssn);
+        
+    }
+    
+    ///
+    private MAPApplicationContext getSRIMAPApplicationContext() {
+        if (this.anyTimeEnquiryContext == null) {
+            this.anyTimeEnquiryContext = MAPApplicationContext.getInstance(
+                    MAPApplicationContextName.anyTimeEnquiryContext, MAPApplicationContextVersion.version3);
+        }
+        return this.anyTimeEnquiryContext;
+    }
+    
+    protected SccpAddress getServiceCenterSccpAddress() {
+        if (this.serviceCenterSCCPAddress == null) {
 
-	protected SccpAddress getServiceCenterSccpAddress() {
-		if (this.serviceCenterSCCPAddress == null) {
-			GlobalTitle0100 gt = new GlobalTitle0100Impl(gmlcPropertiesManagement.getGmlcGt(),0,BCDOddEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY,NatureOfAddress.INTERNATIONAL);
-			this.serviceCenterSCCPAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
-					gmlcPropertiesManagement.getGmlcSsn());
-		}
-		return this.serviceCenterSCCPAddress;
-	}
-
-	private MAPApplicationContext getSRIMAPApplicationContext() {
-		if (this.anyTimeEnquiryContext == null) {
-			this.anyTimeEnquiryContext = MAPApplicationContext.getInstance(
-					MAPApplicationContextName.anyTimeEnquiryContext, MAPApplicationContextVersion.version3);
-		}
-		return this.anyTimeEnquiryContext;
-	}
-
-	private SccpAddress convertAddressFieldToSCCPAddress(String address) {
-		GlobalTitle0100 gt = new GlobalTitle0100Impl(address, 0, BCDOddEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
-		return new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
-				gmlcPropertiesManagement.getHlrSsn());
-	}
+            GlobalTitleIndicator gti = GlobalTitleIndicator.GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_NUMBERING_PLAN_ENCODING_SCHEME_AND_NATURE_OF_ADDRESS;
+            this.serviceCenterSCCPAddress = getGmlcSccpAddress(sccpParameterFact, gmlcPropertiesManagement.getGmlcGt(),gmlcPropertiesManagement.getGmlcSsn(), gti, 0);
+        }
+        return this.serviceCenterSCCPAddress;
+    }
+    
+    // get HLR SccpAddress
+    private SccpAddress getHlrSccpAddress(String address) {
+        GlobalTitleIndicator gti = GlobalTitleIndicator.GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_NUMBERING_PLAN_ENCODING_SCHEME_AND_NATURE_OF_ADDRESS;
+        GlobalTitle gt = null;
+        NumberingPlan np = NumberingPlan.ISDN_TELEPHONY;
+        NatureOfAddress na = NatureOfAddress.INTERNATIONAL;
+        switch (gti) {                       
+        case GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_ONLY:
+            gt = sccpParameterFact.createGlobalTitle(address, 0);
+            break;
+        case GLOBAL_TITLE_INCLUDES_NATURE_OF_ADDRESS_INDICATOR_ONLY:
+            gt = sccpParameterFact.createGlobalTitle(address, na);
+            break;
+        case GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_NUMBERING_PLAN_AND_ENCODING_SCHEME:
+            gt = sccpParameterFact.createGlobalTitle(address, 0, np, null);
+            break;
+        case GLOBAL_TITLE_INCLUDES_TRANSLATION_TYPE_NUMBERING_PLAN_ENCODING_SCHEME_AND_NATURE_OF_ADDRESS:
+            gt = sccpParameterFact.createGlobalTitle(address, 0, np,null, na);
+            break;
+        default:
+            gt = sccpParameterFact.createGlobalTitle(address, 0, np, null, na);
+            break;
+        }
+        return new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,gmlcPropertiesManagement.getHlrSsn());		
+    }
 
     /**
      * Handle generating the appropriate HTTP response
@@ -507,20 +557,19 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         {
             case HTTP_REQUEST_GET:
                 if (mlpResultType == MLPResponse.MLPResultType.OK) {
-                	StringBuilder getResponse = new StringBuilder();
-					getResponse.append("mcc=");
-					getResponse.append(this.responseMCC);
-					getResponse.append(",mnc=");
-					getResponse.append(this.responseMNC);
-					getResponse.append(",lac=");
-					getResponse.append(this.responseLAC);
-					getResponse.append(",cellid=");
-					getResponse.append(this.responseCellId);
-					getResponse.append(",aol=");
-					getResponse.append(this.responseAOL);
-					getResponse.append(",vlrNumber=");
-					getResponse.append(this.responseVLR);
-
+                    StringBuilder getResponse = new StringBuilder();
+                    getResponse.append("mcc=");
+                    getResponse.append(this.responseMCC);
+                    getResponse.append(",mnc=");
+                    getResponse.append(this.responseMNC);
+                    getResponse.append(",lac=");
+                    getResponse.append(this.responseLAC);
+                    getResponse.append(",cellid=");
+                    getResponse.append(this.responseCellId);
+                    getResponse.append(",aol=");
+                    getResponse.append(this.responseAOL);
+                    getResponse.append(",vlrNumber=");
+                    getResponse.append(this.responseVLR);
                     this.sendHTTPResult(getResponse.toString());
                 }
                 else {
@@ -552,34 +601,32 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
      * Return the specified response data to the HTTP client
      * @param responseData Response data to send to client
      */
-	private void sendHTTPResult(String responseData) {
-		try {
-			EventContext ctx = this.getEventContext();
+    private void sendHTTPResult(String responseData) {
+        try {
+            EventContext ctx = this.getEventContext();
             if (ctx == null) {
                 if (logger.isWarningEnabled()) {
                     logger.warning("When responding to HTTP no pending HTTP request is found, responseData=" + responseData);
                     return;
                 }
             }
-
-	        HttpServletRequestEvent event = (HttpServletRequestEvent) ctx.getEvent();
-
-			HttpServletResponse response = event.getResponse();
+            HttpServletRequestEvent event = (HttpServletRequestEvent) ctx.getEvent();			
+            HttpServletResponse response = event.getResponse();
             PrintWriter w = null;
             w = response.getWriter();
             w.print(responseData);
-			w.flush();
-			response.flushBuffer();
+            w.flush();
+            w.close();
+            response.flushBuffer();
 
-			if (ctx.isSuspended()) {
-				ctx.resumeDelivery();
-			}
+            if (ctx.isSuspended()) {
+                ctx.resumeDelivery();
+            }
 
-			logger.info("HTTP Request received and response sent.");
-
-			// getNullActivity().endActivity();
-		} catch (Exception e) {
-			logger.severe("Error while sending back HTTP response", e);
-		}
-	}
+            logger.info("HTTP Request received and response sent.");
+             //getNullActivity().endActivity();
+        } catch (Exception e) {
+            logger.severe("Error while sending back HTTP response", e);
+        }
+    }
 }
