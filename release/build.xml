@@ -350,7 +350,7 @@
 
 	<target name="build-docs">
 		<exec failonerror="true" executable="${mvn.executable}" dir="${base.dir}/../docs">
-			<arg line="${release.build.goals} -P ${release.build.profiles} -Dmaven.test.skip=true" />
+			<arg line="${release.build.goals} -P ${release.build.profiles} -Pall -Dmaven.test.skip=true" />
 		</exec>
 	</target>
 
