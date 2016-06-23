@@ -22,7 +22,7 @@
 	<property name="restcomm-slee.build-number-1" value="65" />
 	<property name="restcomm-slee.build-number-2" value="2.8.31.65" />
 	<property name="restcomm-slee.version" value="${restcomm-slee.build-number-2}" />
-	<property name="restcomm-slee.ss7.map.ra.tag" value="2.8.26" />
+	<property name="restcomm-slee.ss7.map.ra.tag" value="7.0.53" />
 	<property name="restcomm-slee.http.ra.tag" value="2.8.16" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
