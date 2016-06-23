@@ -14,9 +14,9 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<docs.application.name>GMLC Gateway</docs.application.name>
+		<docs.application.name>GMLC</docs.application.name>
 		<docs.application.dirname>gmlc</docs.application.dirname>
-		<docs.bookid>gmlc</docs.bookid>
+		<docs.bookid>GMLC</docs.bookid>
 	</properties>
 
 	<modules>
