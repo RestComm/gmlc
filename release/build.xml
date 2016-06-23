@@ -26,9 +26,10 @@
 	<property name="restcomm-slee.http.ra.tag" value="2.8.16" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
-	<property name="restcomm-jss7.build-number" value="1336" />
-	<property name="restcomm-jss7.version" value="3.0.${restcomm-jss7.build-number}" />
-	<property name="restcomm-jss7.timestamp" value="1602171452" />
+	<property name="restcomm-jss7.build-number" value="1383" />
+	<property name="restcomm-jss7.version" value="7.0.${restcomm-jss7.build-number}" />
+	<property name="restcomm-jss7.tag" value="${restcomm-jss7.version}" />
+	<!--<property name="restcomm-jss7.timestamp" value="1602171452" />-->
 
 
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
