@@ -14,7 +14,7 @@ This chapter will explain how to manage the Gateway effectively using both the G
 == Memory Settings
 
 You should fine tune the JVM memory settings based on your needs but we recommend you allocate a minimum of 3 GB for initial and maximum heap size.
-These settings are specified in the file[path]_restcomm-gmlc-/jboss-5.1.0.GA/bin/run.conf_. 
+These settings are specified in the file[path]_{this-folder}-gmlc-/jboss-5.1.0.GA/bin/run.conf_. 
 
 -Xms3072m::
   Initial heap size, set in megabytes
@@ -33,7 +33,7 @@ We refered Oracle Java 7 JDK.
 
 {this-platform} {this-application} acts as a HTTP Client to achieve GMLC pull by sending a HTTP POST/GET request to GMLC gateway.
 You must configure the HTTP Client JSLEE Resource Adaptor's properties to suit your requirements.
-Please refer to the SLEE RA HTTP Client User Guide available in [path]_restcomm-gmlc-/docs/slee/RestComm_SLEE_RA_HTTP_Client_User_Guide.pdf_. 
+Please refer to the SLEE RA HTTP Client User Guide available in [path]_{this-folder}-gmlc-/docs/slee/RestComm_SLEE_RA_HTTP_Client_User_Guide.pdf_. 
 
 [[_configuring_ss7]]
 == Configuring the SS7 Stack
