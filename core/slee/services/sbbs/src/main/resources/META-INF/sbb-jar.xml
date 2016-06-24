@@ -8,11 +8,6 @@
 		<sbb-vendor>org.mobicents</sbb-vendor>
 		<sbb-version>1.0</sbb-version>
 		<sbb-alias>MobileCoreNetworkInterfaceSbb</sbb-alias>
-		<library-ref>
-			<library-name>library-gmlc</library-name>
-			<library-vendor>org.mobicents</library-vendor>
-			<library-version>2.0</library-version>
-		</library-ref>
 		<sbb-classes>
 			<sbb-abstract-class>
 				<sbb-abstract-class-name>
