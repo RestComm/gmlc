@@ -1,9 +1,14 @@
 <assembly>
+	<id>server</id>
 	<formats>
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
+	
+	<files>
 
+	</files>
+	
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>/lib</outputDirectory>
@@ -11,10 +16,9 @@
 			<scope>runtime</scope>
 			<includes>
 				<!-- GMLC libraries -->
-				<include>org.mobicents.gmlc:gmlc-bootstrap</include>
-
-				<!-- domain library -->
-				<include>org.mobicents.gmlc:gmlc-domain</include>
+				<include>org.mobicents.gmlc:bootstrap</include>
+				<include>org.mobicents.gmlc:gmlc-common-library</include>
+				<include>org.mobicents.gmlc:domain</include>
 
 				<!-- JiBX for XML binding -->
 				<include>org.jibx:jibx-run</include>
@@ -28,6 +32,8 @@
 				<include>org.mobicents.protocols.asn:asn</include>
 
 				<!-- SS7 Libraries -->
+				<include>org.mobicents.protocols.ss7.statistics:statistics-api</include>
+				<include>org.mobicents.protocols.ss7.statistics:statistics-impl</include>
 				<include>org.mobicents.protocols.ss7.scheduler:scheduler</include>
 				<include>org.mobicents.protocols.ss7.sccp:sccp-api</include>
 				<include>org.mobicents.protocols.ss7.sccp:sccp-impl</include>
@@ -45,13 +51,12 @@
 				<include>org.mobicents.protocols.ss7.management:shell-transport</include>
 				<include>org.mobicents.protocols.ss7.management:shell-server-api</include>
 				<include>org.mobicents.protocols.ss7.management:shell-server-impl</include>
-				<include>org.mobicents.protocols.ss7.hardware:linkset</include>
-				<include>org.mobicents.protocols.ss7.statistics:statistics-api</include>
-				<include>org.mobicents.protocols.ss7.statistics:statistics-impl</include>				
-				<!-- <include>org.mobicents.protocols.ss7.hardware:mobicents-dahdi</include> -->
+				<include>org.mobicents.protocols.ss7.hardware:linkset</include>			
+				<!-- <include>org.mobicents.protocols.ss7.hardware:restcomm-dahdi</include> -->
 				<include>org.mobicents.protocols.ss7.hardware:restcomm-dialogic</include>
 				<include>org.mobicents.protocols.ss7.congestion:congestion</include>
 
+				<!-- RestComm SS7 Libs -->
 				<include>org.mobicents.protocols.ss7.oam.common:jmx</include>
 				<include>org.mobicents.protocols.ss7.oam.common:jmxss7</include>
 				<include>org.mobicents.protocols.ss7.oam.common:alarm</include>
