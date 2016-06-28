@@ -22,4 +22,3 @@ The HTTP callback mechanism allows the third-party Application to be agnostic to
 
 This guide will assist you in installing {this-platform} {this-application} .
 For more details on configuring and using the platform, please refer to the {this-platform} {this-application} User Guide.
- 
