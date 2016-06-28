@@ -1,63 +1,60 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<packaging>pom</packaging>
 
 	<parent>
-		<groupId>org.mobicents</groupId>
 		<artifactId>restcomm-parent</artifactId>
-		<version>2.27.32</version>
+		<groupId>org.mobicents</groupId>
+		<version>2.27.32</version> <!-- parent pom version -->
 	</parent>
 
+	<artifactId>restcomm-gmlc-parent</artifactId>
 	<groupId>org.mobicents.gmlc</groupId>
-	<artifactId>parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-
-	<name>RestComm GMLC Parent</name>
-
-
-
+	
+	<packaging>pom</packaging>
+	
+	<name>RestComm GMLC :: ${project.artifactId}</name>
+	
+	
+	
 	<properties>
-		<!-- RELEASE CONFIGURATION -->
-		<release.name>
-			${release.name.prefix}${project.parent.version}${release.name.suffix}
-		</release.name>
-
-		<compiler.plugin.version>2.0.2</compiler.plugin.version> <!-- jibx-maven-plugin plugin does not work with this version: 2.3.1 (:  -->
-		<compile.source>1.5</compile.source>
+		<restcomm.tools.mavenplugin.eclipse.version>
+			1.0.0.FINAL
+		</restcomm.tools.mavenplugin.eclipse.version>
 		<testng.version>6.8</testng.version>
 		<javolution.version>5.5.1</javolution.version>
-		<log4j.version>1.2.14</log4j.version>
-
-		<concurrent.version>1.3.4</concurrent.version>
-
-		<restcomm.core.ext.version>2.8.17</restcomm.core.ext.version>
-		<restcomm.resources.map.version>2.8.26</restcomm.resources.map.version>
-		<restcomm.resources.http.servlet.version>2.8.5</restcomm.resources.http.servlet.version>
-
+		<compiler.plugin.version>2.0.2</compiler.plugin.version> <!-- jibx-maven-plugin plugin does not work with this version: 2.3.1 (:  -->
+		<compile.source>1.7</compile.source>
 		<!-- restcomm but not strictly ss7 -->
-		<asn.version>2.0.3.FINAL</asn.version>
+		<asn.version>2.1.5</asn.version>
 		<stream.version>1.0.0.CR1</stream.version>
-		<sctp.version>1.6.0.FINAL</sctp.version>
+		<sctp.version>1.7.8</sctp.version>
 		<commons.version>1.0.0.CR1</commons.version>
-		<ss7.version>3.0.1336</ss7.version>
+		<log4j.version>1.2.14</log4j.version>
+		<junit.version>3.8.1</junit.version>
+		<!-- restcomm properties -->
+		<jss7.restcomm.version>7.0.1383</jss7.restcomm.version>
 		<dialogic.version>6.7.1</dialogic.version>
-
-		<application.name>restcomm-gmlc</application.name>
+		<ts.slee.version>2.8.10</ts.slee.version>
+		<jslee.ext.version>${ts.slee.version}</jslee.ext.version>
+		<restcomm.resources.map.version>2.8.26</restcomm.resources.map.version>
+		<restcomm.resources.sip.version>2.8.20</restcomm.resources.sip.version>
+		<jdiameter.version>2.8.21</jdiameter.version>
+		<concurrent.version>1.3.4</concurrent.version>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<restcomm.resources.http.servlet.version>2.8.5</restcomm.resources.http.servlet.version>
 	</properties>
 
 	<modules>
 		<module>core</module>
+		<module>tools</module>
 	</modules>
 	<dependencies>
 	</dependencies>
 
-	<!-- RELEASE STUFF -->
-
 	<profiles>
 		<profile>
 			<id>maven-release</id>
-			<!-- No docs modules yet -->
 			<modules>
 				<module>docs</module>
 			</modules>
@@ -67,9 +64,9 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-release-plugin</artifactId>
 						<configuration>
-						    <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
-						    <preparationGoals>clean install</preparationGoals>
-						    <autoVersionSubmodules>true</autoVersionSubmodules>         
+							<allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+							<preparationGoals>clean install</preparationGoals>
+							<autoVersionSubmodules>true</autoVersionSubmodules>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -77,27 +74,108 @@
 		</profile>
 		<profile>
 			<id>release</id>
-			<!-- No docs modules yet -->
 			<modules>
 				<module>docs</module>
 			</modules>
-
+		</profile>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>install</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
-	
-	<scm>
-		<connection>
-			scm:svn:https://github.com/RestComm/gmlc.git
-		</connection>
-		<developerConnection>
-			scm:git:git@github.com:RestComm/gmlc.git
-		</developerConnection>
-		<url>
-			https://github.com/RestComm/gmlc
-		</url>
-	</scm>
 
-	<!-- -->
+<developers>
+		<developer>
+			<id>vetss</id>
+			<name>Sergey</name>
+			<email>serg.vetyutnev@gmail.com</email>
+			<organization>TeleStax</organization>
+			<organizationUrl>http://telestax.com/</organizationUrl>
+			<roles>
+				<role>Active Developer</role>
+			</roles>
+			<timezone>+3</timezone>
+		</developer>
+		<developer>
+			<id>FerUy</id>
+			<name>Fernando Mendioroz</name>
+			<email>fernando.mendioroz@telestax.com</email>
+			<organization>Telestax</organization>
+			<organizationUrl>http://www.telestax.com/</organizationUrl>
+			<roles>
+				<role>Active Developer</role>
+			</roles>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>angrygreenfrogs</id>
+			<name>Andrew Eross</name>
+			<email>eross@locatrix.com</email>
+			<organization>Locatrix</organization>
+			<organizationUrl>http://www.locatrix.com/</organizationUrl>
+			<roles>
+				<role>Active Developer</role>
+			</roles>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>monix</id>
+			<name>Lucas Brown</name>
+			<email>lucas@locatrix.com</email>
+			<organization>Locatrix</organization>
+			<organizationUrl>http://www.locatrix.com/</organizationUrl>
+			<roles>
+				<role>Active Developer</role>
+			</roles>
+			<timezone>+10</timezone>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License</name>
+			<url>http://www.gnu.org/licenses/agpl-3.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+
+	</licenses>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -121,6 +199,7 @@
 					</eclipseProjectName>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -134,8 +213,28 @@
 		</plugins>
 	</build>
 
-	<!-- define repository so we dont have to checkout parent edit settings.xml -->
+	<scm>
+		<connection>scm:git:https://github.com/RestComm/gmlc.git</connection>
+		<developerConnection>scm:git:https://github.com/RestComm/gmlc.git</developerConnection>
+		<url>https://github.com/RestComm/gmlc</url>
+	</scm>
+	
+	<!-- repositories -->
 	<repositories>
+		<repository>
+			<id>mobicents-public-repository-group</id>
+			<name>Mobicents Public Maven Repository Group</name>
+			<url>https://oss.sonatype.org/content/groups/public</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Maven Repository Group</name>
@@ -151,9 +250,9 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>jboss-releases</id>
-			<name>JBoss Releases</name>
-			<url>http://repository.jboss.org/nexus/content/repositories/releases/</url>
+			<id>jboss-3rd-party-repository-group</id>
+			<name>JBoss ThirdParty Releases Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
 			<layout>default</layout>
 			<releases>
 				<enabled>true</enabled>
@@ -164,24 +263,46 @@
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
 		</repository>
-                <repository>
-                        <id>mobicents-public-repository-group</id>
-                        <name>Mobicents Public Maven Repository Group</name>
-                        <url>https://oss.sonatype.org/content/groups/public</url>
-                        <layout>default</layout>
-                        <releases>
-                                <enabled>true</enabled>
-                                <updatePolicy>never</updatePolicy>
-                        </releases>
-                        <snapshots>
-                                <enabled>true</enabled>
-                                <updatePolicy>never</updatePolicy>
-                        </snapshots>
-                </repository>
-                <repository>
-				    <id>java.net</id>
-				    <url>http://download.java.net/maven/2/</url>
-				</repository>
+		<repository>
+			<id>jboss-3rd-party-upload-repository-group</id>
+			<name>JBoss ThirdParty Upload Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/repositories/thirdparty-upload</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>java.net-Public</id>
+			<name>Maven Java Net Snapshots and Releases</name>
+			<url>http://download.java.net/maven/2/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>backup.repository.jboss.org</id>
+			<name>JBoss Repository Backup</name>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+
+<!-- the place to extra repos -->
 
 	</repositories>
 
