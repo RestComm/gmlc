@@ -2,9 +2,9 @@ RestComm GMLC
 ============
 The Gateway Mobile Location Centre enables you to offer Location Based Services (LBS) to mobile subscribers in GSM and UMTS network.
 
-In one PLMN (Public Land Mobile Network), there may be more than one GMLC. The GMLC is the first node an external LCS client accesses in a GSM or UMTS network. The GMLC may request routing information from the HLR (Home Location register) or HSS (Home Subscriber Server). After performing registration authorization, it sends positioning requests to either the VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node) or MSC (Mobile Switching Centre) Server and receives final location estimates from the corresponding entity.
+In one PLMN (Public Land Mobile Network), there may be more than one GMLC. The GMLC is the first node an external LCS client accesses in a GSM, UMTS or LTE network. The GMLC may request routing information from the HLR (Home Location register) or HSS (Home Subscriber Server). After performing registration authorization, it sends positioning requests to either the VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node) MSC (Mobile Switching Centre) Server or MME (Mobility Management Entity) and receives final location estimates from the corresponding network node. Furthermore, it may receive mobile subscriber location reports on event based deferred location requests.
 
-GMLC is built on [RestComm jSS7](https://github.com/RestComm/jSS7).
+GMLC is built on [RestComm jSS7](https://github.com/RestComm/jSS7) and [RestComm jDiameter](https://github.com/RestComm/jdiameter).
 
 ## Downloads
 
@@ -123,14 +123,23 @@ You can view the various included web consoles here:
 2. http://yourserver:8080/slee-management-console
 3. http://yourserver:8080/jmx-console/
 
-Back-end
+Backend
 ========
-* ATI: Any-Time-Interrogation, to gather MSC and Cell-ID from HLR
-* PSI: Provide-Subscriber-Information, to gather Cell-ID directly from MSC
+* MAP ATI: Any-Time-Interrogation, to gather Cell Global Identity, age of location information and state of the target mobile station from the HLR.
+* MAP SRIforLCS: Send Routing Information for Location Services, to gather IMSI and core network entity address (MSC or SGSN) to which send further location request.
+* MAP PSL: Provide Subscriber Location, to gather location information from the UTRAN (UMTS Terrestrial Radio Access Network), which should include, besides Cell Global Identity, a location estimate in geographic coordinates of the target User Equipment, depending on available positioning methods (e.g. E-OTD, OTDOA, UTDOA, A-GPS, etc.).
+* MAP SLR: Subscriber Location Report, to gather location of a target
+User Equipment from the MSC or SGSN when a request for location is either implicitly administered or made at some earlier time in MAP PSL for event based deferred type of location.
+* Diameter Send Routing Information for Location Services: analogous to MAP SRIforLCS but over Diameter based SLh interface between GMLC and HSS.
+* Diameter Provide Subscriber Location: analogous to MAP PSL but over Diameter based Evolve Packet Core Location Protocol (ELP) SLg interface between GMLC and MME.
+* Diameter Subscriber Location Report: analogous to MAP SLR, but over Diameter based Evolve Packet Core Location Protocol (ELP) SLg interface between GMLC and MME.
 
 Operator Backend Requirements
 ========
-Connectivity to the operator's HLR(s) is needed (SIGTRAN or legacy E1 links). The GMLC will send a MAP ATI request to the HLR(s) and HLR(s) will respond with cell-id, state and life for which this location was updated. 
+Connectivity to the operator's HLR/HSS is needed (SIGTRAN or legacy E1 links over Lh interface, or Diameter connectivity within Evolved Packet Core over SLh interface for LTE location). 
+For GSM (2G) location, the GMLC will send a MAP ATI request to the HLR, which will respond with Cell Global Identity, state and age of location (in minutes) for which this location was last updated in the HLR from the MSC/VLR or SGSN at which the target mobile station is attached to.
+For 3G (UMTS/HSPA+) location, the GMLC will firstly send a MAP SRIforLCS to the HLR ans subsequently, a MAP PSL to the corresponding MSC or SGSN. Either the MSC or SGSN could send event based MAP SLR back to the GMLC when applicable.
+For 4G (LTE) location, the GMLC will proceed in an analogous fashion as for 3G location but over SLh and SLg Diameter based interfaces. 
 
 OMA MLP Support (based on MLP v3.1)
 ========
@@ -268,14 +277,14 @@ TODO (v1.0)
 1. Add MLP error/handling code for network timeout
 2. Simple Cell ID -> lat/lon conversion database
 3. Basic username/password authentication system
-4. Add SS7 back-end support for 3G & LTE (system currently only works with GSM)
+4. Add SS7 backend support for 3G & LTE (system currently only works with GSM)
 5. Basic cell triangulation support to improve accuracy beyond purely cell-id
 
-Road-map
+Roadmap
 ========
 v1.0
 * Basic MLP API front-end interface
-* Add SS7 back-end support for 3G & LTE (system currently only works with GSM)
+* Add SS7 backend support for 3G & LTE (system currently only works with GSM)
 * Simple Cell ID -> lat/lon conversion database
 * Basic cell triangulation support to improve accuracy beyond purely cell-id (hopefully with timing advance to get a partial arc area instead of only a full cell)
   * http://wiki.opencellid.org/wiki/Menu_map_view#database
