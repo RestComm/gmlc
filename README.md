@@ -15,13 +15,13 @@ Install on Ubuntu 14.04 from Source
 
 *NOTE: Requires Maven 3 and will not build with Maven 2.*
 
-You can run these instructions as a normal user (root shouldn't be required).
-
 Where relevant you may have to replace "user" with your username, and "/home/user" with your own home directory.
 
 Install General Dependencies
 ```
-apt-get install git software-properties-common screen ca-certificates
+sudo apt-get install git software-properties-common screen ca-certificates unzip ant
+# This fixes an issue with jruby and the documentation compilation reporting "NotImplementedError: block device detection unsupported or native support failed to load"
+sudo apt-get install libc6-dev
 ```
 
 Install Oracle Java 7
@@ -41,87 +41,83 @@ apt-get install maven3
 ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn
 ```
 
-Install RestComm JAIN SLEE
+Install JSS7 dependency as from https://github.com/RestComm/jss7/wiki/Build-jSS7-from-Source
 ```
-apt-get install unzip ant
-su user
 cd ~
-mkdir RestComm
-cd RestComm
-# Download from https://mobicents.ci.cloudbees.com/job/Mobicents-JAIN-SLEE-Release/
-unzip ~/mobicents-jainslee-2.7.0.FINAL-jboss-5.1.0.GA.zip
+mkdir jss7_dependency
+cd jss7_dependency
+wget https://www.dialogic.com/files/DSI/developmentpackages/linux/dpklnx.Z
+tar --no-same-owner -zxvf dpklnx.Z
+mvn install:install-file -DgroupId=com.vendor.dialogic -DartifactId=gctapi -Dversion=6.7.1 -Dpackaging=jar -Dfile=./JAVA/gctApi.jar
+wget http://www.datanucleus.org/downloads/maven2/com/sun/jdmk/jmxtools/1.2.1/jmxtools-1.2.1.jar
+mvn install:install-file -DgroupId=com.sun.jdmk -DartifactId=jmxtools -Dversion=1.2.1 -Dpackaging=jar -Dfile=jmxtools-1.2.1.jar
 ```
 
-Setup JBOSS
+Download and build the GMLC source code
+```
+cd ~
+git clone git@github.com:RestComm/gmlc.git
+cd gmlc/release
+# This may take a while
+ant
+# The end result will be a zip file containing a full release build like "restcomm-gmlc-1.0.0-SNAPSHOT.zip"
+```
+
+Install your newly created release build
+```
+cd ~
+rm -rf RestComm
+unzip ~/gmlc/release/restcomm-gmlc-1.0.0-SNAPSHOT.zip
+mv restcomm-gmlc-1.0.0-SNAPSHOT RestComm
+```
+
+Setup JBOSS environment variable
 ```
 vi ~/.profile
 #
-JBOSS_HOME=/home/user/slee/jboss-5.1.0.GA
+JBOSS_HOME=/home/user/RestComm/jboss-5.1.0.GA
 export JBOSS_HOME
 #
+JBOSS_HOME=/home/user/RestComm/jboss-5.1.0.GA
 
-JBOSS_HOME=/home/user/mobicents/jboss-5.1.0.GA
-
-vi $JBOSS_HOME/server/default/conf/bootstrap/profile.xml
-# Find AttachmentStore, add the class= part below
-<constructor><parameter class="java.io.File">
-#
-
-Test run the server
-cd $JBOSS_HOME/bin
-# run the server open on all network interfaces
-./run.sh -b 0.0.0.0
+Setup the GMLC configuration files
 ```
-
-You can keep the server running and watch each of these get deployed
-
-```
-cd ~/RestComm/resources/http-servlet
-ant deploy
-```
-
-```
-cd
-git clone https://code.google.com/p/jain-slee.ss7/
-cd jain-slee.ss7/resources/map
-mvn clean install
-```
-
-Basic GMLC configuration
-```
-vi ~/RestComm/jboss-5.1.0.GA/server/default/data/GmlcManagement_gmlcproperties.xml
-#
+vi $JBOSS_HOME/server/default/data/GmlcManagement_gmlcproperties.xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <gmlcgt value="628184422892"/>
-<gmlcssn value="8"/>
+<gmlcssn value="145"/>
 <hlrssn value="6"/>
 <mscssn value="8"/>
 <maxmapv value="3"/>
-#
 ```
 
-Now deploy the GMLC
+Run the server
 ```
-cd ~
-git clone https://github.com/RestComm/gmlc.git
+cd ~/RestComm/jboss-5.1.0.GA/bin/
+chmod +x ./run.sh
+./run.sh -b 0.0.0.0
+```
+
+Development
+========
+Step 1: Follow the instructions above on how to install the GMLC from source. Once this has completed, you'll have a running release build of the GMLC.
+Step 2: Make your code changes
+Step 3: Deploy your changes on top of the installed release from Step 1
+
+```
 cd gmlc
 mvn clean install
 ```
 
-You might see an error message like this:
-```
-13:03:49,540 WARN  [DeploymentManager] (HDScanner) Unable to INSTALL gmlc-services-du-1.0.0-SNAPSHOT.jar right now. Waiting for dependencies to be resolved.
-```
-
-If so, press ctrl-c to shutdown JBoss and restart it again and the dependency issue should be resolved now that both the MAP RA and the GMLC are installed.
-
+Administration Console
+=========
 You can view the various included web consoles here:
 
 1. http://yourserver:8080/admin-console/
   * user: admin
   * password: admin
-2. http://yourserver:8080/slee-management-console
-3. http://yourserver:8080/jmx-console/
+2. http://yourserver:8080/restcomm-slee-management/
+3. http://yourserver:8080/jss7-management-console
 
 Backend
 ========
