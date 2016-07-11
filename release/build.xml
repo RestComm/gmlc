@@ -437,6 +437,15 @@
 				<exclude name="*.xml" />
 			</fileset>
 		</copy>
+			
+		<!--dtd-->
+		<!-- This should be a temporay hack -->
+		<echo>Copy MLP DTD files</echo>
+		<copy todir="${release.dir}/jboss-5.1.0.GA/bin" failonerror="true">
+			<fileset dir="${restcomm.gmlc.dir}/core/bootstrap/src/main/config/dtd">
+					<include name="**" />
+			</fileset>
+		</copy>
 		
 		<!--simulator-->
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-gmlc-server" failonerror="true">
