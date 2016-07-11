@@ -79,6 +79,7 @@ JBOSS_HOME=/home/user/RestComm/jboss-5.1.0.GA
 export JBOSS_HOME
 #
 JBOSS_HOME=/home/user/RestComm/jboss-5.1.0.GA
+```
 
 Setup the GMLC configuration files
 ```
