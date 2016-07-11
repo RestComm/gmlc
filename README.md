@@ -6,7 +6,8 @@ In one PLMN (Public Land Mobile Network), there may be more than one GMLC. The G
 
 GMLC is built on [RestComm jSS7](https://github.com/RestComm/jSS7) and [RestComm jDiameter](https://github.com/RestComm/jdiameter).
 
-## Downloads
+Downloads
+========
 
 Download source code and build from [here](https://github.com/RestComm/gmlc/releases) or Continuous Delivery binary from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-GMLC/)
 
@@ -101,9 +102,9 @@ chmod +x ./run.sh
 
 Development
 ========
-Step 1: Follow the instructions above on how to install the GMLC from source. Once this has completed, you'll have a running release build of the GMLC.
-Step 2: Make your code changes
-Step 3: Deploy your changes on top of the installed release from Step 1
+* Step 1: Follow the instructions above on how to install the GMLC from source. Once this has completed, you'll have a running release build of the GMLC.
+* Step 2: Make your code changes
+* Step 3: Deploy your changes on top of the installed release from Step 1
 
 ```
 cd gmlc
