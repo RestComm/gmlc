@@ -44,6 +44,9 @@ hs_err_pid*.log
 PutObjectStoreDirHere
 # ignore mvn-rpmbuild repo
 /.m2
+# release files
+release/checkout/
+release/docs-bundle/
 
 #ignore autogenerate src doco folder
 docs/sources-mobicents/src/
