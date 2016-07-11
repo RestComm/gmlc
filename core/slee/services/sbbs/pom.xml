@@ -75,50 +75,73 @@
 	<build>
 		<plugins>
 			<!-- JiBX bind process -->
-            <plugin>
-                <groupId>org.jibx</groupId>
-                <artifactId>jibx-maven-plugin</artifactId>
-                <version>1.2.6</version>
-                <configuration>
-                	<!-- Appears to cause a problem and this is no longer needed
+			<plugin>
+				<groupId>org.jibx</groupId>
+				<artifactId>jibx-maven-plugin</artifactId>
+				<version>1.2.6</version>
+				<configuration>
 					<schemaLocation>${basedir}/src/main/config</schemaLocation>
 					<schemaBindingDirectory>${basedir}/target/generated-sources</schemaBindingDirectory>
 					<baseBindingDirectory>${basedir}/target/generated-sources</baseBindingDirectory>
-					-->
-                    <customizations>
-                        <customizations>${basedir}/src/main/config/custom.xml</customizations>
-                    </customizations>
+					<customizations>
+						<customizations>${basedir}/src/main/config/custom.xml</customizations>
+					</customizations>
 				</configuration>
-                <executions>
-                    <execution>
-                        <id>generate-code</id>
-                        <goals>
-                            <goal>schema-codegen</goal>
-                        </goals>
-                        <configuration>
-                            <includeSchemas>
-                                <includeSchema>mlp_svc_result_310.xsd</includeSchema>
-                                <includeSchema>mlp_svc_init_310.xsd</includeSchema>
-                            </includeSchemas>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>compile-binding</id>
-                        <goals>
-                            <goal>bind</goal>
-                        </goals>
+				<executions>
+					<execution>
+						<id>generate-code</id>
+						<goals>
+							<goal>schema-codegen</goal>
+						</goals>
 						<configuration>
-                            <includeSchemaBindings>
-                                <includeSchemaBinding>binding.xml</includeSchemaBinding>
-                            </includeSchemaBindings>
-                            <load>true</load>
-                            <validate>false</validate>
-                            <!--<verbose>true</verbose>-->
-                            <verify>false</verify>
-                        </configuration>
-                    </execution>
-                </executions>
+							<includeSchemas>
+								<includeSchema>mlp_svc_result_310.xsd</includeSchema>
+								<includeSchema>mlp_svc_init_310.xsd</includeSchema>
+							</includeSchemas>
+						</configuration>
+					</execution>
+					<!-- Unfortunately this is not currently working, and is broken with an 
+					<execution>
+						<id>compile-binding</id>
+						<goals>
+							<goal>bind</goal>
+						</goals>
+						<configuration>
+							<includeSchemaBindings>
+								<includeSchemaBinding>binding.xml</includeSchemaBinding>
+							</includeSchemaBindings>
+							<load>true</load>
+							<validate>false</validate>
+							<verify>false</verify>
+						</configuration>
+					</execution>
+					-->
+				</executions>
             </plugin>
+			<plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<executions>
+					<execution>
+						<id>JiBX Compile Bindings</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>java</executable>
+							<workingDirectory>${basedir}/target/classes</workingDirectory>
+							<arguments>
+								<argument>-cp</argument>
+								<argument>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-bind.jar</argument>
+								<argument>org.jibx.binding.Compile</argument>
+								<argument>${basedir}/target/generated-sources/binding.xml</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
         </plugins>
 		<pluginManagement>
 			<plugins>
