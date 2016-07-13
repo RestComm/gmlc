@@ -63,13 +63,25 @@
 			</dependencies>
 		</profile>
 		<profile>
+			<id>default</id>
 			<activation>
-				<property>
-					<name>maven.test.skip</name>
-					<value>true</value>
-				</property>
-			</activation>
-		</profile>
+			      <activeByDefault>true</activeByDefault>
+    		</activation>
+		    <properties>
+				<jibx.location>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.location>
+      		</properties>
+  		</profile>
+		<profile>
+			<id>windows</id>
+		    <activation>
+		      <os>
+		        <family>Windows</family>
+		      </os>
+		    </activation>
+		    <properties>
+				<jibx.location>.;${basedir}/../../../../tools/jibx/support.jar;${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.location>
+      		</properties>
+  		</profile>
 	</profiles>
 	
 	<build>
@@ -121,6 +133,7 @@
 			<plugin>
 				<artifactId>exec-maven-plugin</artifactId>
 				<groupId>org.codehaus.mojo</groupId>
+				<version>1.5.0</version>
 				<executions>
 					<execution>
 						<id>JiBX Compile Bindings</id>
@@ -133,7 +146,7 @@
 							<workingDirectory>${basedir}/target/classes</workingDirectory>
 							<arguments>
 								<argument>-cp</argument>
-								<argument>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-bind.jar</argument>
+								<argument>${jibx.location}</argument>
 								<argument>org.jibx.binding.Compile</argument>
 								<argument>${basedir}/target/generated-sources/binding.xml</argument>
 							</arguments>
