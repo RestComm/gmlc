@@ -21,7 +21,7 @@
 	<!-- HTTP servlet RA -->	
 	<property name="checkout.http.dir" value="${base.dir}/checkout/http" />
 	<property name="release.http-servlet.dir" value="${base.dir}/checkout/http-servlet-release" />
-	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
+	<property name="restcomm-slee.http.ra.tag" value="2.8.56" />
 
 	<property name="restcomm.gmlc.git.tag" value="master"/>
 	<property name="restcomm.gmlc.release.version" value="1.0.0-SNAPSHOT"/>
