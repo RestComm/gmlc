@@ -45,6 +45,16 @@
 		    <artifactId>jibx-run</artifactId>
 		    <version>1.2.6</version>
 		</dependency>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <artifactId>exec-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId>
+            <version>1.5.0</version>
+        </dependency>
 	</dependencies>
 	
 	<profiles>
@@ -86,6 +96,26 @@
 	
 	<build>
 		<plugins>
+            <!-- This adds the JiBX generated-sources folder for IDEA -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/target/generated-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 			<!-- JiBX bind process -->
 			<plugin>
 				<groupId>org.jibx</groupId>
