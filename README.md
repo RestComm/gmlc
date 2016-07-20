@@ -142,6 +142,16 @@ cd ~/RestComm/jboss-5.1.0.GA/bin/
 chmod +x ./run.sh
 ./run.sh -b 0.0.0.0 -Xdebug -Xrunjdwp:transport=dt_socket,address=52297,suspend=n,server=y
 ```
+
+Getting Started as a Developer
+==============================
+We'd love to have you join us and contribute ideas and code to improve and extend the RestComm GMLC (as well as other components of the RestComm) suite. Before you get started, there's a few things you need to do:
+1. Visit the TeleStax [Open Source Project Information Site](https://telestax.com/open-source/)
+   1. Here you can see the other TeleStax open source projects and also register as an official contributor
+2. Read the TeleStax [Open Source Playbook](https://telestax.com/wp-content/uploads/2016/04/TeleStaxOpenSourcePlaybook.pdf)
+   1. This is critical for learning how to properly develop and contribute code to RestComm
+   2. Please follow the work-flow described in the Playbook for how to properly design, develop, test, and release new code
+
 How to Setup a Development Environment
 ========
 A standard development environment consists of a Desktop environment along with a virtual machine running Linux for building and testing.
