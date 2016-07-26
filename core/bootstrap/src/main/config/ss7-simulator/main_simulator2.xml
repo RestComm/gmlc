@@ -11,7 +11,7 @@
 		<remoteHost2 value=""/>
 	</m3ua>
 	<dialogic SourceModuleId="0" DestinationModuleId="0"/>
-	<sccp routeOnGtMode="true" remoteSpc="2" localSpc="1" ni="2" remoteSsn="145" localSsn="8" translationType="0">
+	<sccp routeOnGtMode="true" remoteSpc="2" localSpc="1" ni="2" remoteSsn="145" localSsn="6" translationType="0">
 		<globalTitleType value="Translation type, numbering plan, encoding scheme and NOA ind"/>
 		<addressNature value="INTERNATIONAL"/>
 		<numberingPlan value="ISDN_TELEPHONY"/>
