@@ -430,7 +430,7 @@ Request a Location from the GMLC
 HTTP GET (for simple testing)
 ---------------------------------
 ```
-http://yourserver:8080/restcomm?msisdn=<msisdn>
+http://yourserver:8080/restcomm/gmlc/rest?msisdn=<msisdn>
 ```
 HTTP POST (using MLP)
 -------------------------
@@ -438,7 +438,7 @@ HTTP POST (using MLP)
 sudo apt-get install curl
 vi ./req.txt
 # Paste in the above example MLP request
-curl -X POST -d @req.txt http://yourserver:8080/restcomm
+curl -X POST -d @req.txt http://yourserver:8080/restcomm/gmlc/mlp
 ```
 ### MLP Result Codes
 See section 5.4.1 Result codes in the MLP specification for full details

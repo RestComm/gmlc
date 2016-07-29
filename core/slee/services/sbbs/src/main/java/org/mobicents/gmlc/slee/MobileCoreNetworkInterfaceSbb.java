@@ -96,15 +96,36 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     /**
      * HTTP Request Types (GET or MLP)
      */
-    private enum httpRequestTypes {
-        HTTP_REQUEST_GET,
-        HTTP_REQUEST_MLP
+    private enum HttpRequestType {
+        REST("rest"),
+        MLP("mlp"),
+        UNSUPPORTED("404");
+
+        private String path;
+
+        HttpRequestType(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return String.format("/gmlc/%s", path);
+        }
+
+        public static HttpRequestType fromPath(String path) {
+            for (HttpRequestType type: values()) {
+                if (path.equals(type.getPath())) {
+                    return type;
+                }
+            }
+
+            return UNSUPPORTED;
+        }
     }
 
     /**
      * Chosen HTTP Request Type (GET or MLP)
      */
-    private httpRequestTypes httpRequestType = null;
+    private HttpRequestType httpRequestType = null;
 
     /**
      * MSISDN being located
@@ -354,64 +375,71 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	}
 
     /**
-     * Handle HTTP POST request, used for processing MLP location request
+     * Handle HTTP POST request
      * @param event
      * @param aci
      * @param eventContext
      */
     public void onPost(net.java.slee.resource.http.events.HttpServletRequestEvent event, ActivityContextInterface aci,
                       EventContext eventContext) {
-        this.setEventContext(eventContext);
-        this.httpRequestType = this.httpRequestType.HTTP_REQUEST_MLP;
-
-        // Handle retrieving the request, parsing it, and generating the network location request
-        try {
-            // Get the XML request from the POST data
-            HttpServletRequest httpServletRequest = event.getRequest();
-            InputStream body = httpServletRequest.getInputStream();
-
-            // Parse the request and retrieve the requested MSISDN
-            MLPRequest mlpRequest = new MLPRequest(this.logger);
-            this.requestingMSISDN = mlpRequest.parseRequest(body);
-
-            // Send the network request for the MSISDN's location
-            eventContext.suspendDelivery();
-            this.getSingleMSISDNLocation();
-
-            // result will be sent via sendHTTPResult(), which will be called by onAnyTimeInterrogationResponse() or
-            // getSingleMSISDNLocation()
-        }
-        catch(MLPException e) {
-            this.handleLocationResponse(e.getMlpClientErrorType(), "System Failure: " + e.getMlpClientErrorMessage());
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            this.handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "System Failure: Failed to read from server input stream");
-        }
+        onRequest(event, aci, eventContext);
     }
 
     /**
-     * Handle HTTP GET request for a single MSISDN location
-     * Mostly just used for testing at the moment
+     * Handle HTTP GET request
      * @param event
      * @param aci
      * @param eventContext
      */
 	public void onGet(net.java.slee.resource.http.events.HttpServletRequestEvent event, ActivityContextInterface aci,
 			EventContext eventContext) {
-		this.setEventContext(eventContext);
-        this.httpRequestType = this.httpRequestType.HTTP_REQUEST_GET;
+        onRequest(event, aci, eventContext);
+	}
 
-		HttpServletRequest httpServletRequest = event.getRequest();
-		this.requestingMSISDN = httpServletRequest.getParameter("msisdn");
-        if (this.requestingMSISDN != null) {
+    /**
+     * Entry point for all location lookups
+     * Assigns a protocol handler to the request based on the path
+     */
+    private void onRequest(net.java.slee.resource.http.events.HttpServletRequestEvent event, ActivityContextInterface aci,
+                           EventContext eventContext) {
+        setEventContext(eventContext);
+        HttpServletRequest httpServletRequest = event.getRequest();
+        httpRequestType = HttpRequestType.fromPath(httpServletRequest.getPathInfo());
+
+        switch (httpRequestType) {
+            case REST:
+                requestingMSISDN = httpServletRequest.getParameter("msisdn");
+                break;
+            case MLP:
+                try {
+                    // Get the XML request from the POST data
+                    InputStream body = httpServletRequest.getInputStream();
+                    // Parse the request and retrieve the requested MSISDN
+                    MLPRequest mlpRequest = new MLPRequest(logger);
+                    requestingMSISDN = mlpRequest.parseRequest(body);
+                } catch(MLPException e) {
+                    handleLocationResponse(e.getMlpClientErrorType(), "System Failure: " + e.getMlpClientErrorMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "System Failure: Failed to read from server input stream");
+                }
+                break;
+            default:
+                event.getResponse().setStatus(404);
+                sendHTTPResult("Request URI unsupported");
+                return;
+        }
+
+        logger.info(String.format("Handling %s request, msisdn: %s", httpRequestType.name().toUpperCase(), requestingMSISDN));
+
+        if (requestingMSISDN != null) {
             eventContext.suspendDelivery();
             getSingleMSISDNLocation();
         } else {
-            this.logger.info("MSISDN is null, sending back -1 for cellid");
-            this.handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "Invalid MSISDN specified");
+            logger.info("MSISDN is null, sending back -1 for cellid");
+            handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "Invalid MSISDN specified");
         }
-	}
+    }
 
 	/**
 	 * CMP
@@ -512,7 +540,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     private void handleLocationResponse(MLPResponse.MLPResultType mlpResultType, String mlpClientErrorMessage) {
         switch(this.httpRequestType)
         {
-            case HTTP_REQUEST_GET:
+            case REST:
                 if (mlpResultType == MLPResponse.MLPResultType.OK) {
                 	StringBuilder getResponse = new StringBuilder();
 					getResponse.append("mcc=");
@@ -535,7 +563,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 }
                 break;
 
-            case HTTP_REQUEST_MLP:
+            case MLP:
                 String svcResultXml;
                 MLPResponse mlpResponse = new MLPResponse(this.logger);
 
