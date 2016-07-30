@@ -96,13 +96,13 @@
 	
 	<target name="clean">
 		<delete dir="${release.dir}"/>
-		<delete dir="${base.dir}/checkout"/>
-		<delete dir="${base.dir}/docs-bundle"/>
-		<!--<delete dir="${bundle.docs.dir}"/>
-		<delete includeemptydirs="true" failonerror="true">
-	    	<fileset dir="${checkout.dir}" defaultexcludes="false"><exclude name="*.zip" /><exclude name="*.jar" />
+		<delete dir="${bundle.docs.dir}"/>
+		<delete includeemptydirs="true" failonerror="false">
+	    	<fileset dir="${checkout.dir}" defaultexcludes="false">
+	    		<exclude name="*.zip" />
+	    		<exclude name="*.jar" />
 	        </fileset>
-		</delete>-->
+		</delete>
 		<delete>
 			<fileset dir="${base.dir}">
 				<include name="restcomm-gmlc-*.*" />
