@@ -110,7 +110,7 @@
 		</delete>	
 	</target>
 	
-	<target name="release" depends="get-deps,extract-deps,clean-up-restcomm-slee,build-gmlc,copy-gmlc,build-docs,copy-docs,make-final-zip,bundle-documentation" />
+	<target name="release" depends="clean,get-deps,extract-deps,clean-up-restcomm-slee,build-gmlc,copy-gmlc,build-docs,copy-docs,make-final-zip,bundle-documentation" />
 
 	<target name="release-with-jss7-and-ras" depends="build-with-jss7-and-ras.ss7, build-with-jss7-and-ras.ras, release"/>
 	
