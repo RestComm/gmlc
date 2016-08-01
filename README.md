@@ -348,6 +348,8 @@ At present, the GMLC only supports a limited subset of MLP, allowing a simple po
 
 Requests are to be sent over HTTP POST.
 
+For the purpose of testing, you may use the dummy mobile number 19395550113 to receive a successful dummy response.
+
 Example MLP Request
 ---------------
 ```
