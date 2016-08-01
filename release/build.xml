@@ -95,19 +95,19 @@
 	</taskdef>
 	
 	<target name="clean">
-	    <delete dir="${release.dir}"/>
-	    <delete dir="${bundle.docs.dir}"/>
-	    <delete includeemptydirs="true" failonerror="true">
-            <fileset dir="${checkout.dir}" defaultexcludes="false">
-	        	<exclude name="*.zip" />
-	        	<exclude name="*.jar" />
-            </fileset>
+		<delete dir="${release.dir}"/>
+		<delete dir="${bundle.docs.dir}"/>
+		<delete includeemptydirs="true" failonerror="false">
+	    	<fileset dir="${checkout.dir}" defaultexcludes="false">
+	    		<exclude name="*.zip" />
+	    		<exclude name="*.jar" />
+	        </fileset>
 		</delete>
 		<delete>
 			<fileset dir="${base.dir}">
 				<include name="restcomm-gmlc-*.*" />
 			</fileset>
-		</delete>
+		</delete>	
 	</target>
 	
 	<target name="release" depends="clean,get-deps,extract-deps,clean-up-restcomm-slee,build-gmlc,copy-gmlc,build-docs,copy-docs,make-final-zip,bundle-documentation" />
