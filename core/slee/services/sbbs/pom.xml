@@ -78,7 +78,8 @@
 			      <activeByDefault>true</activeByDefault>
     		</activation>
 		    <properties>
-				<jibx.location>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.location>
+                <jibx.codegen.jars>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-tools.jar</jibx.codegen.jars>
+				<jibx.compile.jars>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.compile.jars>
       		</properties>
   		</profile>
 		<profile>
@@ -89,7 +90,8 @@
 		      </os>
 		    </activation>
 		    <properties>
-				<jibx.location>.;${basedir}/../../../../tools/jibx/support.jar;${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.location>
+				<jibx.codegen.jars>.;${basedir}/../../../../tools/jibx/support.jar;${basedir}/../../../../tools/jibx/jibx-tools.jar</jibx.codegen.jars>
+                <jibx.compile.jars>.;${basedir}/../../../../tools/jibx/support.jar;${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.compile.jars>
       		</properties>
   		</profile>
 	</profiles>
@@ -116,55 +118,35 @@
                     </execution>
                 </executions>
             </plugin>
-			<!-- JiBX bind process -->
-			<plugin>
-				<groupId>org.jibx</groupId>
-				<artifactId>jibx-maven-plugin</artifactId>
-				<version>1.2.6</version>
-				<configuration>
-					<schemaLocation>${basedir}/src/main/config</schemaLocation>
-					<schemaBindingDirectory>${basedir}/target/generated-sources</schemaBindingDirectory>
-					<baseBindingDirectory>${basedir}/target/generated-sources</baseBindingDirectory>
-					<customizations>
-						<customizations>${basedir}/src/main/config/custom.xml</customizations>
-					</customizations>
-				</configuration>
-				<executions>
-					<execution>
-						<id>generate-code</id>
-						<goals>
-							<goal>schema-codegen</goal>
-						</goals>
-						<configuration>
-							<includeSchemas>
-								<includeSchema>mlp_svc_result_310.xsd</includeSchema>
-								<includeSchema>mlp_svc_init_310.xsd</includeSchema>
-							</includeSchemas>
-						</configuration>
-					</execution>
-					<!-- Unfortunately this is not currently working, and is broken with an 
-					<execution>
-						<id>compile-binding</id>
-						<goals>
-							<goal>bind</goal>
-						</goals>
-						<configuration>
-							<includeSchemaBindings>
-								<includeSchemaBinding>binding.xml</includeSchemaBinding>
-							</includeSchemaBindings>
-							<load>true</load>
-							<validate>false</validate>
-							<verify>false</verify>
-						</configuration>
-					</execution>
-					-->
-				</executions>
-            </plugin>
 			<plugin>
 				<artifactId>exec-maven-plugin</artifactId>
 				<groupId>org.codehaus.mojo</groupId>
 				<version>1.5.0</version>
 				<executions>
+                    <execution>
+                        <id>JiBX Generate Sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <workingDirectory>${basedir}/target/classes</workingDirectory>
+                            <arguments>
+                                <argument>-cp</argument>
+                                <argument>${jibx.codegen.jars}</argument>
+                                <argument>org.jibx.schema.codegen.CodeGen</argument>
+                                <argument>-c</argument>
+                                <argument>${basedir}/src/main/config/custom.xml</argument>
+                                <argument>-s</argument>
+                                <argument>${basedir}/src/main/config</argument>
+                                <argument>-t</argument>
+                                <argument>${basedir}/target/generated-sources</argument>
+                                <argument>mlp_svc_result_310.xsd</argument>
+                                <argument>mlp_svc_init_310.xsd</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
 					<execution>
 						<id>JiBX Compile Bindings</id>
 						<phase>process-classes</phase>
@@ -176,7 +158,7 @@
 							<workingDirectory>${basedir}/target/classes</workingDirectory>
 							<arguments>
 								<argument>-cp</argument>
-								<argument>${jibx.location}</argument>
+								<argument>${jibx.compile.jars}</argument>
 								<argument>org.jibx.binding.Compile</argument>
 								<argument>${basedir}/target/generated-sources/binding.xml</argument>
 							</arguments>
