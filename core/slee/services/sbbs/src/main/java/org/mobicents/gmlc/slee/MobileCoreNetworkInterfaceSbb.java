@@ -152,7 +152,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     /**
      * For debugging - fake location data
      */
-    private boolean useFakeLocation = false;
+    private String fakeNumber = "19395550113";
     private MLPResponse.MLPResultType fakeLocationType = MLPResponse.MLPResultType.OK;
     private String fakeLocationAdditionalInfoErrorString = "Internal positioning failure occurred";
     private int fakeCellId = 300;
@@ -456,7 +456,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
      * Retrieve the location for the specified MSISDN via ATI request to the HLR
      */
     private void getSingleMSISDNLocation() {
-        if (!useFakeLocation) {
+        if (!requestingMSISDN.equals(fakeNumber)) {
             try {
                 MAPDialogMobility mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(
                         this.getSRIMAPApplicationContext(), this.getServiceCenterSccpAddress(), null,
