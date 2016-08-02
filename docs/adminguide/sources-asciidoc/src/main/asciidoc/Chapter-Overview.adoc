@@ -11,17 +11,19 @@ In one PLMN (Public Land Mobile Network), there may be more than one GMLC. A GML
 
 The simplest location information a GMLC can retrieve is by issuing a MAP ATI (Any Time Interrogation) request to the HLR (Home Location register). MAP ATI is part of CAMEL phase 1. If the GMLC is allowed to proceed with the operation at the HLR, the latter will respond with the Cell Global Identity (CGI) as for the latest MAP Update Location operation carried out between the HLR and VLR at which the target mobile equipment is attached too (therefore, an additional parameter known as "Age of Location Information" is also included in the response). As shown in the figure below taken from 3GPP TS 23.003, CGI is made up of multiple components, namely, MCC (Mobile Country Code), MNC (Mobile Network Code), LAC (Location Area Code) and CI (Cell Identity). The combination of MCC and MCC represents the PLMN at which the cell is located, in other words, the country and Mobile Network Operator it belongs to. LAC represents a geographic location area in which a cluster of Base Transceiver Stations (BTS) are located for radio access, while CI, uniquely identifies the BTS providing service to the target subscriber in that area (more commonly known as cell). From CAMEL phase 4 compliance onward, MAP ATI can also retrieve the IMEI and MS Classmark.
 
-
+.Cell Global Identification structure (3GPP TS 23.003)
 image::images/CGI.png[Cell Global Identity, align="center"]
 
 CGI represents the location information with greatest error margin retrievable by a GMLC in GSM based core networks. 
 
 From 3G (UMTS) and beyond, more accurate positioning methods were developed for cellular networks. Of course, accuracy comes with a price. When these dearer location capabilities are available, the GMLC may request routing information from the HLR via the Lh interface or HSS (Home Subscriber Server) via the SLh/Lh interface. 
 
+.GSM/GPRS/UMTS Location Services interfaces 
 image::images/LCS_2G-3G_interfaces.png[]
 
 While Lh interface reside in a Circuit-Switched Core Network and therefore demands SS7 MAP operations, SLh is placed in the Evolved Packet Core (EPC) and is a Diameter-based interface for LTE location services, as specified by 3GPP TS 29.172. After performing registration authorization, it may send positioning requests to either VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node), MSCS (Mobile Switching Centre Server) or MME (Mobility Management Entity) and receives final location estimates from the corresponding entity via  the Lg, Lgd or SLg interface. Again, Lg/Lgd interfaces demand SS7 MAP operations while SLg is a Diameter-based interface for LTE location occupying ELP procedures, where ELP stands for EPC Location Protocol as specified by 3GPP TS 29.172.
 
+.LTE EPC Location Services interfaces
 image::images/LCS-LTE_interfaces.png[]
 
 Up to this point, what is known as "Immediate Location Request" has been covered. A GMLC can also handle "Deferred Location Request", which represents retrieving of location contingent on some current or future events where the response from the LCS Server to the LCS Client may occur some time after the request was sent, as described in 3GPP TS 23.271. When a deferred location request is triggered by the GMLC, event-based "Subscriber Location Reports", either conveyed through MAP or ELP are sent back to the GMLC by the entity at which the target mobile equipment is attached to (VMSC, MSCS, SGSN or MME).
@@ -69,10 +71,6 @@ Cloud Ready:::
   {this-platform} {this-application} is Cloud-ready.
   It can be deployed on dedicated hardware, private cloud infrastructure or public IaaS such as AWS. 
 
-Network Push:::
-  {this-platform} {this-application} supports network/application/service initiated LCS requests.
-  The request can be just HTTP PUSH. 
-
 SS7 Hardware Cards:::
   {this-platform} {this-application} can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only. 
 
@@ -83,7 +81,7 @@ Diameter-based SLh and SLg (ELP):::
   It also has in-built support for LCS in LTE networks.
 
 HTTP interface:::
-  HTTP interface is a common interface that can be used for connection with service applications. 
+  HTTP interface is a common interface that can be used for connection with service applications. {this-platform} {this-application} supports network/application/service initiated LCS requests.
 
 MLP:::
   Location requests can be sent to the GMLC using plain XML over HTTP(S), with the request being encoded in OMA MLP (Mobile Location Protocol). See the full OMA MLP technical specification here: http://technical.openmobilealliance.org/Technical/technical-information/release-program/current-releases/mlp-v3-1

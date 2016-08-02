@@ -23,22 +23,38 @@
 +
 ----
 
-22:23:11,583 INFO  [DeploymentMBeanImpl] (main) Installed DeployableUnitID[url=file:/home/vinu/restcomm-gmlc-<version>/jboss-5.1.0.GA/server/default/deploy/restcomm-gmlc-gateway/services-DU-6.1.5.GA.jar/]
-22:23:11,874 INFO  [ServiceManagementImpl] (main) Activated ServiceID[name=restcomm-gmlc-cdr,vendor=org.mobicents,version=1.0]
-22:23:11,976 ERROR [STDERR] (pool-28-thread-1) QUERRY: 000000 CREATE TABLE GMLC_GW_CDRS (ID VARCHAR(150) NOT NULL, L_SPC INT, L_SSN SMALLINT, L_RI SMALLINT, L_GT_I SMALLINT, L_GT_DIGITS VARCHAR(18), R_SPC INT, R_SSN SMALLINT, R_RI SMALLINT, R_GT_I SMALLINT, R_GT_DIGITS VARCHAR(18), SERVICE_CODE VARCHAR(10), OR_NATURE SMALLINT, OR_PLAN SMALLINT, OR_DIGITS VARCHAR(18), DE_NATURE SMALLINT, DE_PLAN SMALLINT, DE_DIGITS VARCHAR(18), ISDN_NATURE SMALLINT, ISDN_PLAN SMALLINT, ISDN_DIGITS VARCHAR(18), VLR_NATURE SMALLINT, VLR_PLAN SMALLINT, VLR_DIGITS VARCHAR(18), IMSI VARCHAR(100), TERMINATE_REASON VARCHAR(60), TSTAMP TIMESTAMP  NOT NULL , DIALOG_ID BIGINT, PRIMARY KEY(ID,TSTAMP));
-22:23:12,135 INFO  [ServiceManagementImpl] (main) Activated ServiceID[name=restcomm-gmlc,vendor=org.mobicents,version=1.0]
-22:23:12,395 INFO  [GMLCPropertiesManagement] (main) Loading GMLC Properties from /home/vinu/restcomm-gmlc-6.1.5.GA/jboss-5.1.0.GA/server/default/data/GMLCManagement_GMLCproperties.xml
-22:23:12,395 WARN  [GMLCPropertiesManagement] (main) Failed to load the GMLC configuration file. 
-/home/vinu/restcomm-gmlc-6.1.5.GA/jboss-5.1.0.GA/server/default/data/GMLCManagement_GMLCproperties.xml (No such file or directory)
-22:23:12,396 INFO  [ShortCodeRoutingRuleManagement] (main) Loading short code routig rule configuration from /home/vinu/restcomm-gmlc-6.1.5.GA/jboss-5.1.0.GA/server/default/data/GMLCManagement_scroutingrule.xml
-22:23:12,397 WARN  [ShortCodeRoutingRuleManagement] (main) Failed to load the short code routig rule configuration file. 
-/home/vinu/restcomm-gmlc-6.1.5.GA/jboss-5.1.0.GA/server/default/data/GMLCManagement_scroutingrule.xml (No such file or directory)
-22:23:12,400 INFO  [GMLCManagement] (main) Started GMLCManagement
-22:23:12,419 INFO  [ShellServer] (main) Starting SS7 management shell environment
-22:23:12,430 INFO  [ShellServer] (main) ShellExecutor listening at /127.0.0.1:3435
-22:23:12,498 INFO  [Http11Protocol] (main) Starting Coyote HTTP/1.1 on http-127.0.0.1-8080
-22:23:12,529 INFO  [AjpProtocol] (main) Starting Coyote AJP/1.3 on ajp-127.0.0.1-8009
-22:23:12,541 INFO  [ServerImpl] (main) JBoss (Microcontainer) [5.1.0.GA (build: SVNTag=JBoss_5_1_0_GA date=200905221634)] Started in 1m:11s:118ms
+19:49:43,856 INFO  [ServiceManagementImpl] (main) Activated ServiceID[name=mobicents-gmlc,vendor=org.mobicents,version=1.0]
+19:49:44,123 INFO  [ShellServer] (main) Starting SS7 management shell environment
+19:49:44,124 INFO  [ShellServer] (main) ShellExecutor listening at /127.0.0.1:3435
+19:49:44,175 INFO  [Ss7Management] (main) Starting ...
+19:49:44,175 INFO  [MBeanHostImpl] (main) Found MBeanServer matching for agentId=jboss
+19:49:44,175 WARN  [MBeanHostImpl] (main) Found non-matching MBeanServer with default domian = null
+19:49:44,176 INFO  [Ss7Management] (main) Started ...
+19:49:44,184 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=ALARM,type=Management,name=AlarmHost
+19:49:44,184 INFO  [Ss7Management] (main) Registered MBean: AlarmHost
+19:49:44,192 INFO  [CounterProviderManagement-CounterHost] (main) Starting ...
+19:49:44,192 INFO  [CounterProviderManagement-CounterHost] (main) CounterManagement configuration file path /home/telestax/RestComm/restcomm-gmlc-1.0.42/jboss-5.1.0.GA/server/default/data/CounterHost_CounterProvider.xml
+19:49:44,207 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=COUNTER,type=Management,name=CounterHost
+19:49:44,211 INFO  [Ss7Management] (main) Registered MBean: CounterHost
+19:49:44,243 INFO  [CounterProviderManagement-CounterHost] (main) Started ...
+19:49:44,337 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=SCTP,type=Management,name=SCTPManagement
+19:49:44,338 INFO  [Ss7Management] (main) Registered MBean: SCTPManagement
+19:49:44,366 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=M3UA,type=Management,name=Mtp3UserPart
+19:49:44,366 INFO  [Ss7Management] (main) Registered MBean: Mtp3UserPart
+19:49:44,392 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=SCCP,type=Management,name=SccpStack
+19:49:44,392 INFO  [Ss7Management] (main) Registered MBean: SccpStack
+19:49:44,397 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=SCCP,type=Router,name=SccpStack
+19:49:44,397 INFO  [Ss7Management] (main) Registered MBean: SccpStack
+19:49:44,399 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=SCCP,type=Resource,name=SccpStack
+19:49:44,399 INFO  [Ss7Management] (main) Registered MBean: SccpStack
+19:49:44,433 INFO  [TcapManagementJmx-TcapStack] (main) Starting ...
+19:49:44,436 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=TCAP,type=Management,name=TcapStack
+19:49:44,437 INFO  [CounterProviderManagement-CounterHost] (main) Registered CounterMediator: Tcap-TcapStack
+19:49:44,437 INFO  [Ss7Management] (main) Registered MBean: TcapStack
+19:49:44,437 INFO  [TcapManagementJmx-TcapStack] (main) Started ...
+19:49:44,530 INFO  [Http11Protocol] (main) Starting Coyote HTTP/1.1 on http-127.0.0.1-8080
+19:49:44,566 INFO  [AjpProtocol] (main) Starting Coyote AJP/1.3 on ajp-127.0.0.1-8009
+19:49:44,571 INFO  [ServerImpl] (main) JBoss (Microcontainer) [5.1.0.GA (build: SVNTag=JBoss_5_1_0_GA date=200905221634)] Started in 1m:35s:965ms
 ----		 
 . If you are starting {this-application}-{project-version} for the first time, SS7 is not configured.
   You can use either the Shell Client or the GUI to connect to {this-application}-{project-version} and configure the SS7 Stack, GMLC parameters and Routing Rules.
@@ -51,7 +67,8 @@
 . If the server stopped properly, you will see the following three lines as the  last output in the Unix terminal or Command Prompt: 
 +
 ----
-[Server] Shutdown complete
+INFO  [ServerImpl] (JBoss Shutdown Hook) Shutdown complete
+Shutdown complete
 Halting VM
 ----
 
@@ -76,11 +93,11 @@ If you are using in a Linux system, there is no modification required to the set
 [[_simulator_gmlc_example]]
 == Running GMLC Examples in Simulator
 
-If you are not familiar with the {this-platform} jss7 Simulator, you can find instructions about using the jss7-simulator in the {this-platform} jSS7 User Guide.
+If you are not familiar with the {this-platform} jSS7 Simulator, you can find instructions about using the jSS7-simulator in the {this-platform} jSS7 User Guide.
 You will also find example test cases explained in detail in the jSS7 User Guide.
-In this section you will find a sample GMLC Pull and GMLC Push examples explained using the jSS7 Simulator. 
+In this section you will find a simple Location Service example explained using the jSS7 Simulator. 
 
-.Procedure: Running {this-platform} jSS7 Simulator - GMLC Pull Example
+.Procedure: Running {this-platform} jSS7 Simulator - MAP ATI TEST SERVER Example
 . Change the working directory to the bin folder in the Simulator's installation directory. 
 +
 ----
@@ -100,56 +117,87 @@ bin$ ./run.sh gui
 This will launch the Simulator GUI Application. 
 . When the GUI shows up, select "main" (default) as host name [or type "win" as host name under Windows] and press the 'Start' button.
   The Simulator is already pre-configured to connect to the GMLC Gateway (running in simulator profile). Press 'Run test' and again click on 'Start' in the next screen.
-  The Simulator will connect to GMLC (via m3ua protocol). The Low level part is configured to SCTP (not TCP) protocol and hence you can test the GMLC in a Linux environment.
+  The Simulator will connect to GMLC (via a SIGTRAN SCTP/M3UA association). The Low layer is configured to SCTP (not TCP) protocol, therefore you can test the GMLC in a Linux environment.
   To test under Windows OS, you must change the SS7 simulator settings to TCP.
-. After approximately 30 seconds you will see the state of the Simulator change to "M3UA connection is active" as in figure below:  
+. After approximately 30 seconds you will see the appear two events in the the Simulator window log showing "Sctp connection is up" and "M3UA connection is active" as in figure below:  
 +
 .GMLC SS7 Simulator - Active
 image::images/GMLC_SS7_Simulator_ACTIVE.png[]
 
-. {this-platform} {this-application} is configured with a routing rule for *519#. Dial *519# in your Simulator GUI and press 'Send ProcessUnstructuredRequest'. The example will respond to you with the message "Hello World 1. Balance 2. Texts Remaining".  
-+
-.GMLC SS7 Simulator - Process Unstructured Request
-image::images/GMLC_SS7_Simulator_Process_Unst_request.png[]						
+. {this-platform} {this-application} is configured, in simulator mode, to process an HTTP GET to trigger a MAP ATI at the jSS7 Simulator, which will return a fake answer for the only purpose of testing. Assuming the server is running with no IP binding (i.e. it's running in loopback address 127.0.0.1), open a browser and perform an HTTP GET test, for example (msisdn can be any number except the dummy one reserved, i.e. 19395550113): http://127.0.0.1:8080/restcomm/gmlc/rest?msisdn=87583439
 
-. Now Dial 1 in your Simulator GUI and press 'Send UnstructuredResponse'. You should get a response "Thank you!".  
-+
-.GMLC SS7 Simulator - Unstructured Request
-image::images/GMLC_SS7_Simulator_Unstruc_request.png[]						
+You should immediately receive the following testing response with GCI + Age of Location Information parameters: mcc=250,mnc=1,lac=32000,cellid=221,aol=5,vlrNumber=5555555666
 
-.Procedure: Running {this-platform} GMLC Simulator (HLR) - GMLC Push Example
+If you check the SS7 simulator (where the MAP ATI was sent and responded back), you should be able to see the following request and response (click on "Open Event Window" on each event logged):
+
+.GMLC SS7 Simulator - MAP ATI Request with opened Event Window
+image::images/SS7sim_MAP-ATI_req.png[]			
+  
+.GMLC SS7 Simulator - MAP ATI Response with opened Event Window
+image::images/SS7sim_MAP-ATI_resp.png[]						
+
+.Procedure: Running {this-platform} jSS7 Simulator - HTTP POST MLP Request
 . You must first start the {this-platform} {this-application} in simulator profile.
 ----
-[vinu@vinu-neha ~]$ cd restcomm-gmlc-<version>/jboss-5.1.0.GA/bin
-[vinu@vinu-neha bin]$./run.sh -b 127.0.0.1 -c simulator
+[telestax@127 ~]$ cd restcomm-gmlc-<version>/jboss-5.1.0.GA/bin
+[telestax@127 bin]$./run.sh -b 127.0.0.1 -c simulator
 ----			
-. To send a PUSH request go to http://localhost:8080/jmx-console/ and click the link `org.mobicents.gmlc.example` in the left menu.
-  Then open the MBean `'name=HttpPush'`. 
-. MBean provides two operations: 1) `sendNotify` to push Notification and 2) `sendRequest` to push GMLC menu based tree.
-  The parameter `Isdn` is the MSISDN to which Notify or Request is to be sent.
+. To send an OMA MLP request test, in the same path from where you just ran the server, issue the following command:
 
-.{this-platform} GMLC Simulator - Notify
-image::images/Restcomm-GMLC-simulator_Notify.png[]
+----
+curl -X POST -d @mlpreq.txt http://127.0.0.1:8080/restcomm/gmlc/mlp
+----
+
+mlpreq.txt is like this (you may change the MSISDN):
+
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.DTD">
+<svc_init xmlns="MLP_SVC_INIT_310.dtd">
+	<hdr>
+		<client>
+       			<id>USERNAME</id>
+       			<pwd>PASSWORD</pwd>
+       			<serviceid>SERVICEID</serviceid>
+     		</client>
+   	</hdr>
+   	<slir>
+     		<msids>
+       			<msid type="MSISDN">59899077937</msid>
+     		</msids>
+     		<eqop>
+        		<resp_timer>15</resp_timer>
+     		</eqop>
+   	</slir>
+</svc_init>
+----
+
+You should immediately receive the following testing MLP response:
+
+----
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
+    <slia ver="3.1.0">
+        <pos>
+            <msid>59899077937</msid>
+            <pd>
+                <time utc_off="-0300">20160801211238</time>
+                <shape>
+                    <CircularArea>
+                        <coord>
+                            <X>27 28 25.00S</X>
+                            <Y>153 01 43.00E</Y>
+                        </coord>
+                        <radius>5000</radius>
+                    </CircularArea>
+                </shape>
+            </pd>
+        </pos>
+    </slia>
+</svc_result>
+----
 
 
-You can simulate a simple Notify dialog by following the below steps: 
-
-* Fill the ISDN field with a preferred ISDN number, for example "1111" is good for SS7 Simulator.
-  Now press "Apply changes". 
-* Perform "reset" operation. 
-Perform "sendNotify" operation with parameters: String=<Text of your notification>, boolean=false, int=60000 and String=<any random string>. Parameters definition is as below  
-
-** 1st String is GMLC message that you want to push to mobile 
-** 2nd Boolean if set to true means GMLC Gw will send empty TCAP Begin and try to establish dialog before sending actual message. 
-** 3rd Int is custom invoke timeout. User must respond within this period else GMLC Gw will terminate Dialog and Application will get appropriate error message 
-** 4th String is random string that is stored at GMLC Gw side as custom object.
-** When ever response comes back, GMLC Gw will include this custom string in XML Payload. 
-** Perform "close" operation. 
-
-You will now find a notification at the SS7 Simulator. 
-
-You can also simulate more complicated scenarios like pushing the tree based menu to user and expecting some input from users by calling `sendRequest`.
-The below Class provides more explanation for attributes and operations of HttpPush. 
 
 [[_running_shell]]
 == Running the Shell
@@ -165,9 +213,7 @@ Shell can be started by issuing the following command from [path]_{this-folder}-
 Once console starts, it will print following information and await further commands:
 
 ----
-
-version=2.0.0-SNAPSHOT,name=mobicents CLI,prefix=restcomm,vendor=TeleStax
-mobicents>
+version=7.0.1383,name=Restcomm jSS7 CLI,prefix=restcomm,vendor=TeleStax
 ----
 
 Before issuing further commands you must connect to a managed instance.
@@ -176,16 +222,12 @@ For more details on connecting to an instance and for a list of all supported co
 [[_connect_gui]]
 == Connect to a new Instance
 
-You can connect to a new instance by entering the IP:Port values and the login credentials in the top left corner of the GUI.
-However please note that this feature is not available in this release but will be fully functional in the next release.
- 
+You can connect to a new instance by entering the IP:Port values and then login credentials in the top left corner of the GUI.
 
 [[_gui_security]]
 == Authentication
 
 {this-platform} {this-application} GUI Management Security is based on the JBoss Security Framework.
-However please note that the feature is not fully functional yet and you will not be able to sign-out or sign-in using the login panel at the top right corner of the GUI.
-Future releases will offer a full implementation. 
 
 As of now, there is basic authentication offered (which is based on the JBoss Security framework). When you try to start the Web Console, you will be prompted to enter login credentials.
 These credentials can be configured in the files [path]_jmx-console-roles.properties_ and [path]_jmx-console-users.properties_ located at [path]_{this-folder}-gmlc-<version>/jboss-5.1.0.GA/server/<profile>/conf/props/_. 
