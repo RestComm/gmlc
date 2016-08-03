@@ -123,31 +123,36 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     }
 
     /**
-     * Chosen HTTP Request Type (GET or MLP)
+     * Request
      */
-    private HttpRequestType httpRequestType = null;
+    private class HttpRequest implements Serializable {
+        HttpRequestType type;
+        String msisdn;
 
-    /**
-     * MSISDN being located
-     */
-    private String requestingMSISDN = null;
+        public HttpRequest(HttpRequestType type, String msisdn) {
+            this.type = type;
+            this.msisdn = msisdn;
+        }
+
+        public HttpRequest(HttpRequestType type) {
+            this(type, "");
+        }
+    }
 
     /**
      * Response Location
      */
-    private int responseCellId = -1;
-    private int responseMCC = -1;
-    private int responseMNC = -1;
-    private int responseLAC = -1;
-    private int responseAOL = -1;
-    // private String responseSS = "-1"; keep it for future use
-    private String responseVLR = "-1";
-
-
-    /**
-     * Response type (success, error type)
-     */
-    private MLPResponse.MLPResultType responseType = null;
+    private class CGIResponse implements Serializable {
+        String x;
+        String y;
+        String radius;
+        int cell = -1;
+        int mcc = -1;
+        int mnc = -1;
+        int lac = -1;
+        int aol = -1;
+        String vlr = "-1";
+    }
 
     /**
      * For debugging - fake location data
@@ -220,7 +225,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	public void onDialogTimeout(org.mobicents.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {
         this.logger.severe("\nRx :  onDialogTimeout " + evt);
 
-		this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogTimeout");
+		this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null, "DialogTimeout");
 	}
 
 	public void onDialogDelimiter(org.mobicents.slee.resource.map.events.DialogDelimiter event,
@@ -239,21 +244,21 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	public void onDialogReject(org.mobicents.slee.resource.map.events.DialogReject event, ActivityContextInterface aci) {
         this.logger.severe("\nRx :  onDialogReject " + event);
 
-        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogReject: " + event);
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null, "DialogReject: " + event);
 	}
 
 	public void onDialogUserAbort(org.mobicents.slee.resource.map.events.DialogUserAbort event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
         this.logger.severe("\nRx :  onDialogUserAbort " + event);
 
-        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogUserAbort: " + event);
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null, "DialogUserAbort: " + event);
 	}
 
 	public void onDialogProviderAbort(org.mobicents.slee.resource.map.events.DialogProviderAbort event,
 			ActivityContextInterface aci/* , EventContext eventContext */) {
         this.logger.severe("\nRx :  onDialogProviderAbort " + event);
 
-        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "DialogProviderAbort: " + event);
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null, "DialogProviderAbort: " + event);
 	}
 
 	public void onDialogClose(org.mobicents.slee.resource.map.events.DialogClose event, ActivityContextInterface aci) {
@@ -294,7 +299,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
         this.handleLocationResponse(
                 (error_code == MAPErrorCode.unknownSubscriber ? MLPResponse.MLPResultType.UNKNOWN_SUBSCRIBER
-                        : MLPResponse.MLPResultType.SYSTEM_FAILURE), "ReturnError: " + String.valueOf(error_code) + " : "
+                        : MLPResponse.MLPResultType.SYSTEM_FAILURE), null, "ReturnError: " + String.valueOf(error_code) + " : "
                         + event.getMAPErrorMessage());
 	}
 
@@ -302,7 +307,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 			ActivityContextInterface aci/* , EventContext eventContext */) {
         this.logger.severe("\nRx :  onRejectComponent " + event);
 
-        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, "RejectComponent: " + event);
+        this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null, "RejectComponent: " + event);
 	}
 
 	/**
@@ -325,6 +330,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	        MAPDialogMobility mapDialogMobility = event.getMAPDialog();
 			SubscriberInfo si = event.getSubscriberInfo();
             MLPResponse.MLPResultType result;
+            CGIResponse response = new CGIResponse();
             String mlpClientErrorMessage = null;
 
             if (si != null) {
@@ -334,23 +340,23 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                         CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = si.getLocationInformation()
                                 .getCellGlobalIdOrServiceAreaIdOrLAI();
                         if (cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength() != null) {
-                            this.responseMCC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                            response.mcc = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
                                     .getMCC();
-                            this.responseMNC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                            response.mnc = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
                                     .getMNC();
-                            this.responseLAC = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                            response.lac = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
                                     .getLac();
-                            this.responseCellId = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
+                            response.cell = cellGlobalIdOrServiceAreaIdOrLAI.getCellGlobalIdOrServiceAreaIdFixedLength()
                                     .getCellIdOrServiceAreaCode();
                         }
                     }
 
                     if (si.getLocationInformation().getAgeOfLocationInformation() != null) {
-                        this.responseAOL = si.getLocationInformation().getAgeOfLocationInformation().intValue();
+                        response.aol = si.getLocationInformation().getAgeOfLocationInformation().intValue();
                     }
 
                     if (si.getLocationInformation().getVlrNumber() != null) {
-                        this.responseVLR = si.getLocationInformation().getVlrNumber().getAddress();
+                        response.vlr = si.getLocationInformation().getVlrNumber().getAddress();
                     }
                 } else if (si.getSubscriberState() != null) {
                     result = MLPResponse.MLPResultType.ABSENT_SUBSCRIBER;
@@ -365,11 +371,11 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             }
 
             // Handle successfully having retried the device's cell-id
-            this.handleLocationResponse(result, mlpClientErrorMessage);
+            this.handleLocationResponse(result, response, mlpClientErrorMessage);
 
 		} catch (Exception e) {
             logger.severe(String.format("Error while trying to process AnyTimeInterrogationResponse=%s", event), e);
-            this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE,
+            this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null,
                     "Internal failure occurred while processing network response: " + e.getMessage());
 		}
 	}
@@ -404,7 +410,9 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                            EventContext eventContext) {
         setEventContext(eventContext);
         HttpServletRequest httpServletRequest = event.getRequest();
-        httpRequestType = HttpRequestType.fromPath(httpServletRequest.getPathInfo());
+        HttpRequestType httpRequestType = HttpRequestType.fromPath(httpServletRequest.getPathInfo());
+        setHttpRequest(new HttpRequest(httpRequestType));
+        String requestingMSISDN = null;
 
         switch (httpRequestType) {
             case REST:
@@ -418,10 +426,12 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                     MLPRequest mlpRequest = new MLPRequest(logger);
                     requestingMSISDN = mlpRequest.parseRequest(body);
                 } catch(MLPException e) {
-                    handleLocationResponse(e.getMlpClientErrorType(), "System Failure: " + e.getMlpClientErrorMessage());
+                    handleLocationResponse(e.getMlpClientErrorType(), null, "System Failure: " + e.getMlpClientErrorMessage());
+                    return;
                 } catch (IOException e) {
                     e.printStackTrace();
-                    handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "System Failure: Failed to read from server input stream");
+                    handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, null, "System Failure: Failed to read from server input stream");
+                    return;
                 }
                 break;
             default:
@@ -430,14 +440,15 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 return;
         }
 
+        setHttpRequest(new HttpRequest(httpRequestType, requestingMSISDN));
         logger.info(String.format("Handling %s request, msisdn: %s", httpRequestType.name().toUpperCase(), requestingMSISDN));
 
         if (requestingMSISDN != null) {
             eventContext.suspendDelivery();
-            getSingleMSISDNLocation();
+            getSingleMSISDNLocation(requestingMSISDN);
         } else {
             logger.info("MSISDN is null, sending back -1 for cellid");
-            handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, "Invalid MSISDN specified");
+            handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, null, "Invalid MSISDN specified");
         }
     }
 
@@ -448,6 +459,10 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
 	public abstract EventContext getEventContext();
 
+    public abstract void setHttpRequest(HttpRequest httpRequest);
+
+    public abstract HttpRequest getHttpRequest();
+
 	/**
 	 * Private helper methods
 	 */
@@ -455,15 +470,15 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     /**
      * Retrieve the location for the specified MSISDN via ATI request to the HLR
      */
-    private void getSingleMSISDNLocation() {
+    private void getSingleMSISDNLocation(String requestingMSISDN) {
         if (!requestingMSISDN.equals(fakeNumber)) {
             try {
                 MAPDialogMobility mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(
                         this.getSRIMAPApplicationContext(), this.getServiceCenterSccpAddress(), null,
-                        convertAddressFieldToSCCPAddress(this.requestingMSISDN), null);
+                        convertAddressFieldToSCCPAddress(requestingMSISDN), null);
 
                 ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
-                        org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, this.requestingMSISDN);
+                        org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, requestingMSISDN);
                 SubscriberIdentity subsId = new SubscriberIdentityImpl(isdnAdd);
                 RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
                 ISDNAddressString gscmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
@@ -477,24 +492,27 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
                 mapDialogMobility.send();
             } catch (MAPException e) {
-                this.logger.severe("MAPException while trying to send ATI request for MSISDN=" + this.requestingMSISDN, e);
-                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE,
+                this.logger.severe("MAPException while trying to send ATI request for MSISDN=" + requestingMSISDN, e);
+                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null,
                         "System Failure: Failed to send request to network for position: " + e.getMessage());
             } catch (Exception e) {
-                this.logger.severe("Exception while trying to send ATI request for MSISDN=" + this.requestingMSISDN, e);
-                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE,
+                this.logger.severe("Exception while trying to send ATI request for MSISDN=" + requestingMSISDN, e);
+                this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null,
                         "System Failure: Failed to send request to network for position: " + e.getMessage());
             }
         }
         else {
             // Handle fake success
             if (this.fakeLocationType == MLPResponse.MLPResultType.OK) {
-                this.responseCellId = this.fakeCellId;
-                this.handleLocationResponse(this.fakeLocationType, null);
+                CGIResponse response = new CGIResponse();
+                response.cell = fakeCellId;
+                response.x = fakeLocationX;
+                response.y = fakeLocationY;
+                response.radius = fakeLocationRadius;
+                this.handleLocationResponse(MLPResponse.MLPResultType.OK, response, null);
             }
             else {
-                this.responseCellId = -1;
-                this.handleLocationResponse(this.fakeLocationType, this.fakeLocationAdditionalInfoErrorString);
+                this.handleLocationResponse(this.fakeLocationType, null, this.fakeLocationAdditionalInfoErrorString);
             }
         }
     }
@@ -535,26 +553,29 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
      * We're making use of the MLPResponse class for both GET/POST requests for convenience and
      * because eventually the GET method will likely be removed
      * @param mlpResultType OK or error type to return to client
+     * @param response CGIResponse on location attempt
      * @param mlpClientErrorMessage Error message to send to client
      */
-    private void handleLocationResponse(MLPResponse.MLPResultType mlpResultType, String mlpClientErrorMessage) {
-        switch(this.httpRequestType)
+    private void handleLocationResponse(MLPResponse.MLPResultType mlpResultType, CGIResponse response, String mlpClientErrorMessage) {
+        HttpRequest request = getHttpRequest();
+
+        switch(request.type)
         {
             case REST:
                 if (mlpResultType == MLPResponse.MLPResultType.OK) {
                 	StringBuilder getResponse = new StringBuilder();
 					getResponse.append("mcc=");
-					getResponse.append(this.responseMCC);
+					getResponse.append(response.mcc);
 					getResponse.append(",mnc=");
-					getResponse.append(this.responseMNC);
+					getResponse.append(response.mnc);
 					getResponse.append(",lac=");
-					getResponse.append(this.responseLAC);
+					getResponse.append(response.lac);
 					getResponse.append(",cellid=");
-					getResponse.append(this.responseCellId);
+					getResponse.append(response.cell);
 					getResponse.append(",aol=");
-					getResponse.append(this.responseAOL);
+					getResponse.append(response.aol);
 					getResponse.append(",vlrNumber=");
-					getResponse.append(this.responseVLR);
+					getResponse.append(response.vlr);
 
                     this.sendHTTPResult(getResponse.toString());
                 }
@@ -568,16 +589,15 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 MLPResponse mlpResponse = new MLPResponse(this.logger);
 
                 if (mlpResultType == MLPResponse.MLPResultType.OK) {
-                    svcResultXml = mlpResponse.getSinglePositionSuccessXML(this.fakeLocationX, this.fakeLocationY, this.fakeLocationRadius, this.requestingMSISDN);
+                    svcResultXml = mlpResponse.getSinglePositionSuccessXML(response.x, response.y, response.radius, request.msisdn);
                 }
                 else if (MLPResponse.isSystemError(mlpResultType)) {
                     svcResultXml = mlpResponse.getSystemErrorResponseXML(mlpResultType, mlpClientErrorMessage);
                 }
                 else {
-                    svcResultXml = mlpResponse.getPositionErrorResponseXML(this.requestingMSISDN, mlpResultType, mlpClientErrorMessage);
+                    svcResultXml = mlpResponse.getPositionErrorResponseXML(request.msisdn, mlpResultType, mlpClientErrorMessage);
                 }
 
-                this.logger.info("Generated response XML: "+svcResultXml);
                 this.sendHTTPResult(svcResultXml);
                 break;
         }
@@ -610,7 +630,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 				ctx.resumeDelivery();
 			}
 
-			logger.info("HTTP Request received and response sent.");
+			logger.info("HTTP Request received and response sent, responseData=" + responseData);
 
 			// getNullActivity().endActivity();
 		} catch (Exception e) {
