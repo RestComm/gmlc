@@ -16,9 +16,9 @@
 				<cmp-field>
 					<cmp-field-name>eventContext</cmp-field-name>
 				</cmp-field>
-                <cmp-field>
-                    <cmp-field-name>httpRequest</cmp-field-name>
-                </cmp-field>
+				<cmp-field>
+					<cmp-field-name>httpRequest</cmp-field-name>
+				</cmp-field>
 			</sbb-abstract-class>
 		</sbb-classes>
 		<event event-direction="Receive" initial-event="False">
