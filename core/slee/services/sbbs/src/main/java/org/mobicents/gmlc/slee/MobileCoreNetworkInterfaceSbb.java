@@ -133,6 +133,10 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             this.type = type;
             this.msisdn = msisdn;
         }
+
+        public HttpRequest(HttpRequestType type) {
+            this(type, "");
+        }
     }
 
     /**
@@ -407,6 +411,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         setEventContext(eventContext);
         HttpServletRequest httpServletRequest = event.getRequest();
         HttpRequestType httpRequestType = HttpRequestType.fromPath(httpServletRequest.getPathInfo());
+        setHttpRequest(new HttpRequest(httpRequestType));
         String requestingMSISDN = null;
 
         switch (httpRequestType) {
@@ -422,9 +427,11 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                     requestingMSISDN = mlpRequest.parseRequest(body);
                 } catch(MLPException e) {
                     handleLocationResponse(e.getMlpClientErrorType(), null, "System Failure: " + e.getMlpClientErrorMessage());
+                    return;
                 } catch (IOException e) {
                     e.printStackTrace();
                     handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, null, "System Failure: Failed to read from server input stream");
+                    return;
                 }
                 break;
             default:
