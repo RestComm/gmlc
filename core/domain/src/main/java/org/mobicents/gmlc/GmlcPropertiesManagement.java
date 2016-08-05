@@ -159,7 +159,7 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 					.append(PERSIST_FILE_NAME);
 		} else {
 			persistFile
-					.append(System.getProperty(GmlcManagement.USSD_PERSIST_DIR_KEY,
+					.append(System.getProperty(GmlcManagement.GMLC_PERSIST_DIR_KEY,
 							System.getProperty(GmlcManagement.USER_DIR_KEY))).append(File.separator).append(this.name)
 					.append("_").append(PERSIST_FILE_NAME);
 		}

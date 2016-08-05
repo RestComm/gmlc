@@ -90,7 +90,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
 	private static final GmlcPropertiesManagement gmlcPropertiesManagement = GmlcPropertiesManagement.getInstance();
 
-	private SccpAddress serviceCenterSCCPAddress = null;
+	private SccpAddress gmlcSCCPAddress = null;
 	private MAPApplicationContext anyTimeEnquiryContext = null;
 
     /**
@@ -474,13 +474,14 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         if (!requestingMSISDN.equals(fakeNumber)) {
             try {
                 MAPDialogMobility mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(
-                        this.getSRIMAPApplicationContext(), this.getServiceCenterSccpAddress(), null,
-                        convertAddressFieldToSCCPAddress(requestingMSISDN), null);
+                        this.getSRIMAPApplicationContext(), this.getGmlcSccpAddress(), null,
+                        getHlrSCCPAddress(requestingMSISDN), null);
 
                 ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, requestingMSISDN);
                 SubscriberIdentity subsId = new SubscriberIdentityImpl(isdnAdd);
                 RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
+                // requestedInfo (MAP ATI): last known location and state (idle or busy), no IMEI/MS Classmark/MNP
                 ISDNAddressString gscmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN,
                         gmlcPropertiesManagement.getGmlcGt());
@@ -489,7 +490,6 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
                 ActivityContextInterface sriDialogACI = this.mapAcif.getActivityContextInterface(mapDialogMobility);
                 sriDialogACI.attach(this.sbbContext.getSbbLocalObject());
-
                 mapDialogMobility.send();
             } catch (MAPException e) {
                 this.logger.severe("MAPException while trying to send ATI request for MSISDN=" + requestingMSISDN, e);
@@ -517,17 +517,17 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         }
     }
 
-	protected SccpAddress getServiceCenterSccpAddress() {
-		if (this.serviceCenterSCCPAddress == null) {
+	protected SccpAddress getGmlcSccpAddress() {
+		if (this.gmlcSCCPAddress == null) {
             GlobalTitle gt = sccpParameterFact.createGlobalTitle(gmlcPropertiesManagement.getGmlcGt(), 0,
                     NumberingPlan.ISDN_TELEPHONY, null, NatureOfAddress.INTERNATIONAL);
-            this.serviceCenterSCCPAddress = sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+            this.gmlcSCCPAddress = sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
                     gt, 0, gmlcPropertiesManagement.getGmlcSsn());
 
 //			GlobalTitle0100 gt = new GlobalTitle0100Impl(gmlcPropertiesManagement.getGmlcGt(),0,BCDEvenEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY,NatureOfAddress.INTERNATIONAL);
 //			this.serviceCenterSCCPAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0, gmlcPropertiesManagement.getGmlcSsn());
 		}
-		return this.serviceCenterSCCPAddress;
+		return this.gmlcSCCPAddress;
 	}
 
 	private MAPApplicationContext getSRIMAPApplicationContext() {
@@ -538,7 +538,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 		return this.anyTimeEnquiryContext;
 	}
 
-	private SccpAddress convertAddressFieldToSCCPAddress(String address) {
+	private SccpAddress getHlrSCCPAddress(String address) {
         GlobalTitle gt = sccpParameterFact.createGlobalTitle(address, 0, NumberingPlan.ISDN_TELEPHONY, null,
                 NatureOfAddress.INTERNATIONAL);
         return sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,

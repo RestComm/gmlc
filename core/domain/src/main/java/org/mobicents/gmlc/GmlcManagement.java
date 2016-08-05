@@ -37,7 +37,7 @@ public class GmlcManagement {
 
 	public static final String JMX_DOMAIN = "org.mobicents.gmlc";
 
-	protected static final String USSD_PERSIST_DIR_KEY = "gmlc.persist.dir";
+	protected static final String GMLC_PERSIST_DIR_KEY = "gmlc.persist.dir";
 	protected static final String USER_DIR_KEY = "user.dir";
 
 	private String persistDir = null;
@@ -71,10 +71,10 @@ public class GmlcManagement {
 		// Register the MBeans
 		this.mbeanServer = MBeanServerLocator.locateJBoss();
 
-		ObjectName ussdPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
-		StandardMBean ussdPropMxBean = new StandardMBean(this.gmlcPropertiesManagement,
+		ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
+		StandardMBean gmlcPropMxBean = new StandardMBean(this.gmlcPropertiesManagement,
 				GmlcPropertiesManagementMBean.class, true);
-		this.mbeanServer.registerMBean(ussdPropMxBean, ussdPropObjNname);
+		this.mbeanServer.registerMBean(gmlcPropMxBean, gmlcPropObjNname);
 
 		logger.info("Started GMLC Management");
 	}
@@ -84,8 +84,8 @@ public class GmlcManagement {
 
 		if (this.mbeanServer != null) {
 
-			ObjectName ussdPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
-			this.mbeanServer.unregisterMBean(ussdPropObjNname);
+			ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
+			this.mbeanServer.unregisterMBean(gmlcPropObjNname);
 		}
 	}
 }
