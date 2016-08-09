@@ -143,9 +143,9 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
      * Response Location
      */
     private class CGIResponse implements Serializable {
-        String x;
-        String y;
-        String radius;
+        String x = "-1";
+        String y = "-1";
+        String radius = "-1";
         int cell = -1;
         int mcc = -1;
         int mnc = -1;
