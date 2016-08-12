@@ -49,6 +49,7 @@
 	<modules>
 		<module>core</module>
 		<module>tools</module>
+                <module>test-suite</module>
 	</modules>
 	<dependencies>
 	</dependencies>

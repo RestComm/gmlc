@@ -435,8 +435,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 }
                 break;
             default:
-                event.getResponse().setStatus(404);
-                sendHTTPResult("Request URI unsupported");
+                sendHTTPResult(HttpServletResponse.SC_NOT_FOUND, "Request URI unsupported");
                 return;
         }
 
@@ -563,6 +562,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         {
             case REST:
                 if (mlpResultType == MLPResponse.MLPResultType.OK) {
+                    
                 	StringBuilder getResponse = new StringBuilder();
 					getResponse.append("mcc=");
 					getResponse.append(response.mcc);
@@ -577,10 +577,10 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 					getResponse.append(",vlrNumber=");
 					getResponse.append(response.vlr);
 
-                    this.sendHTTPResult(getResponse.toString());
+                    this.sendHTTPResult(HttpServletResponse.SC_OK, getResponse.toString());
                 }
                 else {
-                    this.sendHTTPResult(mlpClientErrorMessage);
+                    this.sendHTTPResult(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, mlpClientErrorMessage);
                 }
                 break;
 
@@ -598,7 +598,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                     svcResultXml = mlpResponse.getPositionErrorResponseXML(request.msisdn, mlpResultType, mlpClientErrorMessage);
                 }
 
-                this.sendHTTPResult(svcResultXml);
+                this.sendHTTPResult(HttpServletResponse.SC_OK, svcResultXml);
                 break;
         }
     }
@@ -607,7 +607,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
      * Return the specified response data to the HTTP client
      * @param responseData Response data to send to client
      */
-	private void sendHTTPResult(String responseData) {
+	private void sendHTTPResult(int statusCode, String responseData) {
 		try {
 			EventContext ctx = this.getEventContext();
             if (ctx == null) {
@@ -620,6 +620,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	        HttpServletRequestEvent event = (HttpServletRequestEvent) ctx.getEvent();
 
 			HttpServletResponse response = event.getResponse();
+                        response.setStatus(statusCode);
             PrintWriter w = null;
             w = response.getWriter();
             w.print(responseData);
