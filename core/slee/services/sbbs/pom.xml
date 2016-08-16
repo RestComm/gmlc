@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
 
-	<parent>
-		<groupId>org.mobicents.gmlc</groupId>
-		<artifactId>services-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version> 
-	</parent>
+    <parent>
+        <groupId>org.mobicents.gmlc</groupId>
+        <artifactId>services-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version> 
+    </parent>
 	
-	<artifactId>sbbs</artifactId>
-	<name>Core : SLEE : Services Sbbs</name>
+    <artifactId>sbbs</artifactId>
+    <name>Core : SLEE : Services Sbbs</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>gmlc-library</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<artifactId>restcomm-slee-ra-map-ratype</artifactId>
-			<groupId>org.mobicents.resources</groupId>
-			<version>${restcomm.resources.map.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mobicents.servers.jainslee.api</groupId>
-			<artifactId>jain-slee-11-ext</artifactId>
-			<version>${jslee.ext.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<artifactId>sccp-impl</artifactId>
-			<groupId>org.mobicents.protocols.ss7.sccp</groupId>
-			<version>${jss7.restcomm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mobicents.resources</groupId>
-			<artifactId>http-servlet-ratype</artifactId>
-			<version>${restcomm.resources.http.servlet.version}</version>
-		</dependency>
-		<!-- JiBX for XML binding-->
-		<dependency>
-		    <groupId>org.jibx</groupId>
-		    <artifactId>jibx-run</artifactId>
-		    <version>1.2.6</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gmlc-library</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-map-ratype</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.resources.map.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mobicents.servers.jainslee.api</groupId>
+            <artifactId>jain-slee-11-ext</artifactId>
+            <version>${jslee.ext.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <artifactId>sccp-impl</artifactId>
+            <groupId>org.mobicents.protocols.ss7.sccp</groupId>
+            <version>${jss7.restcomm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mobicents.resources</groupId>
+            <artifactId>http-servlet-ratype</artifactId>
+            <version>${restcomm.resources.http.servlet.version}</version>
+        </dependency>
+        <!-- JiBX for XML binding-->
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-run</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-extras</artifactId>
+        </dependency>                
         <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
@@ -55,154 +58,105 @@
             <groupId>org.codehaus.mojo</groupId>
             <version>1.5.0</version>
         </dependency>
-	</dependencies>
+    </dependencies>
 	
-	<profiles>
-		<profile>
-			<id>test</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.testng</groupId>
-					<artifactId>testng</artifactId>
-					<version>${testng.version}</version>
-					<scope>test</scope>
-				</dependency>		
-			</dependencies>
-		</profile>
-		<profile>
-			<id>default</id>
-			<activation>
-			      <activeByDefault>true</activeByDefault>
-    		</activation>
-		    <properties>
-                <jibx.codegen.jars>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-tools.jar</jibx.codegen.jars>
-				<jibx.compile.jars>.:${basedir}/../../../../tools/jibx/support.jar:${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.compile.jars>
-      		</properties>
-  		</profile>
-		<profile>
-			<id>windows</id>
-		    <activation>
-		      <os>
-		        <family>Windows</family>
-		      </os>
-		    </activation>
-		    <properties>
-				<jibx.codegen.jars>.;${basedir}/../../../../tools/jibx/support.jar;${basedir}/../../../../tools/jibx/jibx-tools.jar</jibx.codegen.jars>
-                <jibx.compile.jars>.;${basedir}/../../../../tools/jibx/support.jar;${basedir}/../../../../tools/jibx/jibx-bind.jar</jibx.compile.jars>
-      		</properties>
-  		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.testng</groupId>
+                    <artifactId>testng</artifactId>
+                    <version>${testng.version}</version>
+                    <scope>test</scope>
+                </dependency>		
+            </dependencies>
+        </profile>
+    </profiles>
 	
-	<build>
-		<plugins>
-            <!-- This adds the JiBX generated-sources folder for IDEA -->
+    <build>
+        <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.4</version>
+                <groupId>org.jibx</groupId>
+                <artifactId>jibx-maven-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>test</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${basedir}/target/generated-sources</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-			<plugin>
-				<artifactId>exec-maven-plugin</artifactId>
-				<groupId>org.codehaus.mojo</groupId>
-				<version>1.5.0</version>
-				<executions>
                     <execution>
                         <id>JiBX Generate Sources</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>schema-codegen</goal>
                         </goals>
                         <configuration>
-                            <executable>java</executable>
-                            <workingDirectory>${basedir}/target/classes</workingDirectory>
-                            <arguments>
-                                <argument>-cp</argument>
-                                <argument>${jibx.codegen.jars}</argument>
-                                <argument>org.jibx.schema.codegen.CodeGen</argument>
-                                <argument>-c</argument>
-                                <argument>${basedir}/src/main/config/custom.xml</argument>
-                                <argument>-s</argument>
-                                <argument>${basedir}/src/main/config</argument>
-                                <argument>-t</argument>
-                                <argument>${basedir}/target/generated-sources</argument>
-                                <argument>mlp_svc_result_310.xsd</argument>
-                                <argument>mlp_svc_init_310.xsd</argument>
-                            </arguments>
+                            <customizations>
+                                <customization>${basedir}/src/main/config/custom.xml</customization>
+                            </customizations>
+                            <includeSchemas>
+                                <includeSchema>mlp_svc_result_310.xsd</includeSchema>
+                                <includeSchema>mlp_svc_init_310.xsd</includeSchema>
+                            </includeSchemas>
                         </configuration>
                     </execution>
-					<execution>
-						<id>JiBX Compile Bindings</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>java</executable>
-							<workingDirectory>${basedir}/target/classes</workingDirectory>
-							<arguments>
-								<argument>-cp</argument>
-								<argument>${jibx.compile.jars}</argument>
-								<argument>org.jibx.binding.Compile</argument>
-								<argument>${basedir}/target/generated-sources/binding.xml</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+                    <execution>
+                        <id>JiBX Compile Bindings</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>bind</goal>
+                        </goals>
+                        <configuration>
+                            <schemaBindingDirectory>target/generated-sources</schemaBindingDirectory>
+                            <includeSchemaBindings>
+                                <includeSchemaBindings>binding.xml</includeSchemaBindings>
+                            </includeSchemaBindings>
+                            <verbose>true</verbose>                        
+                            <load>true</load>
+                            <validate>true</validate>
+                            <!--<verbose>true</verbose>-->
+                            <verify>false</verify>
+                        </configuration>
+                    </execution>                    
+                </executions>
+
+            </plugin>
 
         </plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.jibx</groupId>
-										<artifactId>
-											jibx-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.2.6,)
-										</versionRange>
-										<goals>
-											<goal>bind</goal>
-											<goal>schema-codegen</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.jibx</groupId>
+                                        <artifactId>
+                                            jibx-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.2.6,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>bind</goal>
+                                            <goal>schema-codegen</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 	
 
 </project>
