@@ -108,7 +108,7 @@
                         <configuration>
                             <schemaBindingDirectory>target/generated-sources</schemaBindingDirectory>
                             <includeSchemaBindings>
-                                <includeSchemaBindings>*-binding.xml</includeSchemaBindings>
+                                <includeSchemaBindings>binding.xml</includeSchemaBindings>
                             </includeSchemaBindings>
                             <verbose>true</verbose>                        
                             <load>true</load>
