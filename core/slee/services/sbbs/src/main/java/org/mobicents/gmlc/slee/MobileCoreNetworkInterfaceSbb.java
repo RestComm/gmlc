@@ -441,14 +441,14 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
         setHttpRequest(new HttpRequest(httpRequestType, requestingMSISDN));
         if (logger.isFineEnabled()){
-            logger.fine(String.format("Handling %s request, msisdn: %s", httpRequestType.name().toUpperCase(), requestingMSISDN));
+            logger.fine(String.format("Handling %s request, MSISDN: %s", httpRequestType.name().toUpperCase(), requestingMSISDN));
         }
 
         if (requestingMSISDN != null) {
             eventContext.suspendDelivery();
             getSingleMSISDNLocation(requestingMSISDN);
         } else {
-            logger.info("MSISDN is null, sending back -1 for cellid");
+            logger.info("MSISDN is null, sending back -1 for Global Cell Identity");
             handleLocationResponse(MLPResponse.MLPResultType.FORMAT_ERROR, null, "Invalid MSISDN specified");
         }
     }
