@@ -440,7 +440,9 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         }
 
         setHttpRequest(new HttpRequest(httpRequestType, requestingMSISDN));
-        logger.info(String.format("Handling %s request, msisdn: %s", httpRequestType.name().toUpperCase(), requestingMSISDN));
+        if (logger.isFineEnabled()){
+            logger.fine(String.format("Handling %s request, msisdn: %s", httpRequestType.name().toUpperCase(), requestingMSISDN));
+        }
 
         if (requestingMSISDN != null) {
             eventContext.suspendDelivery();
@@ -631,7 +633,9 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 				ctx.resumeDelivery();
 			}
 
-			logger.info("HTTP Request received and response sent, responseData=" + responseData);
+			if (logger.isFineEnabled()){
+			    logger.fine("HTTP Request received and response sent, responseData=" + responseData);
+			}
 
 			// getNullActivity().endActivity();
 		} catch (Exception e) {
