@@ -164,7 +164,9 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 					.append("_").append(PERSIST_FILE_NAME);
 		}
 
-		logger.info(String.format("Loading GMLC Properties from %s", persistFile.toString()));
+		if (logger.isInfoEnabled()){
+		    logger.info(String.format("Loading GMLC Properties from %s", persistFile.toString()));
+		}
 
 		try {
 			this.load();
