@@ -3,49 +3,57 @@
 [[_gmlc_overview]]
 == Overview
 
-GMLC stands for Gateway Mobile Location Centre enables you to offer Location Based Services (LBS) to mobile subscribers roaming across several Mobile Network Operator's Radio Access Networks, regardless of the type of access (GERAN, UTRAN or E-UTRAN). 
+GMLC stands for Gateway Mobile Location Centre and enables offering Location Based Services (LBS) to mobile subscribers roaming across several Mobile Network Operator's Radio Access Networks, regardless of the type of access (GERAN, UTRAN or E-UTRAN). 
 
-Existing PLMN (Public Land Mobile Network) network elements are proprietary and run on non-standard operating environments located in trusted operator's zones which make it difficult to build and deploy new applications. Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over the Internet. The GMLC connects to these network elements and enables the flow of LCS (Location Services) messages to be extended to an open, standards-based application server (AS) located in the IP network. The AS also provides the tools and interfaces to enable access to content providers through the Internet. 
+Existing PLMN (Public Land Mobile Network) network elements are proprietary and run on non-standard operating environments located in trusted operator’s zones which make it difficult to build and deploy new applications. Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over the Internet. The GMLC connects to these network elements and enables the flow of LCS messages to be extended to an open, standards-based Application Server (AS) located in the IP network. The AS also provides the tools and interfaces to enable access to content providers through the Internet. 
 
-In one PLMN (Public Land Mobile Network), there may be more than one GMLC. A GMLC is the first node an external LCS client accesses in a PLMN.  
+A GMLC is the first node an external LCS client accesses in a PLMN (Public Land Mobile Network). There may be more than on GMLC in a PLMN.   
 
 The simplest location information a GMLC can retrieve is by issuing a MAP ATI (Any Time Interrogation) request to the HLR (Home Location register). MAP ATI is part of CAMEL phase 1. If the GMLC is allowed to proceed with the operation at the HLR, the latter will respond with the Cell Global Identity (CGI) as for the latest MAP Update Location operation carried out between the HLR and VLR at which the target mobile equipment is attached too (therefore, an additional parameter known as "Age of Location Information" is also included in the response). As shown in the figure below taken from 3GPP TS 23.003, CGI is made up of multiple components, namely, MCC (Mobile Country Code), MNC (Mobile Network Code), LAC (Location Area Code) and CI (Cell Identity). The combination of MCC and MCC represents the PLMN at which the cell is located, in other words, the country and Mobile Network Operator it belongs to. LAC represents a geographic location area in which a cluster of Base Transceiver Stations (BTS) are located for radio access, while CI, uniquely identifies the BTS providing service to the target subscriber in that area (more commonly known as cell). From CAMEL phase 4 compliance onward, MAP ATI can also retrieve the IMEI and MS Classmark.
 
-.Cell Global Identification structure (3GPP TS 23.003)
+
 image::images/CGI.png[Cell Global Identity, align="center"]
 
 CGI represents the location information with greatest error margin retrievable by a GMLC in GSM based core networks. 
 
-From 3G (UMTS) and beyond, more accurate positioning methods were developed for cellular networks. Of course, accuracy comes with a price. When these dearer location capabilities are available, the GMLC may request routing information from the HLR via the Lh interface or HSS (Home Subscriber Server) via the SLh/Lh interface. 
+As for 3GPP specs, hypothetically a Stand-Alone SMLC
+can be placed within the BSC for triggering more precise location procedures, but in practice this is hardly found. More accurate positioning methods were developed for cellular networks, particularly from 3G (UMTS) and beyond. Naturally, accuracy comes with a price. When these dearer location capabilities are available, the GMLC may request routing information from the HLR via the Lh interface or HSS (Home Subscriber Server) via the SLh/Lh interface. 
 
-.GSM/GPRS/UMTS Location Services interfaces 
 image::images/LCS_2G-3G_interfaces.png[]
 
-While Lh interface reside in a Circuit-Switched Core Network and therefore demands SS7 MAP operations, SLh is placed in the Evolved Packet Core (EPC) and is a Diameter-based interface for LTE location services, as specified by 3GPP TS 29.172. After performing registration authorization, it may send positioning requests to either VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node), MSCS (Mobile Switching Centre Server) or MME (Mobility Management Entity) and receives final location estimates from the corresponding entity via  the Lg, Lgd or SLg interface. Again, Lg/Lgd interfaces demand SS7 MAP operations while SLg is a Diameter-based interface for LTE location occupying ELP procedures, where ELP stands for EPC Location Protocol as specified by 3GPP TS 29.172.
+While Lh interface reside in a Circuit-Switched Core Network and therefore demands SS7 MAP operations, SLh is placed in the Evolved Packet Core (EPC) and is a Diameter-based interface for LTE location services, as specified by 3GPP TS 29.173. After performing registration authorization, it may send positioning requests to either VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node), MSCS (Mobile Switching Centre Server) or MME (Mobility Management Entity) and receives final location estimates from the corresponding entity via  the Lg, Lgd or SLg interface. Again, Lg/Lgd interfaces demand SS7 MAP operations while SLg is a Diameter-based interface for LTE location occupying ELP procedures, where ELP stands for EPC Location Protocol as specified by 3GPP TS 29.172.
 
-.LTE EPC Location Services interfaces
 image::images/LCS-LTE_interfaces.png[]
 
 Up to this point, what is known as "Immediate Location Request" has been covered. A GMLC can also handle "Deferred Location Request", which represents retrieving of location contingent on some current or future events where the response from the LCS Server to the LCS Client may occur some time after the request was sent, as described in 3GPP TS 23.271. When a deferred location request is triggered by the GMLC, event-based "Subscriber Location Reports", either conveyed through MAP or ELP are sent back to the GMLC by the entity at which the target mobile equipment is attached to (VMSC, MSCS, SGSN or MME).
 
-Finally, {this-platform} supports the following MAP and Diameter-based operations for LCS (Location Services) within Mobile Network Operators:
+Next figure exhibits TelScale GMLC (productized version of RestComm GMLC) architecture and interfaces with aforementioned entities and RestComm (and particularly, RestComm Geolocation API).
+
+image::images/GMLC-RestComm-MNO.png[]
+
+Finally, RestComm GMLC supports the following MAP and Diameter-based operations for LCS (Location Services) within Mobile Network Operators:
 
 * MAP ATI: Any-Time-Interrogation, to gather Cell Global Identity, age of location information and state of the target mobile station from the HLR.
 * MAP SRIforLCS: Send Routing Information for Location Services, to gather IMSI and core network entity address (MSC or SGSN) to which send further location request.
 * MAP PSL: Provide Subscriber Location, to gather location information from the UTRAN (UMTS Terrestrial Radio Access Network), which should include, besides Cell Global Identity,  location estimates in geographic coordinates of the target User Equipment, depending on available positioning methods (e.g. E-OTD, OTDOA, UTDOA, A-GPS, etc.).
 * MAP SLR: Subscriber Location Report, to gather location of a target User Equipment from the MSC or SGSN when a request for location is either implicitly administered or made at some earlier time in MAP PSL for event based deferred type of location.
 * Diameter Routing Information Request/Answer (RIR/RIA): analogous to MAP SRIforLCS but over Diameter based SLh interface between GMLC and HSS.
-* ELP Provide Location Request/Answer (PLR/PLA): analogous to MAP PSL but over Diameter-based Evolve Packet Core Location Protocol (ELP) SLg interface between GMLC and MME.
-* ELP Location Report Request/Answer (LRR/LRA): analogous to MAP SLR, but over Diameter-based Evolve Packet Core Location Protocol (ELP) SLg interface between GMLC and MME.
+* ELP Provide Location Request/Answer (PLR/PLA): analogous to MAP PSL but over Diameter-based Evolved Packet Core Location Protocol (ELP) SLg interface between GMLC and MME.
+* ELP Location Report Request/Answer (LRR/LRA): analogous to MAP SLR, but over Diameter-based Evolved Packet Core Location Protocol (ELP) SLg interface between GMLC and MME.
 
 == Message Flow
 
 GMLC service begins when the network sends an HTTP (GET/POST) request to the GMLC Gateway.
 
-The message flow involves the following steps:  
+Following figure displays the signal flow between an application, RestComm Geolocation API and RestComm GMLC within an UMTS Core Network. The term RAN (Radio Access Network) might involve the RNC (Radio Network Controller), a Stand-Alone SMLC (Serving Mobile Location Centre), the NB (Node B -base station-) and the UE (User Equipment).
 
+image::images/RestComm-GMLC-UMTS_flow.png[]
 
+Next figure displays the signal flow between an application, RestComm Geolocation API and RestComm GMLC within an EPS (Evolved Packet System) for LTE/LTE-Advanced location services. The Radio Access Network in this case involves positioning procedures involving the E-SMLC (Evolved SMLC), eNB (evolved NB), and the UE.
 
+image::images/RestComm-GMLC-LTE_flow.png[]
+
+The terms MLP SLIR/SLIA and SLIREP stand for Mobile Location Protocol Standard Location Immediate Request/Response/Report as for OMA (Open Mobile Alliance) Mobile Location Protocol 3.2 specification.
 
 [[_restcomm_gmlc_overview]]
 == {this-platform} {this-application} 
@@ -53,10 +61,10 @@ The message flow involves the following steps:
 [[_restcomm_gmlc_overview_features]]
 === Major Features
 
-{this-platform} 's implementation of GMLC Gateway is the first and only open source GMLC Gateway with a host of rich features and advantages. 
+RestComm's implementation of GMLC is the first and only open source GMLC with a host of rich features and advantages. 
 
 Java-based:::
-  {this-platform} {this-application} is the only Java based GMLC Gateway.
+  RestComm GMLC is the only Java based GMLC Gateway.
   It is robust and reliable and can be installed on any Operating System that supports Java (JDK 7 and SCTP). 
 
 Open Source:::
@@ -64,15 +72,15 @@ Open Source:::
   It is supported by a vibrant Open source community. 
 
 Carrier Grade Performance:::
-  {this-platform} {this-application} has been developed to be deployed at Mobile Network Operators around the world so as to process billions of LCS transactions every day.
+  RestComm GMLC has been developed to be deployed at Mobile Network Operators around the world so as to process billions of LCS transactions every day.
   A single RestComm GMLC node can process up to 1500's LCS/sec and can be adapted to the needs of Communication Service Providers of different sizes in any country reducing  CAPEX and OPEX costs. 
 
 Cloud Ready:::
-  {this-platform} {this-application} is Cloud-ready.
+  RestComm GMLC is Cloud-ready.
   It can be deployed on dedicated hardware, private cloud infrastructure or public IaaS such as AWS. 
 
 SS7 Hardware Cards:::
-  {this-platform} {this-application} can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only. 
+  RestComm GMLC can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only. 
 
 SIGTRAN (M3UA):::
   It also has in-built support for SIGTRAN (M3UA using SCTP).
@@ -81,27 +89,27 @@ Diameter-based SLh and SLg (ELP):::
   It also has in-built support for LCS in LTE networks.
 
 HTTP interface:::
-  HTTP interface is a common interface that can be used for connection with service applications. {this-platform} {this-application} supports network/application/service initiated LCS requests.
+  HTTP interface is a common interface that can be used for connection with service applications. RestComm GMLC supports network/application/service initiated LCS requests.
 
 MLP:::
   Location requests can be sent to the GMLC using plain XML over HTTP(S), with the request being encoded in OMA MLP (Mobile Location Protocol). See the full OMA MLP technical specification here: http://technical.openmobilealliance.org/Technical/technical-information/release-program/current-releases/mlp-v3-1
 
 Easy Configuration and Management:::
-  {this-platform} {this-application} comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the  Gateway at run-time and manage it using simple commands rather than do everything manually.
-   {this-platform} {this-application} also comes with a Graphical User Interface that will allow you to configure, monitor and manage the Gateway through a convenient user-friendly interface. 
+  RestComm GMLC comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the  Gateway at run-time and manage it using simple commands rather than do everything manually.
+   RestComm GMLC also comes with a Graphical User Interface that will allow you to configure, monitor and manage the Gateway through a convenient user-friendly interface. 
 
 [[_mobicents_gmlc_overview_tech_spec]]
 === Technical Specifications
 
-{this-platform} {this-application} is not restricted by Transaction Per Second model.
+RestComm GMLC is not restricted by Transaction Per Second model.
 The only restricting factor is memory + CPU capacity of the host servers, third-party applications or the underlying database service. 
 
-* {this-platform} {this-application} supports as many as 1073741823 incoming and 1073741823 outgoing concurrent sessions/dialogs.
-* {this-platform} {this-application} supports unlimited E1 links and the only limiting factor is the underlying TDM board used.
-* {this-platform} {this-application} SCTP supports as many associations as supported by the underlying Operating System.
+* RestComm GMLC supports as many as 1073741823 incoming and 1073741823 outgoing concurrent sessions/dialogs.
+* RestComm GMLC supports unlimited E1 links and the only limiting factor is the underlying TDM board used.
+* RestComm GMLC SCTP supports as many associations as supported by the underlying Operating System.
   Can be setup in multihome.
-* {this-platform} {this-application} M3UA can be confgured to have as many ASP's / IPSP's as needed by the system.
-* {this-platform} {this-application} SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.        
+* RestComm GMLC M3UA can be confgured to have as many ASP's / IPSP's as needed by the system.
+* RestComm GMLC SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.        
 
 [[_mobicents_gmlc_overview_http]]
 === HTTP Transfer Mechanism
