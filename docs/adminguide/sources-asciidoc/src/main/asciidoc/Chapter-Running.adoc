@@ -121,7 +121,7 @@ This will launch the Simulator GUI Application.
   To test under Windows OS, you must change the SS7 simulator settings to TCP.
 . After approximately 30 seconds you will see the appear two events in the the Simulator window log showing "Sctp connection is up" and "M3UA connection is active" as in figure below:  
 +
-.GMLC SS7 Simulator - Active
+
 image::images/GMLC_SS7_Simulator_ACTIVE.png[]
 
 . {this-platform} {this-application} is configured, in simulator mode, to process an HTTP GET to trigger a MAP ATI at the jSS7 Simulator, which will return a fake answer for the only purpose of testing. Assuming the server is running with no IP binding (i.e. it's running in loopback address 127.0.0.1), open a browser and perform an HTTP GET test, for example (msisdn can be any number except the dummy one reserved, i.e. 19395550113): http://127.0.0.1:8080/restcomm/gmlc/rest?msisdn=87583439
@@ -130,10 +130,8 @@ You should immediately receive the following testing response with GCI + Age of 
 
 If you check the SS7 simulator (where the MAP ATI was sent and responded back), you should be able to see the following request and response (click on "Open Event Window" on each event logged):
 
-.GMLC SS7 Simulator - MAP ATI Request with opened Event Window
 image::images/SS7sim_MAP-ATI_req.png[]			
   
-.GMLC SS7 Simulator - MAP ATI Response with opened Event Window
 image::images/SS7sim_MAP-ATI_resp.png[]						
 
 .Procedure: Running {this-platform} jSS7 Simulator - HTTP POST MLP Request

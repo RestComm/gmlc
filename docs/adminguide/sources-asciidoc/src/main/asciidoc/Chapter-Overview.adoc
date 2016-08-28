@@ -43,17 +43,282 @@ Finally, RestComm GMLC supports the following MAP and Diameter-based operations 
 
 == Message Flow
 
+=== HTTP and MAP messages flow for GSM Location Services
+
 GMLC service begins when the network sends an HTTP (GET/POST) request to the GMLC Gateway.
+
+Next figure displays the signal flow between an application and RestComm GMLC within an GSM Core Network, from where location services are reduced to retrieving Global Cell Identity, Age of Location information and MSC/VLR address at which the target MSISDN is currently attached to, by means of a MAP ATI request to the HLR (subscriber’s state can be included in the response
+if requested in MAP ATI, from which «assumedIdle», «camelBusy» or «notProvidedByVlr» are the available responses). The application, via a REST Web Service, delivers an HTTP GET request to RestComm GMLC. RestComm GMLC then performs a MAP ATI request to the concerning GSM Core Network HLR and receives the corresponding response with location information as previously stated.
+
+image::images/App-GMLC-GSM_flow.png[]
+
+A deeper look inside the messages exchanged as for the previous diagram is shown next (all information depicted are ficticious, as an example)
+
+HTTP GET:
+....
+Internet Protocol Version 4, Src: 192.168.26.1, Dst: 192.168.26.128
+Transmission Control Protocol, Src Port: 48200 (48200), Dst Port: 8080 (8080), Seq: 1, Ack: 1, Len: 509
+Hypertext Transfer Protocol
+    GET /restcomm/gmlc/rest?msisdn=59899077937 HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /restcomm/gmlc/rest?msisdn=59899077937 HTTP/1.1\r\n]
+        Request Method: GET
+        Request URI: /restcomm/gmlc/rest?msisdn=59899077937
+        Request Version: HTTP/1.1
+....
+
+MAP ATI Request
+
+....
+IP 4, Src: 192.168.26.128, Dst: 41.188.110.5
+SCTP, Src Port: 8012 (8012), Dst Port: 8011 (8011)
+MTP 3 User Adaptation Layer (M3UA)
+SCCP
+    Called Party address
+        SubSystem Number: HLR (Home Location Register) (6)
+        Global Title 0x4 (9 bytes)
+            Called Party Digits: 59899077937
+    Calling Party address
+        SubSystem Number: GMLC(MAP) (145)
+        Global Title 0x4 (6 bytes)
+            Calling Party Digits: 222333
+TCAP
+    begin
+        dialogueRequest
+            application-context-name: 0.4.0.0.1.0.29.3 (anyTimeInfoEnquiryContext-v3)
+        components: 1 item
+            Component: invoke 
+                    invokeID: 0
+                    opCode: localValue: 71
+GSM MAP
+    Component: invoke (1)
+        invoke
+            invokeID: 0
+            opCode: anyTimeInterrogation (71)
+            subscriberIdentity: msisdn (1)
+                msisdn: 919598097739f7
+            requestedInfo
+                locationInformation
+                subscriberState
+            gsmSCF-Address: 91223233
+....
+
+MAP ATI Response
+
+....
+IP 4, Src: 41.188.110.5, Dst: 192.168.26.128
+SCTP, Src Port: 8011 (8011), Dst Port: 8012 (8012)
+MTP 3 User Adaptation Layer (M3UA)
+SCCP
+    Called Party address
+        SubSystem Number: GMLC(MAP) (145)
+        Global Title 0x4 (6 bytes)
+            Calling Party Digits: 222333
+    Calling Party address
+        SubSystem Number: HLR (Home Location Register) (6)
+        Global Title 0x4 (9 bytes)
+            Called Party Digits: 59899077937
+TCAP
+    end
+        Destination Transaction ID
+        oid: 0.0.17.773.1.1.1 (id-as-dialogue)
+        dialogueResponse
+            application-context-name: 0.4.0.0.1.0.29.3 (anyTimeInfoEnquiryContext-v3)
+            result: accepted (0)
+        components: 1 item
+            Component: returnResultLast
+                    invokeID: 0
+                    opCode: localValue: 71
+GSM MAP
+    Component: returnResultLast (2)
+        returnResultLast
+            invokeID: 0
+            resultretres
+                opCode: localValue (0)
+                    localValue: anyTimeInterrogation (71)
+                subscriberInfo
+                    locationInformation
+                        ageOfLocationInformation: 5
+                        geographicalInformation: 104f01231f9a0e00
+                        vlr-number: 915555556566
+                        cellGlobalIdOrServiceAreaIdOrLAI: cellGlobalIdOrServiceAreaIdFixedLength: 52f0107d0000dd
+                    subscriberState: assumedIdle (0)
+                        assumedIdle
+....
+
+HTTP GET Response:
+
+....
+IP Version 4, Src: 192.168.26.128, Dst: 192.168.26.1
+Transmission Control Protocol, Src Port: 8080 (8080), Dst Port: 48200 (48200), Seq: 230, Ack: 510, Len: 5
+Hypertext Transfer Protocol
+    HTTP/1.1 200 OK\r\n
+        [Expert Info (Chat/Sequence): HTTP/1.1 200 OK\r\n]
+        Request Version: HTTP/1.1
+        Status Code: 200
+        Response Phrase: OK
+    [HTTP response 1/1]
+    [Time since request: 0.341487879 seconds]
+    [Request in frame: 10]
+    HTTP chunked response
+        Data chunk (61 octets)
+        End of chunked encoding
+        \r\n
+    Data (61 bytes)  mcc=250,mnc=1,lac=32000,cellid=221,aol=5,vlrNumber=5555555666
+....
+
+The latter describes a success scenario, where the application gets the following answer to it HTTP GET tequest:
+
+....
+mcc=250,mnc=1,lac=32000,cellid=221,aol=5,vlrNumber=5555555666
+....
+
+Following, some non succesful HTTP GET responses are displayed:
+
+MAP ATI response with Subscriber State but no Location Information received:
+....
+SubscriberState: SubscriberState [subscriberStateChoice=netDetNotReachable, notReachableReason=notRegistered]
+....
+
+MAP ATI response received with no Subscriber Information:
+....
+Unknown SubscriberInfo received: xxxx
+....
+
+Erroneous MAP ATI response received:
+....
+Unknown AnyTimeInterrogationResponse received: xxxx
+....
+
+MAP ATI response received with UnknownSubscriber error:
+....
+ReturnError: 1 : MAPErrorMessageUnknownSubscriber [, unknownSubscriberDiagnostic=imsiUnknown]
+....
+
+MAP ATI response received with other error messages:
+....
+ReturnError: <error code> : <MAP Error message description>  
+ReturnError: 34 : MAPErrorMessageSystemFailure [networkResource=hlr]
+....
+
+When MSISDN is absent in the GET HTTP request - bad HTTP request syntax:
+....
+Invalid MSISDN specified
+....
+
+When a timeout occurs (e.g. no response from an HLR is received):
+....
+DialogTimeout
+....
+
+When other SS7 stack errors happen:
+....
+DialogReject: <description>
+....
+....
+DialogProviderAbort: <description>
+....
+....
+DialogUserAbort: <description>
+....
+....
+RejectComponent: <description>
+....
+
+Next figure displays the analogous signal flow as the one explained before, but for an HTTP POST request including OMA MLP payload. 
+
+
+Next figure displays the analogous signal flow as the one explained before, but including RestComm Geolocation API between the application and RestComm GMLC. Likewise, in this case, the MAP ATI request is triggered by RestComm by an HTTP POST request with MLP Standard Location Immediate Request (SLIR).
+
+image::images/RestComm-GMLC-GSM_flow.png[]
+
+Following, see an example of MLP payload included in HTTP POST request received by RestComm GMLC:
+
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.DTD">
+<svc_init xmlns="MLP_SVC_INIT_310.dtd">
+	<hdr>
+		<client>
+       			<id>USERNAME</id>
+       			<pwd>PASSWORD</pwd>
+       			<serviceid>SERVICEID</serviceid>
+     		</client>
+   	</hdr>
+   	<slir>
+     		<msids>
+       			<msid type="MSISDN">59899077937</msid>
+     		</msids>
+     		<eqop>
+        		<resp_timer>15</resp_timer>
+     		</eqop>
+   	</slir>
+</svc_init>
+....
+
+The corresponding answer to the MLP SLIR request (after reception of MAP ATI response from the HLR), i.e. the MLP SLIA (Standard Location Immediate Answer) is shown next:
+
+....
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
+    <slia ver="3.1.0">
+        <pos>
+            <msid>59899077937</msid>
+            <pd>
+                <time utc_off="-0300">20160828181421</time>
+                <shape>
+                    <CircularArea>
+                        <coord>
+                            <X>-1</X>
+                            <Y>-1</Y>
+                        </coord>
+                        <radius>-1</radius>
+                    </CircularArea>
+                </shape>
+            </pd>
+        </pos>
+    </slia>
+</svc_result>
+....
+
+An MLP SLIA including an unsuccessful location information retrieval due to "Unknown Subscriber" error received in MAP ATI response is shown next.
+
+....
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
+    <slia ver="3.1.0">
+        <result resid="4">UNKNOWN SUBSCRIBER</result>
+        <add_info>ReturnError: 1 : MAPErrorMessageUnknownSubscriber [, unknownSubscriberDiagnostic=imsiUnknown]</add_info>
+    </slia>
+</svc_result>
+....
+
+An MLP SLIA including an unsuccessful location information retrieval due to "System Failure" error received in MAP ATI response is shown next.
+
+....
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
+    <slia ver="3.1.0">
+        <result resid="1">SYSTEM FAILURE</result>
+        <add_info>ReturnError: 34 : MAPErrorMessageSystemFailure [networkResource=hlr]</add_info>
+    </slia>
+</svc_result>
+....
+
+
+=== HTTP and MAP messages flow for UMTS Location Services
 
 Following figure displays the signal flow between an application, RestComm Geolocation API and RestComm GMLC within an UMTS Core Network. The term RAN (Radio Access Network) might involve the RNC (Radio Network Controller), a Stand-Alone SMLC (Serving Mobile Location Centre), the NB (Node B -base station-) and the UE (User Equipment).
 
 image::images/RestComm-GMLC-UMTS_flow.png[]
 
+The terms MLP SLIR/SLIA and SLIREP stand for Mobile Location Protocol Standard Location Immediate Request/Response/Report as for OMA (Open Mobile Alliance) Mobile Location Protocol 3.2 specification.
+
+=== HTTP and Diameter-based messages flow for LTE Location Services
+
 Next figure displays the signal flow between an application, RestComm Geolocation API and RestComm GMLC within an EPS (Evolved Packet System) for LTE/LTE-Advanced location services. The Radio Access Network in this case involves positioning procedures involving the E-SMLC (Evolved SMLC), eNB (evolved NB), and the UE.
 
 image::images/RestComm-GMLC-LTE_flow.png[]
 
-The terms MLP SLIR/SLIA and SLIREP stand for Mobile Location Protocol Standard Location Immediate Request/Response/Report as for OMA (Open Mobile Alliance) Mobile Location Protocol 3.2 specification.
 
 [[_restcomm_gmlc_overview]]
 == {this-platform} {this-application} 
@@ -114,10 +379,9 @@ The only restricting factor is memory + CPU capacity of the host servers, third-
 [[_mobicents_gmlc_overview_http]]
 === HTTP Transfer Mechanism
 
-The {this-platform} makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). {this-platform} receives the GMLC request from the third-party applications and then translates these requests to SS7 MAP or Diameter based commands when applies. The HTTP callback mechanism allows the third-party Application to be agnostic to Operating System, Programming Language and Framework.
-The third-party Application can be either of the following technologies on any Operating System: 
+{this-platform} {this-application} makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). {this-platform} {this-application} receives location service requests from third-party applications and then translates these requests to SS7 MAP or Diameter based commands when applies. The HTTP callback mechanism allows the third-party application to be agnostic to Operating System, Programming Language and Framework.
+The third-party application can be either of the following technologies on any Operating System: 
 
-* Apache Tomcat, JBoss AS, Oracle Application Server, IBM Websphere etc for JSP/Servlet on Java 
+* Apache Tomcat, JBoss AS, Oracle Application Server, IBM Websphere, etc. for JSP/Servlet on Java 
 * PHP
 * Microsoft IIS for ASP
-    
