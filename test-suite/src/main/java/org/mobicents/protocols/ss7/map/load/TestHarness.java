@@ -33,6 +33,7 @@ import org.apache.log4j.SimpleLayout;
 import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
 import org.mobicents.protocols.ss7.m3ua.impl.parameter.ParameterFactoryImpl;
 import org.mobicents.protocols.ss7.map.api.MAPDialogListener;
+import org.mobicents.protocols.ss7.map.api.service.mobility.MAPServiceMobilityListener;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.ResetRequest;
@@ -60,7 +61,7 @@ import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
  * @author Fernando Mendioroz (fernando.mendioroz@telestax.com)
  *
  */
-public abstract class TestHarness implements MAPDialogListener {
+public abstract class TestHarness implements MAPDialogListener, MAPServiceMobilityListener {
 
     private static final Logger logger = Logger.getLogger("map.test");
 
@@ -76,7 +77,7 @@ public abstract class TestHarness implements MAPDialogListener {
     protected static int SERVER_SPC = 2; // Server Signaling Point Code
     protected static int NETWORK_INDICATOR = 2; // National Network
     protected static int SERVICE_INDICATOR = 3; // upper layer is SCCP
-    protected static int SSN = 145; // Sub-System Number
+    protected static int SSN = 8; // Sub-System Number
 
     // M3UA details
     protected static String CLIENT_IP = "127.0.0.1";

@@ -12,7 +12,7 @@
 	<property name="javac.source" value="1.7" />
 	<property name="srcroot" value="${root}/src" />
 
-	<property name="assemble.dir" value="${ant.file.restcomm.release}/../target/load" />
+	<property name="assemble.dir" value="${ant.file.restcomm.release}/../target/dependency" />
 	<path id="project.class.path">
 		<pathelement location="${assemble.dir}/sctp-api.jar" />
 		<pathelement location="${assemble.dir}/sctp-impl.jar" />
@@ -118,7 +118,7 @@
 			<arg value="2" /> <!-- Server PC -->
 			<arg value="2" /> <!-- NI -->
 			<arg value="3" /> <!-- SI -->
-			<arg value="6" /> <!-- SSN -->
+			<arg value="8" /> <!-- SSN -->
 			<arg value="100" /> <!-- RC -->	
 			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
 		</java>
@@ -148,8 +148,8 @@
 			<jvmarg value="-Dio.netty.leakDetection.level=advanced"/>
 			-->
 			<jvmarg value="-XX:+UseParallelOldGC"/>
-			<arg value="5000000" /> <!-- number of Dialogs -->
-			<arg value="50000" /> <!-- Concurrent Dialogs -->
+			<arg value="100" /> <!-- number of Dialogs -->
+			<arg value="2" /> <!-- Concurrent Dialogs -->
 			<arg value="sctp" /> <!-- socket type -->
 			<arg value="127.0.0.1" /> <!-- Client IP -->
 			<arg value="2345" /> <!-- Client Port -->
@@ -159,7 +159,7 @@
 			<arg value="2" /> <!-- Server PC -->
 			<arg value="2" /> <!-- NI -->
 			<arg value="3" /> <!-- SI -->
-			<arg value="145" /> <!-- SSN -->
+			<arg value="8" /> <!-- SSN -->
 			<arg value="100" /> <!-- RC -->
 			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
 		</java>

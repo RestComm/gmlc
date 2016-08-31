@@ -39,6 +39,7 @@ import org.mobicents.protocols.ss7.map.MAPParameterFactoryImpl;
 import org.mobicents.protocols.ss7.map.MAPStackImpl;
 import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
+import org.mobicents.protocols.ss7.map.api.MAPMessage;
 //import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
@@ -62,14 +63,22 @@ import org.mobicents.protocols.ss7.map.api.primitives.IMEI;
 //import org.mobicents.protocols.ss7.map.api.primitives.PlmnId;
 //import org.mobicents.protocols.ss7.map.api.primitives.SubscriberIdentity;
 import org.mobicents.protocols.ss7.map.api.service.mobility.MAPDialogMobility;
+import org.mobicents.protocols.ss7.map.api.service.mobility.MAPServiceMobilityListener;
+import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportRequest;
+import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportResponse;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportRequest;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoResponse;
+import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.ForwardCheckSSIndicationRequest;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.ForwardCheckSSIndicationRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.ResetRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.RestoreDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.RestoreDataResponse;
+import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiRequest;
+import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiResponse;
+import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationRequest;
+import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationResponse;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiRequest;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiResponse;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationRequest;
@@ -82,6 +91,8 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.U
 import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.UpdateGprsLocationResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.UpdateLocationRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.UpdateLocationResponse;
+import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeRequest_Mobility;
+import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeResponse_Mobility;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeRequest_Mobility;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeResponse_Mobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest;
@@ -105,6 +116,7 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformatio
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberStateChoice;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.UserCSGInformation;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataRequest;
+import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataResponse;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataResponse;
@@ -131,6 +143,7 @@ import org.mobicents.protocols.ss7.tcap.TCAPStackImpl;
 import org.mobicents.protocols.ss7.tcap.api.TCAPStack;
 import org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName;
 //import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
+import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 
 /**
  * @author Fernando Mendioroz (fernando.mendioroz@telestax.com)
@@ -266,6 +279,9 @@ public class Server extends TestHarness {
         this.mapProvider = this.mapStack.getMAPProvider();
 
         this.mapProvider.addMAPDialogListener(this);
+        this.mapProvider.getMAPServiceMobility().addMAPServiceListener(this);
+        
+        this.mapProvider.getMAPServiceMobility().acivate();
 
         this.mapStack.start();
     }
@@ -577,7 +593,7 @@ public class Server extends TestHarness {
             MSClassmark2 msClassmark2 = null;
             GPRSMSClass gprsMSClass = null;
             MNPInfoRes mnpInfoRes = null;
-            SubscriberStateChoice subscriberStateChoice = null; // 0=assumedIdle, 1=camelBusy, 2=notProvidedFromVLR
+            SubscriberStateChoice subscriberStateChoice = SubscriberStateChoice.assumedIdle; // 0=assumedIdle, 1=camelBusy, 2=notProvidedFromVLR
             NotReachableReason notReachableReason = null;
 
             LocationInformation locationInformation = mapFactory.createLocationInformation(ageOfLocationInformation,
@@ -720,6 +736,84 @@ public class Server extends TestHarness {
     public void onUpdateLocationResponse(UpdateLocationResponse arg0) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void onActivateTraceModeRequest_Mobility(ActivateTraceModeRequest_Mobility arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onActivateTraceModeResponse_Mobility(ActivateTraceModeResponse_Mobility arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onAuthenticationFailureReportRequest(AuthenticationFailureReportRequest arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onAuthenticationFailureReportResponse(AuthenticationFailureReportResponse arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onCancelLocationRequest(CancelLocationRequest arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onCancelLocationResponse(CancelLocationResponse arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onCheckImeiRequest(CheckImeiRequest arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onCheckImeiResponse(CheckImeiResponse arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onDeleteSubscriberDataResponse(DeleteSubscriberDataResponse arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onForwardCheckSSIndicationRequest(ForwardCheckSSIndicationRequest arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onInvokeTimeout(MAPDialog arg0, Long arg1) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onMAPMessage(MAPMessage arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onRejectComponent(MAPDialog arg0, Long arg1, Problem arg2, boolean arg3) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

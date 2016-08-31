@@ -306,7 +306,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
             // requestedInfo (MAP ATI): last known location and state (idle or busy), no IMEI/MS Classmark/MNP
 
             ISDNAddressString gscmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
-                    org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "145");
+                    org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "8");
 
             mapDialogMobility.addAnyTimeInterrogationRequest(msisdn, requestedInfo, gscmSCFAddress, null);
 
