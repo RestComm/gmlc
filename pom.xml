@@ -16,8 +16,6 @@
 
 	<name>RestComm GMLC :: ${project.artifactId}</name>
 
-
-
 	<properties>
 		<restcomm.tools.mavenplugin.eclipse.version>
 			1.0.0.FINAL
@@ -50,7 +48,7 @@
 	<modules>
 		<module>core</module>
 		<module>tools</module>
-                <module>test-suite</module>
+		<module>test-suite</module>
 	</modules>
 	<dependencies>
 	</dependencies>
