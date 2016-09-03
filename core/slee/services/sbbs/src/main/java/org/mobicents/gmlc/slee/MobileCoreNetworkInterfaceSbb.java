@@ -128,14 +128,16 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     private class HttpRequest implements Serializable {
         HttpRequestType type;
         String msisdn;
+        String serviceid;
 
-        public HttpRequest(HttpRequestType type, String msisdn) {
+        public HttpRequest(HttpRequestType type, String msisdn, String serviceid) {
             this.type = type;
             this.msisdn = msisdn;
+            this.serviceid= serviceid;
         }
 
         public HttpRequest(HttpRequestType type) {
-            this(type, "");
+            this(type, "","");
         }
     }
 
@@ -412,19 +414,25 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         HttpServletRequest httpServletRequest = event.getRequest();
         HttpRequestType httpRequestType = HttpRequestType.fromPath(httpServletRequest.getPathInfo());
         setHttpRequest(new HttpRequest(httpRequestType));
-        String requestingMSISDN = null;
+        String requestingMLP,requestingMSISDN,serviceid = null;
 
         switch (httpRequestType) {
             case REST:
+            	{
                 requestingMSISDN = httpServletRequest.getParameter("msisdn");
+                serviceid =  httpServletRequest.getParameter("serviceid");
+            	}
                 break;
             case MLP:
                 try {
                     // Get the XML request from the POST data
                     InputStream body = httpServletRequest.getInputStream();
-                    // Parse the request and retrieve the requested MSISDN
+                    // Parse the request and retrieve the requested MSISDN and serviceid
                     MLPRequest mlpRequest = new MLPRequest(logger);
-                    requestingMSISDN = mlpRequest.parseRequest(body);
+                    requestingMLP = mlpRequest.parseRequest(body);
+                    String[] output = requestingMLP.split(";");
+                    requestingMSISDN= output[0].toString();
+                    serviceid= output[1].toString();
                 } catch(MLPException e) {
                     handleLocationResponse(e.getMlpClientErrorType(), null, "System Failure: " + e.getMlpClientErrorMessage());
                     return;
@@ -439,9 +447,9 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 return;
         }
 
-        setHttpRequest(new HttpRequest(httpRequestType, requestingMSISDN));
+        setHttpRequest(new HttpRequest(httpRequestType, requestingMSISDN,serviceid));
         if (logger.isFineEnabled()){
-            logger.fine(String.format("Handling %s request, MSISDN: %s", httpRequestType.name().toUpperCase(), requestingMSISDN));
+            logger.fine(String.format("Handling %s request, MSISDN: %s from %s", httpRequestType.name().toUpperCase(), requestingMSISDN,serviceid));
         }
 
         if (requestingMSISDN != null) {
