@@ -19,8 +19,6 @@
 		<map.version>7.1.18</map.version>
 		<statistics-api.version>7.1.18</statistics-api.version>
 		<statistics-impl.version>7.1.18</statistics-impl.version>
-		<dialogic.version>6.7.1</dialogic.version>
-		<restcomm-dialogic.version>7.1.18</restcomm-dialogic.version>
 		<netty.version>4.0.33.Final</netty.version>
 		<guava.version>19.0</guava.version>
 		<commons-email.version>1.3.2</commons-email.version>
@@ -79,11 +77,6 @@
 			<groupId>org.mobicents.protocols.ss7.statistics</groupId>
 			<artifactId>statistics-impl</artifactId>
 			<version>${statistics-impl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mobicents.protocols.ss7.hardware</groupId>
-			<artifactId>restcomm-dialogic</artifactId>
-			<version>${restcomm-dialogic.version}</version>
 		</dependency>
 
 		<!-- MTP -->
