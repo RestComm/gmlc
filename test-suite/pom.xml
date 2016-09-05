@@ -138,11 +138,11 @@
 			<groupId>org.mobicents.protocols.ss7.map</groupId>
 			<version>${map.version}</version>
 		</dependency>
-		<dependency>
+		<!--  <dependency>
 			<artifactId>map-load</artifactId>
 			<groupId>org.mobicents.protocols.ss7.map</groupId>
 			<version>${map.version}</version>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.mobicents.protocols.stream</groupId>

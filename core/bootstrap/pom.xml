@@ -104,11 +104,13 @@
 			<artifactId>restcomm-dialogic</artifactId>
 			<groupId>org.mobicents.protocols.ss7.hardware</groupId>
 			<version>${jss7.restcomm.version}</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.vendor.dialogic</groupId>
 			<artifactId>gctapi</artifactId>
 			<version>${dialogic.version}</version>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- MTP -->
