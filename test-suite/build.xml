@@ -70,7 +70,7 @@
 		</fail>
 
 		<exec executable="${mvn.executable}" dir="${ant.file.restcomm.release}/../">
-			<arg line="install" />
+			<arg line="install --offline -q" />
 		</exec>
 
 		<exec executable="${mvn.executable}" dir="${ant.file.restcomm.release}/../">
