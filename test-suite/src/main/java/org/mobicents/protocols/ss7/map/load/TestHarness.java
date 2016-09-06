@@ -70,7 +70,7 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
 
     protected static int NDIALOGS = 50000;
 
-    protected static int MAXCONCURRENTDIALOGS = 15;
+    protected static int MAXCONCURRENTDIALOGS = 2;
 
     // MTPL3 Details
     protected static int CLIENT_SPC = 1; // Client Signaling Point Code
@@ -90,8 +90,8 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
 
     protected static int DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT = Runtime.getRuntime().availableProcessors() * 2;
 
-    protected final String SERVER_ASSOCIATION_NAME = "serverAsscoiation";
-    protected final String CLIENT_ASSOCIATION_NAME = "clientAsscoiation";
+    protected final String SERVER_ASSOCIATION_NAME = "serverAssociation";
+    protected final String CLIENT_ASSOCIATION_NAME = "clientAssociation";
 
     protected final String SERVER_NAME = "testserver";
 

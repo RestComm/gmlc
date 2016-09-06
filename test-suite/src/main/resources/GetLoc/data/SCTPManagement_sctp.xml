@@ -9,5 +9,5 @@
 </servers>
 <associations>
 	<name value="ass1"/>
-	<association name="ass1" assoctype="SERVER" hostAddress="127.0.0.1" hostPort="3434" peerAddress="127.0.0.1" peerPort="2345" serverName="serv1" ipChannelType="0" extraHostAddresseSize="0"/>
+	<association name="ass1" assoctype="SERVER" hostAddress="127.0.0.1" hostPort="2345" peerAddress="127.0.0.1" peerPort="3434" serverName="serv1" ipChannelType="0" extraHostAddresseSize="0"/>
 </associations>

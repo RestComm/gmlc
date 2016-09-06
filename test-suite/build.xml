@@ -165,10 +165,52 @@
 		</java>
 	</target>
 
+	<target name="client-server" description="run the Load Test Client and Server">
+			<echo message="${cp.property}" />
+			<delete dir="client-server" />
+			<mkdir dir="client-server" />
+			<java classname="${packageprefix}.ClientServer" fork="true" maxmemory="2048m" classpathref="project.class.path" dir="client-server">
+				<jvmarg value="-Dlog.file.name=log4j-client-server.log"/>
+				<jvmarg value="-Xms2048m"/>
+				<jvmarg value="-Xmx2048m"/>
+				<jvmarg value="-Xmn128m"/>
+				<jvmarg value="-XX:PermSize=256m"/>
+				<jvmarg value="-XX:MaxPermSize=256m"/>
+				<jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+				<!--
+				<jvmarg value="-XX:CMSInitiatingOccupancyFraction=80"/>
+				<jvmarg value="-XX:+UseConcMarkSweepGC"/>
+				<jvmarg value="-XX:+CMSIncrementalMode"/>
+				<jvmarg value="-XX:-CMSIncrementalPacing"/>
+				<jvmarg value="-XX:CMSIncrementalDutyCycleMin=100"/>
+				<jvmarg value="-XX:CMSIncrementalDutyCycle=100"/>
+				<jvmarg value="-Dsun.rmi.dgc.client.gcInterval=3600000"/>
+				<jvmarg value="-Dorg.jboss.resolver.warning=true"/>
+				<jvmarg value="-Djava.net.preferIPv4Stack=true"/>
+				<jvmarg value="-Dio.netty.leakDetection.level=advanced"/>
+				-->
+				<jvmarg value="-XX:+UseParallelOldGC"/>
+				<arg value="100" /> <!-- number of Dialogs -->
+				<arg value="2" /> <!-- Concurrent Dialogs -->
+				<arg value="sctp" /> <!-- socket type -->
+				<arg value="127.0.0.1" /> <!-- Client IP -->
+				<arg value="2345" /> <!-- Client Port -->
+				<arg value="127.0.0.1" /> <!-- Server Ip -->
+				<arg value="3434" /> <!-- Server Port -->
+				<arg value="1" /> <!-- Client PC -->
+				<arg value="2" /> <!-- Server PC -->
+				<arg value="2" /> <!-- NI -->
+				<arg value="3" /> <!-- SI -->
+				<arg value="8" /> <!-- SSN -->
+				<arg value="100" /> <!-- RC -->
+				<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
+			</java>
+		</target>
 	<!-- -->
 	<target name="clean" description="clean the logs">
 		<delete dir="server" />
 		<delete dir="client" />
+		<delete dir="client-server" />
 	</target>
 	
 
