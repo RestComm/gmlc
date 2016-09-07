@@ -19,7 +19,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.mobicents.protocols.ss7.map.load;
+package org.mobicents.protocols.ss7.gmlc.load;
 
 import org.apache.log4j.Logger;
 import org.mobicents.protocols.api.IpChannelType;
@@ -121,6 +121,8 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.LSAIdentity;
+import org.mobicents.protocols.ss7.gmlc.load.Server;
+import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
 //import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.LocationInformationImpl;
 //import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
 //import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.SubscriberInfoImpl;
