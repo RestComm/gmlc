@@ -8,6 +8,7 @@
 		<routingContext size="1">
 			<rc value="100"/>
 		</routingContext>
+		<trafficMode mode="2"/>
 		<defTrafficMode mode="2"/>
 		<asps>
 			<asp name="ASP1"/>
@@ -16,5 +17,5 @@
 </asList>
 <route>
 	<key value="2:1:3"/>
-	<routeAs trafficModeType="2" as="AS1"/>
+	<routeAs trafficModeType="1" as="AS1"/>
 </route>

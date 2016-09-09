@@ -226,7 +226,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
         this.sccpStack.removeAllResourses();
 
         this.sccpStack.getSccpResource().addRemoteSpc(0, SERVER_SPC, 0, 0);
-        this.sccpStack.getSccpResource().addRemoteSsn(0, SERVER_SPC, SSN, 0, false);
+        this.sccpStack.getSccpResource().addRemoteSsn(0, SERVER_SPC, SERVER_SSN, 0, false);
 
         this.sccpStack.getRouter().addMtp3ServiceAccessPoint(1, 1, CLIENT_SPC, NETWORK_INDICATOR, 0);
         this.sccpStack.getRouter().addMtp3Destination(1, 1, SERVER_SPC, SERVER_SPC, 0, 255, 255);
@@ -237,9 +237,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                 NatureOfAddress.INTERNATIONAL);
         GlobalTitle gt2 = fact.createGlobalTitle("-", 0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, ec,
                 NatureOfAddress.INTERNATIONAL);
-        SccpAddress localAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt1, CLIENT_SPC, 0);
+        SccpAddress localAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt1, CLIENT_SPC, CLIENT_SSN);
         this.sccpStack.getRouter().addRoutingAddress(1, localAddress);
-        SccpAddress remoteAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt2, SERVER_SPC, 0);
+        SccpAddress remoteAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt2, SERVER_SPC, SERVER_SSN);
         this.sccpStack.getRouter().addRoutingAddress(2, remoteAddress);
 
         GlobalTitle gt = fact.createGlobalTitle("*", 0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, ec,
@@ -252,7 +252,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
     }
 
     private void initTCAP() throws Exception {
-        this.tcapStack = new TCAPStackImpl("Test", this.sccpStack.getSccpProvider(), SSN);
+        this.tcapStack = new TCAPStackImpl("Test", this.sccpStack.getSccpProvider(), CLIENT_SSN);
         this.tcapStack.start();
         this.tcapStack.setDialogIdleTimeout(60000);
         this.tcapStack.setInvokeTimeout(30000);
@@ -307,10 +307,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
             RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
             // requestedInfo (MAP ATI): last known location and state (idle or busy), no IMEI/MS Classmark/MNP
 
-            ISDNAddressString gscmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
-                    org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "8");
+            ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
+                    org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
 
-            mapDialogMobility.addAnyTimeInterrogationRequest(msisdn, requestedInfo, gscmSCFAddress, null);
+            mapDialogMobility.addAnyTimeInterrogationRequest(msisdn, requestedInfo, gsmSCFAddress, null);
+            logger.info("ATI msisdn:"+msisdn+", requestedInfo: "+requestedInfo+", atiIsdnAddress:"+gsmSCFAddress);
 
             // This will initiate the TC-BEGIN with INVOKE component
             mapDialogMobility.send();
@@ -472,10 +473,10 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
         logger.info("SERVICE_INDICATOR=" + TestHarness.SERVICE_INDICATOR);
 
         if (args.length >= 12) {
-            TestHarness.SSN = Integer.parseInt(args[11]);
+            TestHarness.CLIENT_SSN = Integer.parseInt(args[11]);
         }
 
-        logger.info("SSN=" + TestHarness.SSN);
+        logger.info("SSN=" + TestHarness.CLIENT_SSN);
 
         if (args.length >= 13) {
             TestHarness.ROUTING_CONTEXT = Integer.parseInt(args[12]);

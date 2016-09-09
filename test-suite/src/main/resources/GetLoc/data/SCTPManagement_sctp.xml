@@ -3,5 +3,5 @@
 <servers/>
 <associations>
 	<name value="serverAssociation"/>
-	<association name="serverAssociation" assoctype="CLIENT" hostAddress="127.0.0.1" hostPort="2345" peerAddress="127.0.0.1" peerPort="3434" ipChannelType="0" extraHostAddresseSize="0"/>
+	<association name="serverAssociation" assoctype="CLIENT" hostAddress="127.0.0.1" hostPort="2345" peerAddress="127.0.0.1" peerPort="3434" serverName="" ipChannelType="0" extraHostAddresseSize="0"/>
 </associations>

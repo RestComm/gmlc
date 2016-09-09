@@ -78,7 +78,10 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
     protected static int SERVER_SPC = 2; // Server Signaling Point Code
     protected static int NETWORK_INDICATOR = 2; // National Network
     protected static int SERVICE_INDICATOR = 3; // upper layer is SCCP
-    protected static int SSN = 8; // Sub-System Number
+    //protected static int SSN = 8; // Sub-System Number
+    protected static int CLIENT_SSN = 145; // Client Sub-System Number
+    protected static int SERVER_SSN = 6; // Client Sub-System Number
+    
 
     // M3UA details
     protected static String CLIENT_IP = "127.0.0.1";
@@ -100,9 +103,9 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
     protected static final int MAX_DIALOGS = 500000;
 
     protected final SccpAddress SCCP_CLIENT_ADDRESS = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_DPC_AND_SSN, null,
-            CLIENT_SPC, SSN);
+            CLIENT_SPC, CLIENT_SSN);
     protected final SccpAddress SCCP_SERVER_ADDRESS = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_DPC_AND_SSN, null,
-            SERVER_SPC, SSN);
+            SERVER_SPC, SERVER_SSN);
 
     protected final ParameterFactoryImpl factory = new ParameterFactoryImpl();
 

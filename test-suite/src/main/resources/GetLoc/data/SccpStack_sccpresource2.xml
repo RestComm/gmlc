@@ -2,17 +2,9 @@
 <remoteSsns>
 	<id value="1"/>
 	<value remoteSpc="2" remoteSsn="6" remoteSsnFlag="0" markProhibitedWhenSpcResuming="false"/>
-	<id value="2"/>
-	<value remoteSpc="2" remoteSsn="8" remoteSsnFlag="0" markProhibitedWhenSpcResuming="false"/>
-	<id value="3"/>
-	<value remoteSpc="2" remoteSsn="145" remoteSsnFlag="0" markProhibitedWhenSpcResuming="false"/>
-	<id value="4"/>
-	<value remoteSpc="2" remoteSsn="0" remoteSsnFlag="0" markProhibitedWhenSpcResuming="false"/>
 </remoteSsns>
 <remoteSpcs>
 	<id value="1"/>
 	<value remoteSpc="2" remoteSpcFlag="0" mask="0"/>
-	<id value="2"/>
-	<value remoteSpc="0" remoteSpcFlag="0" mask="0"/>
 </remoteSpcs>
 <concernedSpcs/>

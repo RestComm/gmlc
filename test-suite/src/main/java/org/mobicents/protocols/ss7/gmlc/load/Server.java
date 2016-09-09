@@ -243,7 +243,7 @@ public class Server extends TestHarness {
         this.sccpStack.removeAllResourses();
 
         this.sccpStack.getSccpResource().addRemoteSpc(0, CLIENT_SPC, 0, 0);
-        this.sccpStack.getSccpResource().addRemoteSsn(0, CLIENT_SPC, SSN, 0, false);
+        this.sccpStack.getSccpResource().addRemoteSsn(0, CLIENT_SPC, CLIENT_SSN, 0, false);
 
         this.sccpStack.getRouter().addMtp3ServiceAccessPoint(1, 1, SERVER_SPC, NETWORK_INDICATOR, 0);
         this.sccpStack.getRouter().addMtp3Destination(1, 1, CLIENT_SPC, CLIENT_SPC, 0, 255, 255);
@@ -254,9 +254,9 @@ public class Server extends TestHarness {
                 NatureOfAddress.INTERNATIONAL);
         GlobalTitle gt2 = fact.createGlobalTitle("-", 0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, ec,
                 NatureOfAddress.INTERNATIONAL);
-        SccpAddress localAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt1, SERVER_SPC, 0);
+        SccpAddress localAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt1, SERVER_SPC, SERVER_SSN);
         this.sccpStack.getRouter().addRoutingAddress(1, localAddress);
-        SccpAddress remoteAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt2, CLIENT_SPC, 0);
+        SccpAddress remoteAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt2, CLIENT_SPC, CLIENT_SSN);
         this.sccpStack.getRouter().addRoutingAddress(2, remoteAddress);
 
         GlobalTitle gt = fact.createGlobalTitle("*", 0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, ec,
@@ -269,7 +269,7 @@ public class Server extends TestHarness {
     }
 
     private void initTCAP() throws Exception {
-        this.tcapStack = new TCAPStackImpl("TestServer", this.sccpStack.getSccpProvider(), SSN);
+        this.tcapStack = new TCAPStackImpl("TestServer", this.sccpStack.getSccpProvider(), SERVER_SSN);
         this.tcapStack.start();
         this.tcapStack.setDialogIdleTimeout(60000);
         this.tcapStack.setInvokeTimeout(30000);
@@ -532,9 +532,9 @@ public class Server extends TestHarness {
         logger.info("SERVICE_INDICATOR=" + TestHarness.SERVICE_INDICATOR);
 
         if (args.length >= 10) {
-            TestHarness.SSN = Integer.parseInt(args[9]);
+            TestHarness.SERVER_SSN = Integer.parseInt(args[9]);
         }
-        logger.info("SSN=" + TestHarness.SSN);
+        logger.info("SSN=" + TestHarness.SERVER_SSN);
 
         if (args.length >= 11) {
             TestHarness.ROUTING_CONTEXT = Integer.parseInt(args[10]);

@@ -118,7 +118,7 @@
 			<arg value="2" /> <!-- Server PC -->
 			<arg value="2" /> <!-- NI -->
 			<arg value="3" /> <!-- SI -->
-			<arg value="8" /> <!-- SSN -->
+			<arg value="6" /> <!-- SSN -->
 			<arg value="100" /> <!-- RC -->	
 			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
 		</java>
@@ -159,7 +159,7 @@
 			<arg value="2" /> <!-- Server PC -->
 			<arg value="2" /> <!-- NI -->
 			<arg value="3" /> <!-- SI -->
-			<arg value="8" /> <!-- SSN -->
+			<arg value="145" /> <!-- SSN -->
 			<arg value="100" /> <!-- RC -->
 			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
 		</java>
@@ -201,7 +201,8 @@
 				<arg value="2" /> <!-- Server PC -->
 				<arg value="2" /> <!-- NI -->
 				<arg value="3" /> <!-- SI -->
-				<arg value="8" /> <!-- SSN -->
+				<arg value="145" /> <!-- Client SSN -->
+				<arg value="6" /> <!-- Server SSN -->
 				<arg value="100" /> <!-- RC -->
 				<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
 			</java>
