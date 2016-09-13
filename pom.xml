@@ -10,7 +10,7 @@
 
 	<artifactId>restcomm-gmlc-parent</artifactId>
 	<groupId>org.mobicents.gmlc</groupId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.62</version>
 
 	<packaging>pom</packaging>
 
