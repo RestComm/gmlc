@@ -237,9 +237,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                 NatureOfAddress.INTERNATIONAL);
         GlobalTitle gt2 = fact.createGlobalTitle("-", 0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, ec,
                 NatureOfAddress.INTERNATIONAL);
-        SccpAddress localAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt1, CLIENT_SPC, CLIENT_SSN);
+        SccpAddress localAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt1, CLIENT_SPC,
+                CLIENT_SSN);
         this.sccpStack.getRouter().addRoutingAddress(1, localAddress);
-        SccpAddress remoteAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt2, SERVER_SPC, SERVER_SSN);
+        SccpAddress remoteAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt2, SERVER_SPC,
+                SERVER_SSN);
         this.sccpStack.getRouter().addRoutingAddress(2, remoteAddress);
 
         GlobalTitle gt = fact.createGlobalTitle("*", 0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, ec,
@@ -311,7 +313,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                     org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
 
             mapDialogMobility.addAnyTimeInterrogationRequest(msisdn, requestedInfo, gsmSCFAddress, null);
-            logger.info("ATI msisdn:"+msisdn+", requestedInfo: "+requestedInfo+", atiIsdnAddress:"+gsmSCFAddress);
+            logger.info("ATI msisdn:" + msisdn + ", requestedInfo: " + requestedInfo + ", atiIsdnAddress:" + gsmSCFAddress);
 
             // This will initiate the TC-BEGIN with INVOKE component
             mapDialogMobility.send();
@@ -337,6 +339,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
                     atiResp.getMAPDialog().getLocalDialogId()));
+        } else {
+            logger.info(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
+                    atiResp.getMAPDialog().getLocalDialogId()));
         }
 
         try {
@@ -361,6 +366,10 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                                 logger.debug(String.format(
                                         "Rx onAnyTimeInterrogationResponse:  CI=%d, LAC=%d, MNC=%d, MCC=%d, for DialogId=%d",
                                         cellId, lac, mnc, mcc, atiResp.getMAPDialog().getLocalDialogId()));
+                            } else {
+                                logger.info(String.format(
+                                        "Rx onAnyTimeInterrogationResponse:  CI=%d, LAC=%d, MNC=%d, MCC=%d, for DialogId=%d",
+                                        cellId, lac, mnc, mcc, atiResp.getMAPDialog().getLocalDialogId()));
                             }
                         }
                     }
@@ -370,6 +379,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                         if (logger.isDebugEnabled()) {
                             logger.debug(String.format("Rx onAnyTimeInterrogationResponse:  AoL=%d for DialogId=%d", aol,
                                     atiResp.getMAPDialog().getLocalDialogId()));
+                        } else {
+                            logger.info(String.format("Rx onAnyTimeInterrogationResponse:  AoL=%d for DialogId=%d", aol,
+                                    atiResp.getMAPDialog().getLocalDialogId()));
                         }
                     }
 
@@ -377,6 +389,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                         String vlrAddress = si.getLocationInformation().getVlrNumber().getAddress();
                         if (logger.isDebugEnabled()) {
                             logger.debug(String.format("Rx onAnyTimeInterrogationResponse:  VLR address=%s for DialogId=%d",
+                                    vlrAddress, atiResp.getMAPDialog().getLocalDialogId()));
+                        } else {
+                            logger.info(String.format("Rx onAnyTimeInterrogationResponse:  VLR address=%s for DialogId=%d",
                                     vlrAddress, atiResp.getMAPDialog().getLocalDialogId()));
                         }
                     }
@@ -388,15 +403,26 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                         logger.debug(String.format("Rx onAnyTimeInterrogationResponse SubscriberState: "
                                 + si.getSubscriberState() + "for DialogId=%d", atiResp.getMAPDialog().getLocalDialogId()));
                     } else {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug(String.format("Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si
-                                    + "for DialogId=%d", atiResp.getMAPDialog().getLocalDialogId()));
-                        }
+                        logger.info(String.format("Rx onAnyTimeInterrogationResponse SubscriberState: "
+                                + si.getSubscriberState() + "for DialogId=%d", atiResp.getMAPDialog().getLocalDialogId()));
+                    }
+                } else {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(
+                                "Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si + "for DialogId=%d",
+                                atiResp.getMAPDialog().getLocalDialogId()));
+                    } else {
+                        logger.info(String.format(
+                                "Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si + "for DialogId=%d",
+                                atiResp.getMAPDialog().getLocalDialogId()));
                     }
                 }
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Bad AnyTimeInterrogationResponse received: " + atiResp + "for DialogId=%d",
+                            atiResp.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format("Bad AnyTimeInterrogationResponse received: " + atiResp + "for DialogId=%d",
                             atiResp.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -582,6 +608,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
     public void onDialogDelimiter(MAPDialog mapDialog) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogDelimiter for DialogId=%d", mapDialog.getLocalDialogId()));
+        } else {
+            logger.info(String.format("onDialogDelimiter for DialogId=%d", mapDialog.getLocalDialogId()));
         }
     }
 
@@ -598,6 +626,10 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
             MAPExtensionContainer extensionContainer) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format(
+                    "onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s MAPExtensionContainer=%s",
+                    mapDialog.getLocalDialogId(), destReference, origReference, extensionContainer));
+        } else {
+            logger.info(String.format(
                     "onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s MAPExtensionContainer=%s",
                     mapDialog.getLocalDialogId(), destReference, origReference, extensionContainer));
         }
@@ -617,6 +649,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s ",
                     mapDialog.getLocalDialogId(), destReference, origReference));
+        } else {
+            logger.info(String.format("onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s ",
+                    mapDialog.getLocalDialogId(), destReference, origReference));
         }
     }
 
@@ -630,6 +665,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
     public void onDialogAccept(MAPDialog mapDialog, MAPExtensionContainer extensionContainer) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogAccept for DialogId=%d MAPExtensionContainer=%s", mapDialog.getLocalDialogId(),
+                    extensionContainer));
+        } else {
+            logger.info(String.format("onDialogAccept for DialogId=%d MAPExtensionContainer=%s", mapDialog.getLocalDialogId(),
                     extensionContainer));
         }
     }
@@ -689,6 +727,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
     public void onDialogClose(MAPDialog mapDialog) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("DialogClose for Dialog=%d", mapDialog.getLocalDialogId()));
+        } else {
+            logger.info(String.format("DialogClose for Dialog=%d", mapDialog.getLocalDialogId()));
         }
 
     }
@@ -715,6 +755,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
     public void onDialogRelease(MAPDialog mapDialog) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogResease for DialogId=%d", mapDialog.getLocalDialogId()));
+        } else {
+            logger.info(String.format("onDialogResease for DialogId=%d", mapDialog.getLocalDialogId()));
         }
 
         this.endCount++;

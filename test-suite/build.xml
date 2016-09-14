@@ -148,8 +148,8 @@
 			<jvmarg value="-Dio.netty.leakDetection.level=advanced"/>
 			-->
 			<jvmarg value="-XX:+UseParallelOldGC"/>
-			<arg value="100" /> <!-- number of Dialogs -->
-			<arg value="2" /> <!-- Concurrent Dialogs -->
+			<arg value="1000" /> <!-- number of Dialogs -->
+			<arg value="10" /> <!-- Concurrent Dialogs -->
 			<arg value="sctp" /> <!-- socket type -->
 			<arg value="127.0.0.1" /> <!-- Client IP -->
 			<arg value="2345" /> <!-- Client Port -->

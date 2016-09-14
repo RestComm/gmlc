@@ -298,6 +298,8 @@ public class Server extends TestHarness {
     public void onDialogDelimiter(MAPDialog mapDialog) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogDelimiter for DialogId=%d", mapDialog.getLocalDialogId()));
+        } else {
+            logger.info(String.format("onDialogDelimiter for DialogId=%d", mapDialog.getLocalDialogId()));
         }
     }
 
@@ -316,6 +318,10 @@ public class Server extends TestHarness {
             logger.debug(String.format(
                     "onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s MAPExtensionContainer=%s",
                     mapDialog.getLocalDialogId(), destReference, origReference, extensionContainer));
+        } else {
+            logger.info(String.format(
+                    "onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s MAPExtensionContainer=%s",
+                    mapDialog.getLocalDialogId(), destReference, origReference, extensionContainer));
         }
     }
 
@@ -324,6 +330,9 @@ public class Server extends TestHarness {
             IMSI imsi, AddressString vlr) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s ",
+                    mapDialog.getLocalDialogId(), destReference, origReference));
+        } else {
+            logger.info(String.format("onDialogRequest for DialogId=%d DestinationReference=%s OriginReference=%s ",
                     mapDialog.getLocalDialogId(), destReference, origReference));
         }
     }
@@ -338,6 +347,9 @@ public class Server extends TestHarness {
     public void onDialogAccept(MAPDialog mapDialog, MAPExtensionContainer extensionContainer) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogAccept for DialogId=%d MAPExtensionContainer=%s", mapDialog.getLocalDialogId(),
+                    extensionContainer));
+        } else {
+            logger.info(String.format("onDialogAccept for DialogId=%d MAPExtensionContainer=%s", mapDialog.getLocalDialogId(),
                     extensionContainer));
         }
     }
@@ -397,6 +409,8 @@ public class Server extends TestHarness {
     public void onDialogClose(MAPDialog mapDialog) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("DialogClose for Dialog=%d", mapDialog.getLocalDialogId()));
+        } else {
+            logger.info(String.format("DialogClose for Dialog=%d", mapDialog.getLocalDialogId()));
         }
     }
 
@@ -422,6 +436,8 @@ public class Server extends TestHarness {
     public void onDialogRelease(MAPDialog mapDialog) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onDialogResease for DialogId=%d", mapDialog.getLocalDialogId()));
+        } else {
+            logger.info(String.format("onDialogResease for DialogId=%d", mapDialog.getLocalDialogId()));
         }
 
         this.endCount++;
@@ -560,6 +576,8 @@ public class Server extends TestHarness {
         if (logger.isDebugEnabled()) {
             logger.debug(
                     String.format("onAnyTimeInterrogationRequest for DialogId=%d", atiReq.getMAPDialog().getLocalDialogId()));
+        } else {
+            logger.info(String.format("onAnyTimeInterrogationRequest for DialogId=%d", atiReq.getMAPDialog().getLocalDialogId()));
         }
 
         try {

@@ -71,7 +71,7 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
 
     protected static int NDIALOGS = 50000;
 
-    protected static int MAXCONCURRENTDIALOGS = 2;
+    protected static int MAXCONCURRENTDIALOGS = 10;
 
     // MTPL3 Details
     protected static int CLIENT_SPC = 1; // Client Signaling Point Code
