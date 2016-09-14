@@ -18,7 +18,7 @@
           <stringProp name="LoopController.loops">${__P(GetLocLoops)}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${__P(GetLocThreads)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(GetLocRampUpSecs)}</stringProp>
         <longProp name="ThreadGroup.start_time">1470828846000</longProp>
         <longProp name="ThreadGroup.end_time">1470828846000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -28,7 +28,7 @@
       <hashTree>
         <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="msisdnCounter" enabled="true">
           <stringProp name="CounterConfig.start">59899077937</stringProp>
-          <stringProp name="CounterConfig.end">59899077937</stringProp>
+          <stringProp name="CounterConfig.end">59999077937</stringProp>
           <stringProp name="CounterConfig.incr">1</stringProp>
           <stringProp name="CounterConfig.name">msisdn</stringProp>
           <stringProp name="CounterConfig.format"></stringProp>
