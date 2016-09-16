@@ -371,7 +371,6 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
             }
             // Handle successful retrieval of subscriber's info
             this.handleLocationResponse(result, response, mlpClientErrorMessage);
-            mapDialogMobility.release();
 
 		} catch (Exception e) {
             logger.severe(String.format("Error while trying to process AnyTimeInterrogationResponse=%s", event), e);
