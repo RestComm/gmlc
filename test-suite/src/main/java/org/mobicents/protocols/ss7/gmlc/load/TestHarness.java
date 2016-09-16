@@ -71,17 +71,15 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
 
     protected static int NDIALOGS = 50000;
 
-    protected static int MAXCONCURRENTDIALOGS = 10;
+    protected static int MAXCONCURRENTDIALOGS = 200;
 
     // MTPL3 Details
     protected static int CLIENT_SPC = 1; // Client Signaling Point Code
     protected static int SERVER_SPC = 2; // Server Signaling Point Code
     protected static int NETWORK_INDICATOR = 2; // National Network
     protected static int SERVICE_INDICATOR = 3; // upper layer is SCCP
-    //protected static int SSN = 8; // Sub-System Number
     protected static int CLIENT_SSN = 145; // Client Sub-System Number
-    protected static int SERVER_SSN = 6; // Client Sub-System Number
-    
+    protected static int SERVER_SSN = 6; // Client Sub-System Number   
 
     // M3UA details
     protected static String CLIENT_IP = "127.0.0.1";
