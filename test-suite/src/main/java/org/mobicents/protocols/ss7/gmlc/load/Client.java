@@ -427,8 +427,6 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
                 }
             }
 
-            atiResp.getMAPDialog().close(true);
-
         } catch (Exception e) {
             logger.error(String.format("Error while processing onAnyTimeInterrogationResponse for Dialog=%d",
                     atiResp.getMAPDialog().getLocalDialogId()));

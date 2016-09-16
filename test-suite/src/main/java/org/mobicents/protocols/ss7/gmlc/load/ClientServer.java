@@ -582,6 +582,9 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
         if (logger.isDebugEnabled()) {
             logger.debug(
                     String.format("onAnyTimeInterrogationRequest for DialogId=%d", atiReq.getMAPDialog().getLocalDialogId()));
+        } else {
+            logger.info(
+                    String.format("onAnyTimeInterrogationRequest for DialogId=%d", atiReq.getMAPDialog().getLocalDialogId()));
         }
 
         try {
@@ -634,8 +637,8 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 
             mapDialogMobility.addAnyTimeInterrogationResponse(invokeId, subscriberInfo, mapExtensionContainer);
 
-            // This will initiate the TC-BEGIN with INVOKE component
-            mapDialogMobility.send();
+            // This will close the TCAP dialog with TC-END initiated by TC-BEGIN with INVOKE component
+            mapDialogMobility.close(false);
 
         } catch (MAPException mapException) {
             logger.error("MAP Exception while processing AnyTimeInterrogationRequest ", mapException);
@@ -650,6 +653,9 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
+                    atiResp.getMAPDialog().getLocalDialogId()));
+        } else {
+            logger.info(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
                     atiResp.getMAPDialog().getLocalDialogId()));
         }
 
@@ -675,6 +681,10 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                                 logger.debug(String.format(
                                         "Rx onAnyTimeInterrogationResponse:  CI=%d, LAC=%d, MNC=%d, MCC=%d, for DialogId=%d",
                                         cellId, lac, mnc, mcc, atiResp.getMAPDialog().getLocalDialogId()));
+                            } else {
+                                logger.info(String.format(
+                                        "Rx onAnyTimeInterrogationResponse:  CI=%d, LAC=%d, MNC=%d, MCC=%d, for DialogId=%d",
+                                        cellId, lac, mnc, mcc, atiResp.getMAPDialog().getLocalDialogId()));
                             }
                         }
                     }
@@ -684,6 +694,9 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                         if (logger.isDebugEnabled()) {
                             logger.debug(String.format("Rx onAnyTimeInterrogationResponse:  AoL=%d for DialogId=%d", aol,
                                     atiResp.getMAPDialog().getLocalDialogId()));
+                        } else {
+                            logger.info(String.format("Rx onAnyTimeInterrogationResponse:  AoL=%d for DialogId=%d", aol,
+                                    atiResp.getMAPDialog().getLocalDialogId()));
                         }
                     }
 
@@ -691,6 +704,9 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                         String vlrAddress = si.getLocationInformation().getVlrNumber().getAddress();
                         if (logger.isDebugEnabled()) {
                             logger.debug(String.format("Rx onAnyTimeInterrogationResponse:  VLR address=%s for DialogId=%d",
+                                    vlrAddress, atiResp.getMAPDialog().getLocalDialogId()));
+                        } else {
+                            logger.info(String.format("Rx onAnyTimeInterrogationResponse:  VLR address=%s for DialogId=%d",
                                     vlrAddress, atiResp.getMAPDialog().getLocalDialogId()));
                         }
                     }
@@ -702,20 +718,29 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                         logger.debug(String.format("Rx onAnyTimeInterrogationResponse SubscriberState: "
                                 + si.getSubscriberState() + "for DialogId=%d", atiResp.getMAPDialog().getLocalDialogId()));
                     } else {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug(String.format("Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si
-                                    + "for DialogId=%d", atiResp.getMAPDialog().getLocalDialogId()));
-                        }
+                        logger.info(String.format("Rx onAnyTimeInterrogationResponse SubscriberState: "
+                                + si.getSubscriberState() + "for DialogId=%d", atiResp.getMAPDialog().getLocalDialogId()));
+                    }
+                } else {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(
+                                "Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si + "for DialogId=%d",
+                                atiResp.getMAPDialog().getLocalDialogId()));
+                    } else {
+                        logger.info(String.format(
+                                "Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si + "for DialogId=%d",
+                                atiResp.getMAPDialog().getLocalDialogId()));
                     }
                 }
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Bad AnyTimeInterrogationResponse received: " + atiResp + "for DialogId=%d",
                             atiResp.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format("Bad AnyTimeInterrogationResponse received: " + atiResp + "for DialogId=%d",
+                            atiResp.getMAPDialog().getLocalDialogId()));
                 }
             }
-
-            atiResp.getMAPDialog().close(true);
 
         } catch (Exception e) {
             logger.error(String.format("Error while processing onAnyTimeInterrogationResponse for Dialog=%d",

@@ -630,7 +630,7 @@ public class Server extends TestHarness {
             mapDialogMobility.addAnyTimeInterrogationResponse(invokeId, subscriberInfo, mapExtensionContainer);
 
             // This will initiate the TC-BEGIN with INVOKE component
-            mapDialogMobility.send();
+            mapDialogMobility.close(false);
 
         } catch (MAPException mapException) {
             logger.error("MAP Exception while processing AnyTimeInterrogationRequest ", mapException);
