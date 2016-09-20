@@ -442,11 +442,11 @@ public class Server extends TestHarness {
 
         this.endCount++;
 
-        if ((this.endCount % 2000) == 0) {
+        if (((this.endCount % 10000) == 0) && endCount>1) {
             long currentTime = System.currentTimeMillis();
             long processingTime = currentTime - start;
             start = currentTime;
-            logger.warn("Completed 2000 Dialogs in=" + processingTime);
+            logger.warn("Completed 10000 Dialogs in=" + processingTime + " ms. Dialogs per sec: "+ + (float) (10000000 / processingTime));
         }
 
     }
@@ -576,9 +576,11 @@ public class Server extends TestHarness {
         if (logger.isDebugEnabled()) {
             logger.debug(
                     String.format("onAnyTimeInterrogationRequest for DialogId=%d", atiReq.getMAPDialog().getLocalDialogId()));
-        } else {
+        } if (logger.isInfoEnabled()) {
             logger.info(String.format("onAnyTimeInterrogationRequest for DialogId=%d", atiReq.getMAPDialog().getLocalDialogId()));
-        }
+        } /*else {
+            logger.warn(String.format("onAnyTimeInterrogationRequest for DialogId=%d", atiReq.getMAPDialog().getLocalDialogId()));
+        }*/
 
         try {
             long invokeId = atiReq.getInvokeId();

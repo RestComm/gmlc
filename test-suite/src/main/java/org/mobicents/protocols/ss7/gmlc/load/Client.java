@@ -760,11 +760,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener {
         this.endCount++;
 
         if (this.endCount < NDIALOGS) {
-            if ((this.endCount % 2000) == 0) {
+            if ((this.endCount % 10000) == 0) {
                 long current = System.currentTimeMillis();
                 float sec = (float) (current - prev) / 1000f;
                 prev = current;
-                logger.warn("Completed 2000 Dialogs, dlg per a sec: " + (float) (2000 / sec));
+                logger.warn("Completed 10000 Dialogs, dlg/sec: " + (float) (10000 / sec));
             }
         } else {
             if (this.endCount == NDIALOGS) {

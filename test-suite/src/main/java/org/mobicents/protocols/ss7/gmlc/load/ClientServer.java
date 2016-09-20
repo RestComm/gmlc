@@ -887,11 +887,11 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 
         this.serverEndCount++;
 
-        if ((this.serverEndCount % 2000) == 0) {
+        if (((this.serverEndCount % 10000) == 0) && serverEndCount>1) {
             long currentTime = System.currentTimeMillis();
             long processingTime = currentTime - serverStart;
             serverStart = currentTime;
-            logger.warn("Completed 2000 Dialogs in=" + processingTime);
+            logger.warn("Completed 10000 Dialogs in=" + processingTime + " ms. Dialogs per sec: "+ + (float) (10000000 / processingTime));
         }
 
     }
