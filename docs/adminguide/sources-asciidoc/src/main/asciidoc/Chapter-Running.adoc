@@ -33,7 +33,7 @@
 19:49:44,184 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=ALARM,type=Management,name=AlarmHost
 19:49:44,184 INFO  [Ss7Management] (main) Registered MBean: AlarmHost
 19:49:44,192 INFO  [CounterProviderManagement-CounterHost] (main) Starting ...
-19:49:44,192 INFO  [CounterProviderManagement-CounterHost] (main) CounterManagement configuration file path /home/telestax/RestComm/restcomm-gmlc-1.0.42/jboss-5.1.0.GA/server/default/data/CounterHost_CounterProvider.xml
+19:49:44,192 INFO  [CounterProviderManagement-CounterHost] (main) CounterManagement configuration file path /home/telestax/RestComm/restcomm-gmlc-1.0.66/jboss-5.1.0.GA/server/default/data/CounterHost_CounterProvider.xml
 19:49:44,207 INFO  [MBeanHostImpl] (main) Registered MBean with ObjectName=org.mobicents.ss7:layer=COUNTER,type=Management,name=CounterHost
 19:49:44,211 INFO  [Ss7Management] (main) Registered MBean: CounterHost
 19:49:44,243 INFO  [CounterProviderManagement-CounterHost] (main) Started ...

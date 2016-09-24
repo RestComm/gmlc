@@ -27,11 +27,11 @@ image::images/LCS-LTE_interfaces.png[]
 
 Up to this point, what is known as "Immediate Location Request" has been covered. A GMLC can also handle "Deferred Location Request", which represents retrieving of location contingent on some current or future events where the response from the LCS Server to the LCS Client may occur some time after the request was sent, as described in 3GPP TS 23.271. When a deferred location request is triggered by the GMLC, event-based "Subscriber Location Reports", either conveyed through MAP or ELP are sent back to the GMLC by the entity at which the target mobile equipment is attached to (VMSC, MSCS, SGSN or MME).
 
-Next figure exhibits TelScale GMLC (productized version of RestComm GMLC) architecture and interfaces with aforementioned entities and RestComm (and particularly, RestComm Geolocation API).
+Next figure exhibits {this-platform} {this-application} architecture and interfaces with aforementioned entities and RestComm (and particularly, RestComm Geolocation API).
 
 image::images/GMLC-RestComm-MNO.png[]
 
-Finally, RestComm GMLC supports the following MAP and Diameter-based operations for LCS (Location Services) within Mobile Network Operators:
+Finally, {this-platform} {this-application} supports the following MAP and Diameter-based operations for LCS (Location Services) within Mobile Network Operators:
 
 * MAP ATI: Any-Time-Interrogation, to gather Cell Global Identity, age of location information and state of the target mobile station from the HLR.
 * MAP SRIforLCS: Send Routing Information for Location Services, to gather IMSI and core network entity address (MSC or SGSN) to which send further location request.
@@ -45,10 +45,9 @@ Finally, RestComm GMLC supports the following MAP and Diameter-based operations 
 
 === HTTP and MAP messages flow for GSM Location Services
 
-GMLC service begins when the network sends an HTTP (GET/POST) request to the GMLC Gateway.
+GMLC service begins when the network sends an HTTP (GET/POST) request to the GMLC.
 
-Next figure displays the signal flow between an application and RestComm GMLC within an GSM Core Network, from where location services are reduced to retrieving Global Cell Identity, Age of Location information and MSC/VLR address at which the target MSISDN is currently attached to, by means of a MAP ATI request to the HLR (subscriber’s state can be included in the response
-if requested in MAP ATI, from which «assumedIdle», «camelBusy» or «notProvidedByVlr» are the available responses). The application, via a REST Web Service, delivers an HTTP GET request to RestComm GMLC. RestComm GMLC then performs a MAP ATI request to the concerning GSM Core Network HLR and receives the corresponding response with location information as previously stated.
+Next figure displays the signal flow between an application and {this-platform} {this-application} within an GSM Core Network, from where location services are reduced to retrieving Global Cell Identity, Age of Location information and MSC/VLR address at which the target MSISDN is currently attached to, by means of a MAP ATI request to the HLR (subscriber’s state can be included in the response if requested in MAP ATI, from which «assumedIdle», «camelBusy» or «notProvidedByVlr» are the available responses). The application, via a REST Web Service, delivers an HTTP GET request to {this-platform} {this-application}. {this-platform} {this-application} then performs a MAP ATI request to the concerning GSM Core Network HLR and receives the corresponding response with location information as previously stated.
 
 image::images/App-GMLC-GSM_flow.png[]
 
@@ -224,14 +223,13 @@ DialogUserAbort: <description>
 RejectComponent: <description>
 ....
 
-Next figure displays the analogous signal flow as the one explained before, but for an HTTP POST request including OMA MLP payload. 
 
 
-Next figure displays the analogous signal flow as the one explained before, but including RestComm Geolocation API between the application and RestComm GMLC. Likewise, in this case, the MAP ATI request is triggered by RestComm by an HTTP POST request with MLP Standard Location Immediate Request (SLIR).
+Next figure displays the analogous signal flow as the one explained before, but including RestComm Geolocation API between the application and {this-platform} {this-application}. Likewise, in this case, the MAP ATI request is triggered by RestComm by an HTTP POST request with MLP Standard Location Immediate Request (SLIR).
 
 image::images/RestComm-GMLC-GSM_flow.png[]
 
-Following, see an example of MLP payload included in HTTP POST request received by RestComm GMLC:
+Following, see an example of MLP payload included in HTTP POST request received by {this-platform} {this-application}:
 
 ....
 <?xml version="1.0" encoding="UTF-8"?>
@@ -307,7 +305,7 @@ An MLP SLIA including an unsuccessful location information retrieval due to "Sys
 
 === HTTP and MAP messages flow for UMTS Location Services
 
-Following figure displays the signal flow between an application, RestComm Geolocation API and RestComm GMLC within an UMTS Core Network. The term RAN (Radio Access Network) might involve the RNC (Radio Network Controller), a Stand-Alone SMLC (Serving Mobile Location Centre), the NB (Node B -base station-) and the UE (User Equipment).
+Following figure displays the signal flow between an application, RestComm Geolocation API and {this-platform} {this-application} within an UMTS Core Network. The term RAN (Radio Access Network) might involve the RNC (Radio Network Controller), a Stand-Alone SMLC (Serving Mobile Location Centre), the NB (Node B -base station-) and the UE (User Equipment).
 
 image::images/RestComm-GMLC-UMTS_flow.png[]
 
@@ -315,7 +313,7 @@ The terms MLP SLIR/SLIA and SLIREP stand for Mobile Location Protocol Standard L
 
 === HTTP and Diameter-based messages flow for LTE Location Services
 
-Next figure displays the signal flow between an application, RestComm Geolocation API and RestComm GMLC within an EPS (Evolved Packet System) for LTE/LTE-Advanced location services. The Radio Access Network in this case involves positioning procedures involving the E-SMLC (Evolved SMLC), eNB (evolved NB), and the UE.
+Next figure displays the signal flow between an application, RestComm Geolocation API and {this-platform} {this-application} within an EPS (Evolved Packet System) for LTE/LTE-Advanced location services. The Radio Access Network in this case involves positioning procedures involving the E-SMLC (Evolved SMLC), eNB (evolved NB), and the UE.
 
 image::images/RestComm-GMLC-LTE_flow.png[]
 
@@ -326,10 +324,10 @@ image::images/RestComm-GMLC-LTE_flow.png[]
 [[_restcomm_gmlc_overview_features]]
 === Major Features
 
-RestComm's implementation of GMLC is the first and only open source GMLC with a host of rich features and advantages. 
+{this-platform} {this-application} implementation of GMLC is the first and only open source GMLC with a host of rich features and advantages. 
 
 Java-based:::
-  RestComm GMLC is the only Java based GMLC Gateway.
+  {this-platform} {this-application} is the only Java based GMLC Gateway.
   It is robust and reliable and can be installed on any Operating System that supports Java (JDK 7 and SCTP). 
 
 Open Source:::
@@ -337,44 +335,44 @@ Open Source:::
   It is supported by a vibrant Open source community. 
 
 Carrier Grade Performance:::
-  RestComm GMLC has been developed to be deployed at Mobile Network Operators around the world so as to process billions of LCS transactions every day.
-  A single RestComm GMLC node can process up to 1500's LCS/sec and can be adapted to the needs of Communication Service Providers of different sizes in any country reducing  CAPEX and OPEX costs. 
+  {this-platform} {this-application} has been developed to be deployed at Mobile Network Operators around the world so as to process billions of LCS transactions every day.
+  A single {this-platform} {this-application} node can process up to 1500's LCS/sec and can be adapted to the needs of Communication Service Providers of different sizes in any country reducing  CAPEX and OPEX costs. 
 
 Cloud Ready:::
-  RestComm GMLC is Cloud-ready.
+  {this-platform} {this-application} is Cloud-ready.
   It can be deployed on dedicated hardware, private cloud infrastructure or public IaaS such as AWS. 
 
 SS7 Hardware Cards:::
-  RestComm GMLC can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only. 
+  {this-platform} {this-application} can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only. 
 
 SIGTRAN (M3UA):::
   It also has in-built support for SIGTRAN (M3UA using SCTP).
   
 Diameter-based SLh and SLg (ELP):::
-  It also has in-built support for LCS in LTE networks.
+  {this-platform} {this-application} also has in-built support for LCS in LTE networks.
 
 HTTP interface:::
-  HTTP interface is a common interface that can be used for connection with service applications. RestComm GMLC supports network/application/service initiated LCS requests.
+  {this-platform} {this-application} HTTP interface is a common interface that can be used for connection with service applications. {this-platform} {this-application} supports network/application/service initiated LCS requests.
 
 MLP:::
-  Location requests can be sent to the GMLC using plain XML over HTTP(S), with the request being encoded in OMA MLP (Mobile Location Protocol). See the full OMA MLP technical specification here: http://technical.openmobilealliance.org/Technical/technical-information/release-program/current-releases/mlp-v3-1
+  Location requests can be sent to the {this-platform} {this-application} using plain XML over HTTP(S), with the request being encoded in OMA MLP (Mobile Location Protocol). See the full OMA MLP technical specification here: http://technical.openmobilealliance.org/Technical/technical-information/release-program/current-releases/mlp-v3-1
 
 Easy Configuration and Management:::
-  RestComm GMLC comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the  Gateway at run-time and manage it using simple commands rather than do everything manually.
-   RestComm GMLC also comes with a Graphical User Interface that will allow you to configure, monitor and manage the Gateway through a convenient user-friendly interface. 
+  {this-platform} {this-application} comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the  Gateway at run-time and manage it using simple commands rather than do everything manually.
+  {this-platform} {this-application} also comes with a Graphical User Interface that will allow you to configure, monitor and manage the Gateway through a convenient user-friendly interface. 
 
 [[_mobicents_gmlc_overview_tech_spec]]
 === Technical Specifications
 
-RestComm GMLC is not restricted by Transaction Per Second model.
+{this-platform} {this-application} is not restricted by Transaction Per Second model.
 The only restricting factor is memory + CPU capacity of the host servers, third-party applications or the underlying database service. 
 
-* RestComm GMLC supports as many as 1073741823 incoming and 1073741823 outgoing concurrent sessions/dialogs.
-* RestComm GMLC supports unlimited E1 links and the only limiting factor is the underlying TDM board used.
-* RestComm GMLC SCTP supports as many associations as supported by the underlying Operating System.
+* {this-platform} {this-application} supports as many as 1073741823 incoming and 1073741823 outgoing concurrent sessions/dialogs.
+* {this-platform} {this-application} supports unlimited E1 links and the only limiting factor is the underlying TDM board used.
+* {this-platform} {this-application} SCTP supports as many associations as supported by the underlying Operating System.
   Can be setup in multihome.
-* RestComm GMLC M3UA can be confgured to have as many ASP's / IPSP's as needed by the system.
-* RestComm GMLC SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.        
+* {this-platform} {this-application} M3UA can be confgured to have as many ASP's / IPSP's as needed by the system.
+* {this-platform} {this-application} SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.        
 
 [[_mobicents_gmlc_overview_http]]
 === HTTP Transfer Mechanism
