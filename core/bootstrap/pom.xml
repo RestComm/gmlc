@@ -254,6 +254,16 @@
 			<version>${jss7.restcomm.version}</version>
 		</dependency>
 
+		<!-- SS7 CLI -->
+		
+		<!-- jreadline -->
+		<dependency>
+			<groupId>org.jboss.jreadline</groupId>
+			<artifactId>jreadline</artifactId>
+			<version>0.17</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- JiBX -->
 		<dependency>
 			<groupId>org.jibx</groupId>
