@@ -35,7 +35,7 @@
 		<jss7.restcomm.version>7.0.1383</jss7.restcomm.version>
 		<dialogic.version>6.7.1</dialogic.version>
 		<ts.slee.version>2.8.10</ts.slee.version>
-		<jslee.ext.version>${ts.slee.version}</jslee.ext.version>
+		<jslee.ext.version>3.0.7</jslee.ext.version>
 		<restcomm.resources.map.version>2.8.26</restcomm.resources.map.version>
 		<restcomm.resources.sip.version>2.8.20</restcomm.resources.sip.version>
 		<jdiameter.version>2.8.21</jdiameter.version>
