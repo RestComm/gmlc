@@ -51,7 +51,7 @@ Next figure displays the signal flow between an application and {this-platform} 
 
 image::images/App-GMLC-GSM_flow.png[]
 
-A deeper look inside the messages exchanged as for the previous diagram is shown next (all information depicted are ficticious, as an example)
+A deeper look inside the messages exchanged as for the previous diagram is shown next (all information depicted are fictitious, as an example)
 
 HTTP GET:
 ....
