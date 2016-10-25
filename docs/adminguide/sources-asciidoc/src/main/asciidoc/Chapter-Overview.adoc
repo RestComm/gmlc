@@ -5,7 +5,7 @@
 
 GMLC stands for Gateway Mobile Location Centre and enables offering Location Based Services (LBS) to mobile subscribers roaming across several Mobile Network Operator's Radio Access Networks, regardless of the type of access (GERAN, UTRAN or E-UTRAN). 
 
-Existing PLMN (Public Land Mobile Network) network elements are proprietary and run on non-standard operating environments located in trusted operator’s zones which make it difficult to build and deploy new applications. Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over the Internet. The GMLC connects to these network elements and enables the flow of LCS messages to be extended to an open, standards-based Application Server (AS) located in the IP network. The AS also provides the tools and interfaces to enable access to content providers through the Internet. 
+Existing PLMN (Public Land Mobile Network) network elements are proprietary and run on non-standard operating environments located in trusted operator’s zones which make it difficult to build and deploy new applications. Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over the Internet. The GMLC connects to these network elements and enables the flow of LCS messages to be extended to an open, standards-based Application Server (AS) located in the IP network. The AS also provides the tools and interfaces to enable access to content providers through the Internet.
 
 A GMLC is the first node an external LCS client accesses in a PLMN (Public Land Mobile Network). There may be more than one GMLC in a PLMN.   
 
@@ -224,7 +224,6 @@ RejectComponent: <description>
 ....
 
 
-
 Next figure displays the analogous signal flow as the one explained before, but including RestComm Geolocation API between the application and {this-platform} {this-application}. Likewise, in this case, the MAP ATI request is triggered by RestComm by an HTTP POST request with MLP Standard Location Immediate Request (SLIR).
 
 image::images/RestComm-GMLC-GSM_flow.png[]
@@ -247,14 +246,15 @@ Following, see an example of MLP payload included in HTTP POST request received 
        			<msid type="MSISDN">59899077937</msid>
      		</msids>
      		<loc_type type=""CURRENT_OR_LAST" />   	
-     </slir>
+    </slir>
 </svc_init>
 ....
 
 The corresponding answer to the MLP SLIR request (after reception of MAP ATI response from the HLR), i.e. the MLP SLIA (Standard Location Immediate Answer) is shown next:
 
 ....
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
 <svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
     <slia ver="3.1.0">
         <pos>
@@ -287,7 +287,8 @@ The corresponding answer to the MLP SLIR request (after reception of MAP ATI res
 An MLP SLIA including an unsuccessful location information retrieval due to "Unknown Subscriber" error received in MAP ATI response is shown next.
 
 ....
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
 <svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
     <slia ver="3.1.0">
         <result resid="4">UNKNOWN SUBSCRIBER</result>
@@ -299,7 +300,8 @@ An MLP SLIA including an unsuccessful location information retrieval due to "Unk
 An MLP SLIA including an unsuccessful location information retrieval due to "System Failure" error received in MAP ATI response is shown next.
 
 ....
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
 <svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
     <slia ver="3.1.0">
         <result resid="1">SYSTEM FAILURE</result>
@@ -326,7 +328,10 @@ image::images/RestComm-GMLC-LTE_flow.png[]
 An analogous signal flow as the one explained before for GSM location but consistent with previous signal flow for LTE location is described next. The mentioned MLP SLIR example would be almost identical to the one shown for GSM location, but with some additions as following:
 
 ....
-<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.DTD"> <svc_init xmlns="MLP_SVC_INIT_310.dtd"> 	    <hdr> 		
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.DTD"> 
+<svc_init xmlns="MLP_SVC_INIT_310.dtd"> 	    
+    <hdr> 		
         <client>
             <id>ACae6e420f425248d6a26948c17a9e2acf</id>
             <pwd>f8bc1274677b173d1a1cf3b9924eaa7e</pwd>
@@ -349,7 +354,7 @@ An analogous signal flow as the one explained before for GSM location but consis
 		</geo_info>
 		<change_area>
 			<target_area>
-				<name_area>area51</name_area>
+				<name_area>a51</name_area>
 			</target_area>
 			<type>MS_WITHIN_AREA</type>
 			<loc_estimates>FALSE</loc_estimates>
@@ -367,35 +372,49 @@ is shown next (only AVPs shown for simplicity):
 ....
 [PLR] Sending Request: 8388620 [E2E:1263534084 -- HBH:1693441831 -- AppID:16777255]
 [PLR] Request AVPs:
-[PLR] <avp name="Session-Id" code="263" vendor="0" value="127.0.0.1;343; 3840918879;SLg-PLA34277987203" />
+[PLR] <avp name="Session-Id" code="263" vendor="0" value="51.0.0.1;343; 3840918879;SLg-PLA34277987203" />
 [PLR] <avp name="Vendor-Specific-Application-Id" code="260" vendor="0">
 [PLR]   <avp name="Vendor-Id" code="266" vendor="0" value="10415" />
 [PLR]   <avp name="Auth-Application-Id" code="258" vendor="0" value="16777255" />
 [PLR] </avp>
-[PLR] <avp name="Destination-Realm" code="283" vendor="0" value="server.mobicents.org" />
-[PLR] <avp name="Origin-Realm" code="296" vendor="0" value="client.mobicents.org" />
+[PLR] <avp name="Destination-Realm" code="283" vendor="0" value="tel1.com" />
+[PLR] <avp name="Origin-Realm" code="296" vendor="0" value="restcomm.com" />
 [PLR] <avp name="Auth-Session-State" code="277" vendor="0" value="1" />
-[PLR] <avp name="Origin-Host" code="264" vendor="0" value="aaa://127.0.0.1:13868" />
+[PLR] <avp name="Origin-Host" code="264" vendor="0" value="aaa://51.0.0.1:13868" />
 [PLR] <avp name="SLg-Location-Type" code="2500" vendor="10415" value="0" />
 [PLR] <avp name="MSISDN" code="701" vendor="10415" value="59899077937" />
 [PLR] <avp name="LCS-EPS-Client-Name" code="2501" vendor="10415">
-[PLR]   <avp name="LCS-Name-String" code="1238" vendor="10415" value="Restcomm Geolocation API" />
+[PLR]   <avp name="LCS-Name-String" code="1238" vendor="10415" value=" ACae6e420f425248d6a26948c17a9e2acf" />
 [PLR]   <avp name="LCS-Format-Indicator" code="1237" vendor="10415" value="2" />
 [PLR] </avp>
 [PLR] <avp name="LCS-Client-Type" code="1241" vendor="10415" value="1" />
 [PLR] <avp name="LCS-Requestor-Name" code="2502" vendor="10415">
-[PLR]   <avp name="LCS-Requestor-Id-String" code="1240" vendor="10415" value="restcomm_geolocation_23" />
-[PLR]   <avp name="LCS-Format-Indicator" code="1237" vendor="10415" value="3" />
+[PLR]   <avp name="LCS-Requestor-Id-String" code="1240" vendor="10415" value="Restcomm Geolocation API" />
+[PLR]   <avp name="LCS-Format-Indicator" code="1237" vendor="10415" value="0" />
 [PLR] </avp>
-[PLR] <avp name="LCS-Priority" code="2503" vendor="10415" value="0" />
+[PLR] <avp name="LCS-Priority" code="2503" vendor="10415" value="1" />
 [PLR] <avp name="LCS-QoS" code="2504" vendor="10415">
 [PLR]   <avp name="LCS-QoS-Class" code="2523" vendor="10415" value="1" />
 [PLR]   <avp name="Horizontal-Accuracy" code="2505" vendor="10415" value="120" />
-[PLR]   <avp name="Vertical-Accuracy" code="2506" vendor="10415" value="3237" />
+[PLR]   <avp name="Vertical-Accuracy" code="2506" vendor="10415" value="99999" />
 [PLR]   <avp name="Vertical-Requested" code="2507" vendor="10415" value="0" />
 [PLR]   <avp name="Response-Time" code="2509" vendor="10415" value="1" />
 [PLR] </avp>
-[PLR] <avp name="Velocity-Requested" code="2508" vendor="10415" value="0" />
+[PLR] <avp name="Deferred-Location-Type" code="2532" vendor="10415" value="4" />
+[PLR] <avp name="LCS-Reference-Number" code="2531" vendor="10415" value="579" />
+[PLR] <avp name="Area-Event-Info" code="2533" vendor="10415">
+[PLR]   <avp name="Occurrence-Info" code="2538" vendor="10415" value="0" />
+[PLR]   <avp name="Interval-Time" code="2539" vendor="10415" value="3600" />
+[PLR] </avp>
+[PLR] <avp name="Area-Definition" code="2534" vendor="10415">
+[PLR]   <avp name="Area-Type" code="2536" vendor="10415" value="2" />
+[PLR]   <avp name="Area-Identification" code="2537" vendor="10415" value="a51" />
+[PLR] </avp>
+[PLR] <avp name="PLR-Flags" code="2545" vendor="10415" value="4" />
+[PLR] <avp name="Area-Event-Info" code="2533" vendor="10415">
+[PLR]   <avp name="Reporting-Amount" code="2541" vendor="10415" value="1" />
+[PLR]   <avp name="Reporting-Interval" code="2542" vendor="10415" value="3600" />
+[PLR] </avp>
 [PLR] </avp>
 [PLR] <avp name="GMLC-Address" code="2405" vendor="10415" value="52.21.78.91" />
 [PLR] <avp name="PLR-Flags" code="2545" vendor="10415" value="4" />
@@ -407,20 +426,24 @@ Reception of ELP PLA from the LTE network is shown next (only AVPs shown for sim
 ....
 [PLA] Received Answer: 8388620 [E2E:1263534084 -- HBH:1693441831 -- AppID:16777255]
 [PLA] Request AVPs:
-[PLA] <avp name="Session-Id" code="263" vendor="0" value="127.0.0.1;343;3840918879;SLg-PLA34277987203" />
+[PLA] <avp name="Session-Id" code="263" vendor="0" value="51.0.0.1;343; 3840918879;SLg-PLA34277987203" />
 [PLA] <avp name="Vendor-Specific-Application-Id" code="260" vendor="0">
 [PLA] <avp name="Vendor-Id" code="266" vendor="0" value="10415" />
 [PLA] <avp name="Auth-Application-Id" code="258" vendor="0" value="16777255" />
 [PLA] </avp>
 [PLA] <avp name="Result-Code" code="268" vendor="0" value="2001" />
 [PLA] <avp name="Auth-Session-State" code="277" vendor="0" value="1" />
-[PLA] <avp name="Location-Estimate" code="1242" vendor="10415" value="S35°38'15.37" W109°45'21.77"" />
+[PLA] <avp name="Location-Estimate" code="1242" vendor="10415" value="S35°38'15.37" W58°45'21.77"" />
 [PLA] <avp name="Accuracy-Fulfilment-Indicator" code="2513" vendor="10415" value="0" />
 [PLA] <avp name="Age-Of-Location-Estimate" code="2514" vendor="10415" value="0" />
+[PLA] <avp name="EUTRAN-Positioning-Data" code="2516" vendor="10415" value="0A73F937" />
 [PLA] <avp name="ECGI" code="2517" vendor="10415" value="EFB9437" />
 [PLA] <avp name="Serving-Node" code="2401" vendor="10415">
+[PLA]   <avp name="SGSN-Number" code="1489" vendor="10415" value="59899004501" />
+[PLA]	<avp name="SGSN-Name" code="2409" vendor="10415" value="SGSN01" />
+[PLA]	<avp name="SGSN-Realm" code="2410" vendor="10415" value="sgsn.tel1.com" />
 [PLA]   <avp name="MME-Name" code="2402" vendor="10415" value="MME710" />
-[PLA]   <avp name="MME-Realm" code="2408" vendor="10415" value="mme.antel.com" />
+[PLA]   <avp name="MME-Realm" code="2408" vendor="10415" value="mme.tel1.com" />
 [PLA]   <avp name="3GPP-AAA-Server-Name" code="318" vendor="10415" value="aaa.restcomm.com" />
 [PLA]   <avp name="LCS-Capabilities-Sets" code="2404" vendor="10415" value="99900123" />
  [PLA]   <avp name="GMLC-Address" code="2405" vendor="10415" value="52.21.78.91" />
@@ -436,34 +459,171 @@ The corresponding answer to the MLP SLIR request (after reception of ELP PLA fro
 Location Immediate Answer) embedded in HTTP POST response is shown next.
 
 ....
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD"> <svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">     
-<slia ver="3.1.0"> 	<pos>
-        <msid>59899077937</msid>
-        <pd>
-            <time utc_off="-0300">20161023235151</time>
-		    <geo_info>
-			    <CoordinateReferenceSystem>
-				    <Identifier>
-					    <code>4326</code>
-					    <codeSpace>EPSG</codeSpace>
-					    <edition>6.1</edition>
-				    </Identifier>
-			    </CoordinateReferenceSystem>
-			    <shape>
-			        <CircularArea>
-			            <coord>
-			                <X>35 38 15.37S</X>
-			                <Y>109 45 21.77W</Y>
-			            </coord>
-			            <radius>-1</radius>
-			        </CircularArea>
-			    </shape>
-		    </geo_info>
-		</pd>
-	</pos>
-</slia>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD"> 
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">     
+    <slia ver="3.1.0"> 
+        <lcs_ref>579</lcs_ref>
+        <pos>
+            <msid>59899077937</msid>
+            <pd>
+                <time utc_off="-0300">20161023235151</time>
+		        <geo_info>
+			        <CoordinateReferenceSystem>
+				        <Identifier>
+					        <code>4326</code>
+					        <codeSpace>EPSG</codeSpace>
+					        <edition>6.1</edition>
+				        </Identifier>
+			        </CoordinateReferenceSystem>
+			        <shape>
+			            <CircularArea>
+			                <coord>
+			                    <X>35 38 15.37S</X>
+			                    <Y>58 45 21.77W</Y>
+			                </coord>
+			                <radius>-1</radius>
+			            </CircularArea>
+			        </shape>
+		        </geo_info>
+		    </pd>
+	    </pos>
+    </slia>
 </svc_result>
+....
 
+When the settled event occurs, it triggers a location report back to the GMLC, the ELP LRR/LRA messages are subsequently conveyed back and forth between the MME and GMLC, as displayed next:
+
+....
+[LRR] Sending Request: 8388621 [E2E:1370488836 -- HBH:1693543583 -- AppID:16777255]
+[LRR] Request AVPs:
+[LRR] <avp name="Session-Id" code="263" vendor="0" value="51.0.0.1;343; 3841024432;-SLg-LRR34277987203" />
+[LRR] <avp name="Vendor-Specific-Application-Id" code="260" vendor="0">
+[LRR]   <avp name="Vendor-Id" code="266" vendor="0" value="10415" />
+[LRR]   <avp name="Auth-Application-Id" code="258" vendor="0" value="16777255" />
+[LRR] </avp>
+[LRR] <avp name="Destination-Realm" code="283" vendor="0" value="restcomm.com" />
+[LRR] <avp name="Origin-Realm" code="296" vendor="0" value="tel1.com" />
+[LRR] <avp name="Auth-Session-State" code="277" vendor="0" value="1" />
+[LRR] <avp name="Origin-Host" code="264" vendor="0" value="aaa://51.0.0.1:13868" />
+[LRR] <avp name="Location-Event" code="2518" vendor="10415" value="4" />
+[LRR] <avp name="LCS-EPS-Client-Name" code="2501" vendor="10415">
+[LRR]   <avp name="LCS-Name-String" code="1238" vendor="10415" value="ACae6e420f425248d6a26948c17a9e2acf" />
+[LRR]   <avp name="LCS-Format-Indicator" code="1237" vendor="10415" value="2" />
+[LRR] </avp>
+[LRR] <avp name="3GPP-IMSI" code="1" vendor="10415" value="748039876543210" />
+[LRR] <avp name="MSISDN" code="701" vendor="10415" value="59899077937" />
+[LRR] <avp name="IMEI" code="1402" vendor="10415" value="011714004661057" />
+[LRR] <avp name="Location-Estimate" code="1242" vendor="10415" value=" S35°37'10.91" W58°01'33.07"" />
+[LRR] <avp name="Accuracy-Fulfilment-Indicator" code="2513" vendor="10415" value="0" />
+[LRR] <avp name="Age-Of-Location-Estimate" code="2514" vendor="10415" value="3" />
+[LRR] <avp name="Velocity-Estimate" code="2515" vendor="10415" value="0" />
+[LRR] <avp name="EUTRAN-Positioning-Data" code="2516" vendor="10415" value="0A73F937" />
+[LRR] <avp name="ECGI" code="2517" vendor="10415" value="E1F0023" />
+[LRR] <avp name="Service-Area-Identity" code="1607" vendor="10415" value="service-area-umts-3" />
+[LRR] <avp name="LCS-Service-Type-ID" code="2520" vendor="10415" value="234" />
+[LRR] <avp name="Pseudonym-Indicator" code="2519" vendor="10415" value="0" />
+[LRR] <avp name="LCS-QoS-Class" code="2523" vendor="10415" value="1" />
+[LRR] <avp name="Serving-Node" code="2401" vendor="10415">
+[LRR]   <avp name="SGSN-Number" code="1489" vendor="10415" value="59899004501" />
+[LRR]	<avp name="SGSN-Name" code="2409" vendor="10415" value="SGSN01" />
+[LRR]	<avp name="SGSN-Realm" code="2410" vendor="10415" value="sgsn.tel1.com" />
+[LRR]   <avp name="MME-Name" code="2402" vendor="10415" value="MME710" />
+[LRR]   <avp name="MME-Realm" code="2408" vendor="10415" value="mme.tel1.com" />
+[LRR]   <avp name="3GPP-AAA-Server-Name" code="318" vendor="10415" value="aaa.restcomm.com" />
+[LRR]   <avp name="LCS-Capabilities-Sets" code="2404" vendor="10415" value="99900123" />
+ [PLA]   <avp name="GMLC-Address" code="2405" vendor="10415" value="52.21.78.91" />
+ [LRR] </avp>
+[LRR] <avp name="LRR-Flags" code="2530" vendor="10415" value="0" />
+[LRR] <avp name="LCS-Reference-Number" code="2531" vendor="10415" value="579" />
+[LRR] <avp name="Deferred-MT-LR-Data" code="2547" vendor="10415">
+[LRR]   <avp name="Deferred-Location-Type" code="2532" vendor="10415" value="4" />
+[LRR]   <avp name="Termination-Cause" code="2548" vendor="10415" value="7" />
+[LRR] </avp>
+[LRR] <avp name="GMLC-Address" code="2405" vendor="10415" value="52.21.78.91" />
+[LRR] <avp name="Periodic-LDR-Info" code="2540" vendor="10415">
+[LRR]   <avp name="Reporting-Amount" code="2541" vendor="10415" value="8639910" />
+[LRR]   <avp name="Reporting-Interval" code="2542" vendor="10415" value="8639998" />
+[LRR] </avp>
+[LRR] <avp name="ESMLC-Cell-Info" code="2552" vendor="10415">
+[LRR]   <avp name="ECGI" code="2517" vendor="10415" value="EFC9452" />
+[LRR]   <avp name="Cell-Portion-ID" code="2553" vendor="10415" value="12393" />
+[LRR] </avp>
+[LRR] <avp name="1xRTT-RCID" code="2554" vendor="10415" value="00000010" />
+[LRR] <avp name="Civic-Address" code="2556" vendor="10415" value="<civicAddress xml:lang='en-GB' xmlns="urn:ietf:params:xml:ns:pidf:geopriv10:civicAddr" xmlns:cdc="http://devon.canals.example.com/civic">
+        <country>UY</country>
+	<A1>MV</A1>
+	<ap:airport>MVD</ap:airport>
+	<ap:terminal>Carrasco International</ap:terminal>
+	<ap:concourse>A</ap:concourse>
+	<ap:gate>4</ap:gate>
+      </civicAddress>" />
+[LRR] <avp name="Barometric-Pressure" code="2557" vendor="10415" value="101327" />
+....
+
+....
+[LRA] Received Answer: 8388621 [E2E:1370488836 -- HBH:1693543583 -- AppID:16777255]
+[LRA] Request AVPs:
+[LRA] <avp name="Session-Id" code="263" vendor="0" value="51.0.0.1;343; 3841024432;-SLg-LRR34277987203" />
+[LRA] <avp name="Vendor-Specific-Application-Id" code="260" vendor="0">
+[LRA]   <avp name="Vendor-Id" code="266" vendor="0" value="10415" />
+[LRA]   <avp name="Auth-Application-Id" code="258" vendor="0" value="16777255" />
+[LRA] </avp>
+[LRA] <avp name="Result-Code" code="268" vendor="0" value="2001" />
+[LRA] <avp name="Auth-Session-State" code="277" vendor="0" value="1" />
+[LRA] <avp name="GMLC-Address" code="2405" vendor="10415" value="52.21.78.91" />
+[LRA] <avp name="LRA-Flags" code="2549" vendor="10415" value="0" />
+[LRA] <avp name="Reporting-PLMN-List" code="2543" vendor="10415">
+[LRA]   <avp name="Visited-PLMN-Id" code="1407" vendor="10415" value="74803, 74801" />
+[LRA]   <avp name="Periodic-Location-Support-Indicator" code="2550" vendor="10415" value="1" />
+[LRA]   <avp name="Prioritized-List-Indicator" code="2551" vendor="10415" value="0" />
+[LRA] </avp>
+[LRA] <avp name="PLMN-ID-List" code="2544" vendor="10415">
+[LRA]   <avp name="Visited-PLMN-Id" code="1407" vendor="10415" value="74803, 74801" />
+[LRA]   <avp name="Periodic-Location-Support-Indicator" code="2550" vendor="10415" value="1" />
+[LRA] </avp>
+[LRA] <avp name="LCS-Reference-Number" code="2531" vendor="10415" value="579" />
+[LRR] <avp name="Origin-Host" code="264" vendor="0" value="51.0.0.1" />
+[LRR] <avp name="Origin-Realm" code="296" vendor="0" value="restcomm.com" />
+....
+
+The corresponding answer MLP SLREP (Standard Location Immediate Answer) embedded in HTTP POST response is shown next.
+
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0"> 
+    <slirep ver="3.1.0"> 	
+        <lcs_ref>579</lcs_ref>
+	    <pos>
+	        <msid>59899077937</msid>
+	        <imsi>748039876543210</imsi>
+ 	        <imei>011714004661057</imei>
+ 	        <speed>0</speed>
+            <pd>
+                <time utc_off="-0300">20161023235901</time>
+		        <geo_info>
+			        <CoordinateReferenceSystem>
+				        <Identifier>
+					        <code>4326</code>
+					        <codeSpace>EPSG</codeSpace>
+					        <edition>6.1</edition>
+				        </Identifier>
+			        </CoordinateReferenceSystem>
+			        <shape>
+			            <CircularArea>
+			                <coord>
+			                    <X>35 37 10.91S</X>
+			                    <Y>58 01 33.07W</Y>
+			                </coord>
+			                <radius>100</radius>
+			            </CircularArea>
+			        </shape>
+		        </geo_info>
+		    </pd>
+	    </pos>
+    </slirep>
+</svc_result>
 ....
 
 
