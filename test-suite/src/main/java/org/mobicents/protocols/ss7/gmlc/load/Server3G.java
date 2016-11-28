@@ -40,7 +40,6 @@ import org.mobicents.protocols.ss7.map.MAPStackImpl;
 import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
-//import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortSource;
@@ -55,15 +54,15 @@ import org.mobicents.protocols.ss7.map.api.primitives.*;
 //import org.mobicents.protocols.ss7.map.api.primitives.LMSI;
 //import org.mobicents.protocols.ss7.map.api.primitives.PlmnId;
 //import org.mobicents.protocols.ss7.map.api.primitives.SubscriberIdentity;
-import org.mobicents.protocols.ss7.gmlc.load.Server3G;
-import org.mobicents.protocols.ss7.gmlc.load.TestHarness3G;
+//import org.mobicents.protocols.ss7.gmlc.load.Server;
+//import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
 //import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
 import org.mobicents.protocols.ss7.map.api.service.lsm.*;
 import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.SupportedLCSCapabilitySets;
 import org.mobicents.protocols.ss7.map.primitives.GSNAddressImpl;
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 //import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
-import org.mobicents.protocols.ss7.map.primitives.MAPExtensionContainerImpl;
+//import org.mobicents.protocols.ss7.map.primitives.MAPExtensionContainerImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.sccp.LoadSharingAlgorithm;
 import org.mobicents.protocols.ss7.sccp.OriginationType;
@@ -79,7 +78,6 @@ import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.protocols.ss7.tcap.TCAPStackImpl;
 import org.mobicents.protocols.ss7.tcap.api.TCAPStack;
 import org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName;
-//import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
@@ -586,59 +584,59 @@ public class Server3G extends TestHarness3G {
         logger.info("IpChannelType=" + ipChannelType);
 
         if (args.length >= 2) {
-            TestHarness.CLIENT_IP = args[1];
+            TestHarness3G.CLIENT_IP = args[1];
         }
-        logger.info("CLIENT_IP=" + TestHarness.CLIENT_IP);
+        logger.info("CLIENT_IP=" + TestHarness3G.CLIENT_IP);
 
         if (args.length >= 3) {
-            TestHarness.CLIENT_PORT = Integer.parseInt(args[2]);
+            TestHarness3G.CLIENT_PORT = Integer.parseInt(args[2]);
         }
-        logger.info("CLIENT_PORT=" + TestHarness.CLIENT_PORT);
+        logger.info("CLIENT_PORT=" + TestHarness3G.CLIENT_PORT);
 
         if (args.length >= 4) {
-            TestHarness.SERVER_IP = args[3];
+            TestHarness3G.SERVER_IP = args[3];
         }
-        logger.info("SERVER_IP=" + TestHarness.SERVER_IP);
+        logger.info("SERVER_IP=" + TestHarness3G.SERVER_IP);
 
         if (args.length >= 5) {
-            TestHarness.SERVER_PORT = Integer.parseInt(args[4]);
+            TestHarness3G.SERVER_PORT = Integer.parseInt(args[4]);
         }
-        logger.info("SERVER_PORT=" + TestHarness.SERVER_PORT);
+        logger.info("SERVER_PORT=" + TestHarness3G.SERVER_PORT);
 
         if (args.length >= 6) {
-            TestHarness.CLIENT_SPC = Integer.parseInt(args[5]);
+            TestHarness3G.CLIENT_SPC = Integer.parseInt(args[5]);
         }
-        logger.info("CLIENT_SPC=" + TestHarness.CLIENT_SPC);
+        logger.info("CLIENT_SPC=" + TestHarness3G.CLIENT_SPC);
 
         if (args.length >= 7) {
-            TestHarness.SERVER_SPC = Integer.parseInt(args[6]);
+            TestHarness3G.SERVER_SPC = Integer.parseInt(args[6]);
         }
-        logger.info("SERVET_SPC=" + TestHarness.SERVER_SPC);
+        logger.info("SERVET_SPC=" + TestHarness3G.SERVER_SPC);
 
         if (args.length >= 8) {
-            TestHarness.NETWORK_INDICATOR = Integer.parseInt(args[7]);
+            TestHarness3G.NETWORK_INDICATOR = Integer.parseInt(args[7]);
         }
-        logger.info("NETWORK_INDICATOR=" + TestHarness.NETWORK_INDICATOR);
+        logger.info("NETWORK_INDICATOR=" + TestHarness3G.NETWORK_INDICATOR);
 
         if (args.length >= 9) {
-            TestHarness.SERVICE_INDICATOR = Integer.parseInt(args[8]);
+            TestHarness3G.SERVICE_INDICATOR = Integer.parseInt(args[8]);
         }
-        logger.info("SERVICE_INDICATOR=" + TestHarness.SERVICE_INDICATOR);
+        logger.info("SERVICE_INDICATOR=" + TestHarness3G.SERVICE_INDICATOR);
 
         if (args.length >= 10) {
-            TestHarness.SERVER_SSN = Integer.parseInt(args[9]);
+            TestHarness3G.SERVER_SSN = Integer.parseInt(args[9]);
         }
-        logger.info("SSN=" + TestHarness.SERVER_SSN);
+        logger.info("SSN=" + TestHarness3G.SERVER_SSN);
 
         if (args.length >= 11) {
-            TestHarness.ROUTING_CONTEXT = Integer.parseInt(args[10]);
+            TestHarness3G.ROUTING_CONTEXT = Integer.parseInt(args[10]);
         }
-        logger.info("ROUTING_CONTEXT=" + TestHarness.ROUTING_CONTEXT);
+        logger.info("ROUTING_CONTEXT=" + TestHarness3G.ROUTING_CONTEXT);
 
         if (args.length >= 12) {
-            TestHarness.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT = Integer.parseInt(args[11]);
+            TestHarness3G.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT = Integer.parseInt(args[11]);
         }
-        logger.info("DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT=" + TestHarness.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT);
+        logger.info("DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT=" + TestHarness3G.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT);
 
         final Server server = new Server();
         try {

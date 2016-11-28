@@ -39,7 +39,7 @@ import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 
 /**
- * @author Fernando Mendioroz (fernando.mendioroz@telestax.com)
+ * @author <a href="mailto:fernando.mendioroz@telestax.com"> Fernando Mendioroz </a>
  *
  */
 public abstract class TestHarness3G implements MAPDialogListener, MAPServiceLsmListener {

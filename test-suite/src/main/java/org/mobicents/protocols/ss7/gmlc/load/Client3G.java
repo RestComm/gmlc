@@ -257,7 +257,7 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
                 .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
             MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
                 .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcGatewayContext,
-                    MAPApplicationContextVersion.version4),
+                    MAPApplicationContextVersion.version3),
                     SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
 
             // Then, create parameters for concerning MAP operation
@@ -308,7 +308,7 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
                 .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
             MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
                 .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcEnquiryContext,
-                    MAPApplicationContextVersion.version4),
+                    MAPApplicationContextVersion.version3),
                     SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
 
             // Then, create parameters for concerning MAP operation
@@ -530,10 +530,10 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
     public void onProvideSubscriberLocationResponse(ProvideSubscriberLocationResponse provideSubscriberLocationResponse) {
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
+            logger.debug(String.format("onProvideSubscriberLocationResponse  for DialogId=%d",
                 provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
         } else {
-            logger.info(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
+            logger.info(String.format("onProvideSubscriberLocationResponse  for DialogId=%d",
                 provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
 
 
@@ -556,70 +556,70 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
         logger.info("IpChannelType=" + ipChannelType);
 
         if (args.length >= 4) {
-            TestHarness.CLIENT_IP = args[3];
+            TestHarness3G.CLIENT_IP = args[3];
         }
 
-        logger.info("CLIENT_IP=" + TestHarness.CLIENT_IP);
+        logger.info("CLIENT_IP=" + TestHarness3G.CLIENT_IP);
 
         if (args.length >= 5) {
-            TestHarness.CLIENT_PORT = Integer.parseInt(args[4]);
+            TestHarness3G.CLIENT_PORT = Integer.parseInt(args[4]);
         }
 
-        logger.info("CLIENT_PORT=" + TestHarness.CLIENT_PORT);
+        logger.info("CLIENT_PORT=" + TestHarness3G.CLIENT_PORT);
 
         if (args.length >= 6) {
-            TestHarness.SERVER_IP = args[5];
+            TestHarness3G.SERVER_IP = args[5];
         }
 
-        logger.info("SERVER_IP=" + TestHarness.SERVER_IP);
+        logger.info("SERVER_IP=" + TestHarness3G.SERVER_IP);
 
         if (args.length >= 7) {
-            TestHarness.SERVER_PORT = Integer.parseInt(args[6]);
+            TestHarness3G.SERVER_PORT = Integer.parseInt(args[6]);
         }
 
-        logger.info("SERVER_PORT=" + TestHarness.SERVER_PORT);
+        logger.info("SERVER_PORT=" + TestHarness3G.SERVER_PORT);
 
         if (args.length >= 8) {
-            TestHarness.CLIENT_SPC = Integer.parseInt(args[7]);
+            TestHarness3G.CLIENT_SPC = Integer.parseInt(args[7]);
         }
 
-        logger.info("CLIENT_SPC=" + TestHarness.CLIENT_SPC);
+        logger.info("CLIENT_SPC=" + TestHarness3G.CLIENT_SPC);
 
         if (args.length >= 9) {
-            TestHarness.SERVER_SPC = Integer.parseInt(args[8]);
+            TestHarness3G.SERVER_SPC = Integer.parseInt(args[8]);
         }
 
-        logger.info("SERVER_SPC=" + TestHarness.SERVER_SPC);
+        logger.info("SERVER_SPC=" + TestHarness3G.SERVER_SPC);
 
         if (args.length >= 10) {
-            TestHarness.NETWORK_INDICATOR = Integer.parseInt(args[9]);
+            TestHarness3G.NETWORK_INDICATOR = Integer.parseInt(args[9]);
         }
 
-        logger.info("NETWORK_INDICATOR=" + TestHarness.NETWORK_INDICATOR);
+        logger.info("NETWORK_INDICATOR=" + TestHarness3G.NETWORK_INDICATOR);
 
         if (args.length >= 11) {
-            TestHarness.SERVICE_INDICATOR = Integer.parseInt(args[10]);
+            TestHarness3G.SERVICE_INDICATOR = Integer.parseInt(args[10]);
         }
 
-        logger.info("SERVICE_INDICATOR=" + TestHarness.SERVICE_INDICATOR);
+        logger.info("SERVICE_INDICATOR=" + TestHarness3G.SERVICE_INDICATOR);
 
         if (args.length >= 12) {
-            TestHarness.CLIENT_SSN = Integer.parseInt(args[11]);
+            TestHarness3G.CLIENT_SSN = Integer.parseInt(args[11]);
         }
 
-        logger.info("SSN=" + TestHarness.CLIENT_SSN);
+        logger.info("SSN=" + TestHarness3G.CLIENT_SSN);
 
         if (args.length >= 13) {
-            TestHarness.ROUTING_CONTEXT = Integer.parseInt(args[12]);
+            TestHarness3G.ROUTING_CONTEXT = Integer.parseInt(args[12]);
         }
 
-        logger.info("ROUTING_CONTEXT=" + TestHarness.ROUTING_CONTEXT);
+        logger.info("ROUTING_CONTEXT=" + TestHarness3G.ROUTING_CONTEXT);
 
         if (args.length >= 14) {
-            TestHarness.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT = Integer.parseInt(args[13]);
+            TestHarness3G.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT = Integer.parseInt(args[13]);
         }
 
-        logger.info("DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT=" + TestHarness.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT);
+        logger.info("DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT=" + TestHarness3G.DELIVERY_TRANSFER_MESSAGE_THREAD_COUNT);
 
         /*
          * logger.info("Number of calls to be completed = " + noOfCalls + " Number of concurrent calls to be maintained = " +
@@ -659,6 +659,7 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
                 }
 
                 client.initiateMapSRIforLCS();
+                // client.initiateMapPSL();
             }
 
         } catch (Exception e) {
