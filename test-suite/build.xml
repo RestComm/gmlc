@@ -38,7 +38,7 @@
 		<!-- Stats -->
 		<pathelement location="${assemble.dir}/statistics-api.jar" />
 		<pathelement location="${assemble.dir}/statistics-impl.jar" />
-		
+
 		<!-- restcomm 3rd party -->
 		<pathelement location="${assemble.dir}/asn.jar" />
 		<pathelement location="${assemble.dir}/stream.jar" />
@@ -49,13 +49,13 @@
 		<pathelement location="${assemble.dir}/guava.jar" />
 		<pathelement location="${assemble.dir}/netty-all.jar" />
 		<pathelement location="src/main/resources" />
-		
+
 	</path>
 
 	<property name="cp.property" refid="project.class.path" />
 
 	<target name="assemble" description="Builds load tests and assembles binaries.">
-		
+
 
 		<echo message="Java Version: ${java.version}" />
 		<echo message="Java home: ${java.home}" />
@@ -119,7 +119,7 @@
 			<arg value="2" /> <!-- NI -->
 			<arg value="3" /> <!-- SI -->
 			<arg value="6" /> <!-- SSN -->
-			<arg value="100" /> <!-- RC -->	
+			<arg value="100" /> <!-- RC -->
 			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
 		</java>
 	</target>
@@ -166,53 +166,142 @@
 	</target>
 
 	<target name="client-server" description="run the Load Test Client and Server">
-			<echo message="${cp.property}" />
-			<delete dir="client-server" />
-			<mkdir dir="client-server" />
-			<java classname="${packageprefix}.ClientServer" fork="true" maxmemory="2048m" classpathref="project.class.path" dir="client-server">
-				<jvmarg value="-Dlog.file.name=log4j-client-server.log"/>
-				<jvmarg value="-Xms2048m"/>
-				<jvmarg value="-Xmx2048m"/>
-				<jvmarg value="-Xmn128m"/>
-				<jvmarg value="-XX:PermSize=256m"/>
-				<jvmarg value="-XX:MaxPermSize=256m"/>
-				<jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
-				<!--
-				<jvmarg value="-XX:CMSInitiatingOccupancyFraction=80"/>
-				<jvmarg value="-XX:+UseConcMarkSweepGC"/>
-				<jvmarg value="-XX:+CMSIncrementalMode"/>
-				<jvmarg value="-XX:-CMSIncrementalPacing"/>
-				<jvmarg value="-XX:CMSIncrementalDutyCycleMin=100"/>
-				<jvmarg value="-XX:CMSIncrementalDutyCycle=100"/>
-				<jvmarg value="-Dsun.rmi.dgc.client.gcInterval=3600000"/>
-				<jvmarg value="-Dorg.jboss.resolver.warning=true"/>
-				<jvmarg value="-Djava.net.preferIPv4Stack=true"/>
-				<jvmarg value="-Dio.netty.leakDetection.level=advanced"/>
-				-->
-				<jvmarg value="-XX:+UseParallelOldGC"/>
-				<arg value="100000" /> <!-- number of Dialogs -->
-				<arg value="1000" /> <!-- Concurrent Dialogs -->
-				<arg value="sctp" /> <!-- socket type -->
-				<arg value="127.0.0.1" /> <!-- Client IP -->
-				<arg value="2345" /> <!-- Client Port -->
-				<arg value="127.0.0.1" /> <!-- Server Ip -->
-				<arg value="3434" /> <!-- Server Port -->
-				<arg value="1" /> <!-- Client PC -->
-				<arg value="2" /> <!-- Server PC -->
-				<arg value="2" /> <!-- NI -->
-				<arg value="3" /> <!-- SI -->
-				<arg value="145" /> <!-- Client SSN -->
-				<arg value="6" /> <!-- Server SSN -->
-				<arg value="100" /> <!-- RC -->
-				<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
-			</java>
-		</target>
+		<echo message="${cp.property}" />
+		<delete dir="client-server" />
+		<mkdir dir="client-server" />
+		<java classname="${packageprefix}.ClientServer" fork="true" maxmemory="2048m" classpathref="project.class.path" dir="client-server">
+			<jvmarg value="-Dlog.file.name=log4j-client-server.log"/>
+			<jvmarg value="-Xms2048m"/>
+			<jvmarg value="-Xmx2048m"/>
+			<jvmarg value="-Xmn128m"/>
+			<jvmarg value="-XX:PermSize=256m"/>
+			<jvmarg value="-XX:MaxPermSize=256m"/>
+			<jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+			<!--
+      <jvmarg value="-XX:CMSInitiatingOccupancyFraction=80"/>
+      <jvmarg value="-XX:+UseConcMarkSweepGC"/>
+      <jvmarg value="-XX:+CMSIncrementalMode"/>
+      <jvmarg value="-XX:-CMSIncrementalPacing"/>
+      <jvmarg value="-XX:CMSIncrementalDutyCycleMin=100"/>
+      <jvmarg value="-XX:CMSIncrementalDutyCycle=100"/>
+      <jvmarg value="-Dsun.rmi.dgc.client.gcInterval=3600000"/>
+      <jvmarg value="-Dorg.jboss.resolver.warning=true"/>
+      <jvmarg value="-Djava.net.preferIPv4Stack=true"/>
+      <jvmarg value="-Dio.netty.leakDetection.level=advanced"/>
+      -->
+			<jvmarg value="-XX:+UseParallelOldGC"/>
+			<arg value="100000" /> <!-- number of Dialogs -->
+			<arg value="1000" /> <!-- Concurrent Dialogs -->
+			<arg value="sctp" /> <!-- socket type -->
+			<arg value="127.0.0.1" /> <!-- Client IP -->
+			<arg value="2345" /> <!-- Client Port -->
+			<arg value="127.0.0.1" /> <!-- Server Ip -->
+			<arg value="3434" /> <!-- Server Port -->
+			<arg value="1" /> <!-- Client PC -->
+			<arg value="2" /> <!-- Server PC -->
+			<arg value="2" /> <!-- NI -->
+			<arg value="3" /> <!-- SI -->
+			<arg value="145" /> <!-- Client SSN -->
+			<arg value="6" /> <!-- Server SSN -->
+			<arg value="100" /> <!-- RC -->
+			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
+		</java>
+	</target>
+
+	<target name="server3g" description="run the Load Test Server.">
+		<echo message="${cp.property}" />
+		<delete dir="server3g" />
+		<mkdir dir="server3g" />
+		<delete file="log4j-server.log" />
+		<java classname="${packageprefix}.Server3G" fork="true" maxmemory="2048m" classpathref="project.class.path" dir="server3g">
+			<jvmarg value="-Dlog.file.name=log4j-server.log" />
+			<jvmarg value="-Xms2048m"/>
+			<jvmarg value="-Xmx2048m"/>
+			<jvmarg value="-Xmn128m"/>
+			<jvmarg value="-XX:PermSize=256m"/>
+			<jvmarg value="-XX:MaxPermSize=256m"/>
+			<jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+			<!--
+			<jvmarg value="-XX:CMSInitiatingOccupancyFraction=80"/>
+			<jvmarg value="-XX:+UseConcMarkSweepGC"/>
+			<jvmarg value="-XX:+CMSIncrementalMode"/>
+			<jvmarg value="-XX:-CMSIncrementalPacing"/>
+			<jvmarg value="-XX:CMSIncrementalDutyCycleMin=100"/>
+			<jvmarg value="-XX:CMSIncrementalDutyCycle=100"/>
+			<jvmarg value="-Dsun.rmi.dgc.client.gcInterval=3600000"/>
+			<jvmarg value="-Dorg.jboss.resolver.warning=true"/>
+			<jvmarg value="-Djava.net.preferIPv4Stack=true"/>
+			<jvmarg value="-Dio.netty.leakDetection.level=advanced"/>
+			-->
+			<jvmarg value="-XX:+UseParallelOldGC"/>
+			<!--
+			<jvmarg value="-XX:+PrintGCDetails" />
+			<jvmarg value="-XX:+PrintGCTimeStamps" />
+			-->
+			<arg value="sctp" /> <!-- socket type -->
+			<arg value="127.0.0.1" /> <!-- Client IP -->
+			<arg value="2345" /> <!-- Client Port -->
+			<arg value="127.0.0.1" /> <!-- Server Ip -->
+			<arg value="3434" /> <!-- Server Port -->
+			<arg value="1" /> <!-- Client PC -->
+			<arg value="2" /> <!-- Server PC -->
+			<arg value="2" /> <!-- NI -->
+			<arg value="3" /> <!-- SI -->
+			<arg value="6" /> <!-- SSN -->
+			<arg value="100" /> <!-- RC -->
+			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
+		</java>
+	</target>
+	<target name="client3g" description="run the Load Test Client">
+		<echo message="${cp.property}" />
+		<delete dir="client3g" />
+		<mkdir dir="client3g" />
+		<java classname="${packageprefix}.Client3G" fork="true" maxmemory="2048m" classpathref="project.class.path" dir="client3g">
+			<jvmarg value="-Dlog.file.name=log4j-client.log"/>
+			<jvmarg value="-Xms2048m"/>
+			<jvmarg value="-Xmx2048m"/>
+			<jvmarg value="-Xmn128m"/>
+			<jvmarg value="-XX:PermSize=256m"/>
+			<jvmarg value="-XX:MaxPermSize=256m"/>
+			<jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+			<!--
+			<jvmarg value="-XX:CMSInitiatingOccupancyFraction=80"/>
+			<jvmarg value="-XX:+UseConcMarkSweepGC"/>
+			<jvmarg value="-XX:+CMSIncrementalMode"/>
+			<jvmarg value="-XX:-CMSIncrementalPacing"/>
+			<jvmarg value="-XX:CMSIncrementalDutyCycleMin=100"/>
+			<jvmarg value="-XX:CMSIncrementalDutyCycle=100"/>
+			<jvmarg value="-Dsun.rmi.dgc.client.gcInterval=3600000"/>
+			<jvmarg value="-Dorg.jboss.resolver.warning=true"/>
+			<jvmarg value="-Djava.net.preferIPv4Stack=true"/>
+			<jvmarg value="-Dio.netty.leakDetection.level=advanced"/>
+			-->
+			<jvmarg value="-XX:+UseParallelOldGC"/>
+			<arg value="500000" /> <!-- number of Dialogs -->
+			<arg value="1000" /> <!-- Concurrent Dialogs -->
+			<arg value="sctp" /> <!-- socket type -->
+			<arg value="127.0.0.1" /> <!-- Client IP -->
+			<arg value="2345" /> <!-- Client Port -->
+			<arg value="127.0.0.1" /> <!-- Server Ip -->
+			<arg value="3434" /> <!-- Server Port -->
+			<arg value="1" /> <!-- Client PC -->
+			<arg value="2" /> <!-- Server PC -->
+			<arg value="2" /> <!-- NI -->
+			<arg value="3" /> <!-- SI -->
+			<arg value="145" /> <!-- SSN -->
+			<arg value="100" /> <!-- RC -->
+			<arg value="16" /> <!-- deliveryTransferMessageThreadCount -->
+		</java>
+	</target>
+
 	<!-- -->
 	<target name="clean" description="clean the logs">
 		<delete dir="server" />
 		<delete dir="client" />
+		<delete dir="server3g" />
+		<delete dir="client3g" />
 		<delete dir="client-server" />
 	</target>
-	
+
 
 </project>
