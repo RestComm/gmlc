@@ -296,26 +296,17 @@ public class Server3G extends TestHarness3G {
 
     @Override
     public void onProvideSubscriberLocationRequest(ProvideSubscriberLocationRequest provideSubscriberLocationRequest) {
-        /*
-         * This is an error condition. Server should never receive onSendRoutingInfoForLCSResponse.
-         */
-        logger.error(String.format("onProvideSubscriberLocationRequest for Dialog=%d and invokeId=%d",
-            provideSubscriberLocationRequest.getMAPDialog().getLocalDialogId(), provideSubscriberLocationRequest.getInvokeId()));
-    }
-
-    @Override
-    public void onProvideSubscriberLocationResponse(ProvideSubscriberLocationResponse provideSubscriberLocationResponseIndication) {
 
         if (logger.isDebugEnabled()) {
             logger.debug(
-                String.format("onProvideSubscriberLocationResponse for DialogId=%d", provideSubscriberLocationResponseIndication.getMAPDialog().getLocalDialogId()));
+                String.format("onProvideSubscriberLocationRequest for DialogId=%d", provideSubscriberLocationRequest.getMAPDialog().getLocalDialogId()));
         } if (logger.isInfoEnabled()) {
-            logger.info(String.format("onProvideSubscriberLocationResponse for DialogId=%d", provideSubscriberLocationResponseIndication.getMAPDialog().getLocalDialogId()));
+            logger.info(String.format("onProvideSubscriberLocationResponse for DialogId=%d", provideSubscriberLocationRequest.getMAPDialog().getLocalDialogId()));
         }
 
         try {
-            long invokeId = provideSubscriberLocationResponseIndication.getInvokeId();
-            MAPDialogLsm mapDialogLsm = provideSubscriberLocationResponseIndication.getMAPDialog();
+            long invokeId = provideSubscriberLocationRequest.getInvokeId();
+            MAPDialogLsm mapDialogLsm = provideSubscriberLocationRequest.getMAPDialog();
             mapDialogLsm.setUserObject(invokeId);
 
             // Create Routing Information parameters for concerning MAP operation
@@ -361,6 +352,17 @@ public class Server3G extends TestHarness3G {
         } catch (Exception e) {
             logger.error("Exception while processing onSendRoutingInfoForLCSRequest ", e);
         }
+
+    }
+
+    @Override
+    public void onProvideSubscriberLocationResponse(ProvideSubscriberLocationResponse provideSubscriberLocationResponse) {
+
+        /*
+         * This is an error condition. Server should never receive onProvideSubscriberLocationResponse.
+         */
+        logger.error(String.format("onProvideSubscriberLocationResponse for Dialog=%d and invokeId=%d",
+            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId(), provideSubscriberLocationResponse.getInvokeId()));
 
     }
 

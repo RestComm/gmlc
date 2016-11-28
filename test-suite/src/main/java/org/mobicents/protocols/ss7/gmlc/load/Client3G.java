@@ -37,6 +37,7 @@ import org.mobicents.protocols.ss7.m3ua.IPSPType;
 import org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl;
 import org.mobicents.protocols.ss7.m3ua.parameter.RoutingContext;
 import org.mobicents.protocols.ss7.m3ua.parameter.TrafficModeType;
+import org.mobicents.protocols.ss7.map.MAPParameterFactoryImpl;
 import org.mobicents.protocols.ss7.map.MAPStackImpl;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContextName;
@@ -55,12 +56,10 @@ import org.mobicents.protocols.ss7.map.api.primitives.*;
 import org.mobicents.protocols.ss7.gmlc.load.Client3G;
 import org.mobicents.protocols.ss7.gmlc.load.TestHarness3G;
 import org.mobicents.protocols.ss7.map.api.service.lsm.*;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.RequestedInfo;
 import org.mobicents.protocols.ss7.map.primitives.GSNAddressImpl;
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.service.lsm.LocationTypeImpl;
-import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
 import org.mobicents.protocols.ss7.sccp.LoadSharingAlgorithm;
 import org.mobicents.protocols.ss7.sccp.NetworkIdState;
 import org.mobicents.protocols.ss7.sccp.OriginationType;
@@ -81,6 +80,7 @@ import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 
 import com.google.common.util.concurrent.RateLimiter;
 
+import static org.mobicents.protocols.ss7.map.api.service.lsm.LocationEstimateType.currentLocation;
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
 /**
@@ -265,14 +265,9 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
             SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
 
-            RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
-            // requestedInfo (MAP ATI): last known location and state (idle or busy), no IMEI/MS Classmark/MNP
-
             ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
 
-//            Long  addSendRoutingInfoForLCSRequest(int customInvokeTimeout, ISDNAddressString gmlcNumber, SubscriberIdentity targetMS,
-//                                            MAPExtensionContainer extensionContainer)
 //            Long	addSendRoutingInfoForLCSRequest(ISDNAddressString gmlcNumber, SubscriberIdentity targetMS, MAPExtensionContainer extensionContainer)
             mapDialogLsm.addSendRoutingInfoForLCSRequest(gsmSCFAddress, msisdn, null);
             logger.info("SRIforLCS msisdn:" + msisdn + ", sriForLCSIsdnAddress:" + gsmSCFAddress);
@@ -317,13 +312,12 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
             // SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
             ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
-            final LocationEstimateType locationEstimateType = null;
+            final LocationEstimateType locationEstimateType = currentLocation;
             // public enum LocationEstimateType {currentLocation(0), currentOrLastKnownLocation(1), initialLocation(2), activateDeferredLocation(3),
             //                                   cancelDeferredLocation(4)..
-            locationEstimateType.getLocationEstimateType(0);
             final DeferredLocationEventType deferredLocationEventType = null;
             // DeferredLocationEventType: boolean getMsAvailable(); getEnteringIntoArea(); getLeavingFromArea(); getBeingInsideArea();
-            deferredLocationEventType.getEnteringIntoArea();
+            // deferredLocationEventType.getEnteringIntoArea();
             LocationType locationType = new LocationTypeImpl(locationEstimateType, deferredLocationEventType);
             LCSClientID lcsClientID = null;
             Boolean privacyOverride = false;
@@ -369,10 +363,10 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
     public void onSendRoutingInfoForLCSResponse(SendRoutingInfoForLCSResponse sendRoutingInforForLCSResponse) {
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
+            logger.debug(String.format("onSendRoutingInfoForLCSResponse  for DialogId=%d",
                 sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
         } else {
-            logger.info(String.format("onAnyTimeInterrogationResponse  for DialogId=%d",
+            logger.info(String.format("onSendRoutingInfoForLCSResponse  for DialogId=%d",
                 sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
         }
 
@@ -519,7 +513,7 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
     @Override
     public void onProvideSubscriberLocationRequest(ProvideSubscriberLocationRequest provideSubscriberLocationRequest) {
         /*
-         * This is an error condition. Client should never receive onSendRoutingInfoForLCSRequest.
+         * This is an error condition. Client should never receive onProvideSubscriberLocationRequest.
          */
         logger.error(String.format("onProvideSubscriberLocationRequest for Dialog=%d and invokeId=%d",
             provideSubscriberLocationRequest.getMAPDialog().getLocalDialogId(), provideSubscriberLocationRequest.getInvokeId()));
@@ -535,9 +529,369 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
         } else {
             logger.info(String.format("onProvideSubscriberLocationResponse  for DialogId=%d",
                 provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+        }
 
+        try {
 
+            if (provideSubscriberLocationResponse.getLocationEstimate() != null) {
+                ExtGeographicalInformation locationEstimate = provideSubscriberLocationResponse.getLocationEstimate();
+                Double latitude = locationEstimate.getLatitude();
+                Double longitude = locationEstimate.getLongitude();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse LocationEstimate, latitude = %d " + latitude + ", longitude: " +
+                        longitude + "for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
 
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse LocationEstimate: "
+                            + provideSubscriberLocationResponse.getLocationEstimate() + "for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad LocationEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad LocationEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getGeranPositioningData() != null) {
+                PositioningDataInformation geranPositioningData = provideSubscriberLocationResponse.getGeranPositioningData();
+                String geranPositioning = geranPositioningData.getData().toString();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse GeranPositioningData = %s " + geranPositioning +
+                        "for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse GeranPositioningData: "
+                            + provideSubscriberLocationResponse.getGeranPositioningData() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad GeranPositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad GeranPositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getUtranPositioningData() != null) {
+                UtranPositioningDataInfo utranPositioningData = provideSubscriberLocationResponse.getUtranPositioningData();
+                String utranPositioning = utranPositioningData.getData().toString();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse UtranPositioningData = %s " + utranPositioning +
+                        "for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse UtranPositioningData: "
+                            + provideSubscriberLocationResponse.getUtranPositioningData() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad UtranPositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad UtranPositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getAgeOfLocationEstimate() != null) {
+                Integer ageOfLocationEstimate = provideSubscriberLocationResponse.getAgeOfLocationEstimate();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse AgeOfLocationEstimate = %d " + ageOfLocationEstimate +
+                        "for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse AgeOfLocationEstimate: "
+                            + provideSubscriberLocationResponse.getAgeOfLocationEstimate() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad AgeOfLocationEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad AgeOfLocationEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getAdditionalLocationEstimate() != null) {
+                AddGeographicalInformation additionalLocationEstimate = provideSubscriberLocationResponse.getAdditionalLocationEstimate();
+                Double additionalLatitude = additionalLocationEstimate.getLatitude();
+                Double additionalLongitude = additionalLocationEstimate.getLongitude();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse AdditionalLocationEstimate, latitude = %d "
+                            + additionalLatitude + ", longitude: " +
+                            additionalLongitude + "for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse AdditionalLocationEstimate: "
+                            + provideSubscriberLocationResponse.getAdditionalLocationEstimate() + "for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad AdditionalLocationEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad AdditionalLocationEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getExtensionContainer() != null) {
+                MAPExtensionContainer mapExtensionContainer = provideSubscriberLocationResponse.getExtensionContainer();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse MAPExtensionContainer not null" +
+                        "for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse MAPExtensionContainer: "
+                            + provideSubscriberLocationResponse.getExtensionContainer() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getDeferredMTLRResponseIndicator() == false ||
+                provideSubscriberLocationResponse.getDeferredMTLRResponseIndicator() == true) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse DeferredMTLRResponseIndicator: "
+                            + provideSubscriberLocationResponse.getDeferredMTLRResponseIndicator() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(
+                            "Rx onSendRoutingInfoForLCSResponse, Bad DeferredMTLRResponseIndicator received for DialogId=%d",
+                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                    } else {
+                        logger.info(String.format(
+                            "Rx onSendRoutingInfoForLCSResponse, Bad DeferredMTLRResponseIndicator received for DialogId=%d",
+                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                    }
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getCellIdOrSai() != null) {
+                CellGlobalIdOrServiceAreaIdOrLAI cellIdOrSai = provideSubscriberLocationResponse.getCellIdOrSai();
+                String cidOrSai = cellIdOrSai.getCellGlobalIdOrServiceAreaIdFixedLength().toString();
+                String laiFixedLength = cellIdOrSai.getLAIFixedLength().toString();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse CellIdOrSai, CellGlobalIdOrServiceAreaIdOrLAI = %s " + cidOrSai +
+                        ", LAIFixedLength: " + laiFixedLength +
+                        ", for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse CellIdOrSai: "
+                            + provideSubscriberLocationResponse.getCellIdOrSai() + "for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad CellIdOrSai received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad CellIdOrSai received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getSaiPresent() == false ||
+                provideSubscriberLocationResponse.getSaiPresent() == true) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse SaiPresent: "
+                            + provideSubscriberLocationResponse.getSaiPresent() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(
+                            "Rx onSendRoutingInfoForLCSResponse, Bad SaiPresent received for DialogId=%d",
+                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                    } else {
+                        logger.info(String.format(
+                            "Rx onSendRoutingInfoForLCSResponse, Bad SaiPresent received for DialogId=%d",
+                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                    }
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getAccuracyFulfilmentIndicator() != null) {
+                AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = provideSubscriberLocationResponse.getAccuracyFulfilmentIndicator();
+                int indicator = accuracyFulfilmentIndicator.getIndicator();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse AccuracyFulfilmentIndicator, indicator = %d " + indicator +
+                        ", for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse AccuracyFulfilmentIndicator: "
+                            + provideSubscriberLocationResponse.getAccuracyFulfilmentIndicator() + "for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad AccuracyFulfilmentIndicator received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad AccuracyFulfilmentIndicator received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getVelocityEstimate() != null) {
+                VelocityEstimate velocityEstimate = provideSubscriberLocationResponse.getVelocityEstimate();
+                long horizontalSpeed = velocityEstimate.getHorizontalSpeed();
+                long verticalSpeed = velocityEstimate.getVerticalSpeed();
+                int velocityType = velocityEstimate.getVelocityType().getCode();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse VelocityEstimate, horizontal speed = %d " + horizontalSpeed +
+                        ", vertical speed: " + verticalSpeed + "velocity type: " + velocityType
+                        + ", for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse VelocityEstimate: "
+                            + provideSubscriberLocationResponse.getVelocityEstimate() + "for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad VelocityEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad VelocityEstimate received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getMoLrShortCircuitIndicator() == false ||
+                provideSubscriberLocationResponse.getMoLrShortCircuitIndicator() == true) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse SaiPresent: "
+                            + provideSubscriberLocationResponse.getMoLrShortCircuitIndicator() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format(
+                            "Rx onSendRoutingInfoForLCSResponse, Bad MoLrShortCircuitIndicator received for DialogId=%d",
+                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                    } else {
+                        logger.info(String.format(
+                            "Rx onSendRoutingInfoForLCSResponse, Bad MoLrShortCircuitIndicator received for DialogId=%d",
+                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                    }
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getGeranGANSSpositioningData() != null) {
+                GeranGANSSpositioningData geranGANSSpositioningDataPositioningData = provideSubscriberLocationResponse.getGeranGANSSpositioningData();
+                String geranGanssPositioning = geranGANSSpositioningDataPositioningData.getData().toString();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse GeranGANSSPositioningData = %s " + geranGanssPositioning +
+                        "for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse GeranGANSSPositioningData: "
+                            + provideSubscriberLocationResponse.getGeranGANSSpositioningData() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad GeranGANSSPositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad GeranGANSSPositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getUtranGANSSpositioningData() != null) {
+                UtranGANSSpositioningData utranGANSSpositioningDataPositioningData = provideSubscriberLocationResponse.getUtranGANSSpositioningData();
+                String utranGanssPositioning = utranGANSSpositioningDataPositioningData.getData().toString();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse UtranGANSSpositioningData = %s " + utranGanssPositioning +
+                        "for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse UtranGANSSpositioningData: "
+                            + provideSubscriberLocationResponse.getUtranGANSSpositioningData() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (provideSubscriberLocationResponse.getTargetServingNodeForHandover() != null) {
+                ServingNodeAddress servingNodeAddress = provideSubscriberLocationResponse.getTargetServingNodeForHandover();
+                String mscNumber = servingNodeAddress.getMscNumber().toString();
+                String sgsnNumber = servingNodeAddress.getSgsnNumber().toString();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse ServingNode, MSC Number = %s " + mscNumber +
+                        ", SGSN Number = %s " + sgsnNumber +
+                        ", for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSendRoutingInfoForLCSResponse UtranGANSSpositioningData: "
+                            + provideSubscriberLocationResponse.getUtranGANSSpositioningData() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSendRoutingInfoForLCSResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error(String.format("Error while processing onProvideSubscriberLocationResponse for Dialog=%d",
+                provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
         }
     }
 
@@ -658,8 +1012,8 @@ public class Client3G extends TestHarness3G implements MAPServiceLsmListener {
                     // logger.warn("StartTime = " + client.start);
                 }
 
-                client.initiateMapSRIforLCS();
-                // client.initiateMapPSL();
+                // client.initiateMapSRIforLCS();
+                client.initiateMapPSL();
             }
 
         } catch (Exception e) {
