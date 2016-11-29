@@ -791,13 +791,47 @@ public class Server extends TestHarness {
     }
 
     @Override
-    public void onSubscriberLocationReportRequest(SubscriberLocationReportRequest subscriberLocationReportRequestIndication) {
+    public void onSubscriberLocationReportRequest(SubscriberLocationReportRequest subscriberLocationReportRequest) {
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(
+                String.format("onSubscriberLocationReportRequest for DialogId=%d", subscriberLocationReportRequest.getMAPDialog().getLocalDialogId()));
+        } if (logger.isInfoEnabled()) {
+            logger.info(String.format("onSubscriberLocationReportRequest for DialogId=%d", subscriberLocationReportRequest.getMAPDialog().getLocalDialogId()));
+        }
+
+        try {
+            long invokeId = subscriberLocationReportRequest.getInvokeId();
+            MAPDialogLsm mapDialogLsm = subscriberLocationReportRequest.getMAPDialog();
+            mapDialogLsm.setUserObject(invokeId);
+
+            // Create Routing Information parameters for concerning MAP operation
+            MAPParameterFactoryImpl mapFactory = new MAPParameterFactoryImpl();
+            ISDNAddressString naEsrd = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123007");
+            ISDNAddressString naEsrk = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
+            MAPExtensionContainer mapExtensionContainer = null;
+
+            mapDialogLsm.addSubscriberLocationReportResponse(invokeId, naEsrd, naEsrk, mapExtensionContainer);
+
+        } catch (MAPException mapException) {
+            logger.error("MAP Exception while processing onSendRoutingInfoForLCSRequest ", mapException);
+        } catch (Exception e) {
+            logger.error("Exception while processing onSendRoutingInfoForLCSRequest ", e);
+        }
+
 
     }
 
     @Override
-    public void onSubscriberLocationReportResponse(SubscriberLocationReportResponse subscriberLocationReportResponseIndication) {
+    public void onSubscriberLocationReportResponse(SubscriberLocationReportResponse subscriberLocationReportResponse) {
 
+        /*
+         * This is an error condition. Server should never receive onProvideSubscriberLocationResponse.
+         */
+        logger.error(String.format("onProvideSubscriberLocationResponse for Dialog=%d and invokeId=%d",
+            subscriberLocationReportResponse.getMAPDialog().getLocalDialogId(), subscriberLocationReportResponse.getInvokeId()));
     }
 
     public void onInsertSubscriberDataRequest(InsertSubscriberDataRequest insertSubscriberData) {

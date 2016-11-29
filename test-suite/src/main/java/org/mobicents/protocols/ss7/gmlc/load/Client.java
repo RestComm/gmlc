@@ -113,6 +113,7 @@ import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 
 import com.google.common.util.concurrent.RateLimiter;
 
+import static org.mobicents.protocols.ss7.map.api.service.lsm.LCSEvent.emergencyCallOrigination;
 import static org.mobicents.protocols.ss7.map.api.service.lsm.LocationEstimateType.currentLocation;
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
@@ -390,7 +391,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
 
                 client.initiateMapAti();
                 // client.initiateMapSRIforLCS();
-                // client.initiateMapPSL();;
+                // client.initiateMapPSL();
+                // client.initiateMapSLR();
             }
 
         } catch (Exception e) {
@@ -673,6 +675,91 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             // This will initiate the TC-BEGIN with INVOKE component
             mapDialogLsm.send();
 
+        } catch (MAPException e) {
+            logger.error(String.format("Error while sending MAP SRIforLCS:" + e));
+        }
+
+    }
+
+    private void initiateMapSLR() throws MAPException {
+        try {
+            NetworkIdState networkIdState = this.mapStack.getMAPProvider().getNetworkIdState(0);
+            if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
+                // congestion or unavailable
+                logger.warn("Outgoing congestion control: MAP load test client: networkIdState=" + networkIdState);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            this.rateLimiterObj.acquire();
+
+            // First create Dialog
+            AddressString origRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "12345");
+            AddressString destRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
+            MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
+                .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcEnquiryContext,
+                    MAPApplicationContextVersion.version3),
+                    SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
+
+            // Then, create parameters for concerning MAP operation
+            ISDNAddressString msisdn = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
+            // SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
+            ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
+            ISDNAddressString naEsrd = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "1110101");
+            ISDNAddressString naEsrk = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "9889277");
+            final LCSEvent lcsEvent = emergencyCallOrigination;
+            // LCS-Event ::= ENUMERATED { emergencyCallOrigination (0), emergencyCallRelease (1), mo-lr (2), ..., deferredmt-lrResponse (3) } -- exception handling: --
+            // a SubscriberLocationReport-Arg containing an unrecognized LCS-Event -- shall be rejected by a receiver with a return error cause of unexpected data value
+            final LocationEstimateType locationEstimateType = currentLocation;
+            // public enum LocationEstimateType {currentLocation(0), currentOrLastKnownLocation(1), initialLocation(2), activateDeferredLocation(3),
+            //                                   cancelDeferredLocation(4)..
+            LCSClientID lcsClientID = null;
+            LCSLocationInfo lcsLocationInfo = null;
+            IMSI imsi = null;
+            IMEI imei = null;
+            Integer ageOfLocationEstimate = 0;
+            ExtGeographicalInformation extGeographicalInformation = null;
+            SLRArgExtensionContainer slrArgExtensionContainer = null;
+            byte[] addLocationEstimate = null;
+            AddGeographicalInformation addGeographicalInformation = null;
+            DeferredmtlrData deferredmtlrData = null;
+            PositioningDataInformation positioningDataInformation = null;
+            UtranPositioningDataInfo utranPositioningDataInfo = null;
+            Integer lcsServiceTypeID = 1;
+            boolean saiPresent = true;
+            Boolean pseudonymIndicator = false;
+            AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = null;
+            VelocityEstimate velocityEstimate = null;
+            PeriodicLDRInfo periodicLDRInfo = null;
+            boolean b2 = false;
+            CellGlobalIdOrServiceAreaIdOrLAI cellIdOrSai = null;
+            GeranGANSSpositioningData geranGanssPositioningData = null;
+            UtranGANSSpositioningData utranGanssPositioningData = null;
+            ServingNodeAddress servingNodeAddress = null;
+            Integer lcsReferenceNumber = 379;
+            Integer integer3 = 0;
+            byte[] homeGmlcAddress = hexStringToByteArray("3734383439323337");
+            GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
+
+            mapDialogLsm.addSubscriberLocationReportRequest(lcsEvent, lcsClientID, lcsLocationInfo, msisdn, imsi, imei, naEsrd, naEsrk, extGeographicalInformation,
+                ageOfLocationEstimate, slrArgExtensionContainer, addGeographicalInformation, deferredmtlrData,
+                lcsReferenceNumber, positioningDataInformation, utranPositioningDataInfo, cellIdOrSai, hGmlcAddress,
+                lcsServiceTypeID, saiPresent, pseudonymIndicator, accuracyFulfilmentIndicator, velocityEstimate,
+                integer3, periodicLDRInfo, b2, geranGanssPositioningData, utranGanssPositioningData, servingNodeAddress);
+
+            logger.info("MAP SLR: msisdn:" + msisdn + ", LCSEvent:" + lcsEvent);
+            // This will initiate the TC-BEGIN with INVOKE component
+            mapDialogLsm.send();
         } catch (MAPException e) {
             logger.error(String.format("Error while sending MAP SRIforLCS:" + e));
         }
@@ -1225,12 +1312,103 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
     }
 
     @Override
-    public void onSubscriberLocationReportRequest(SubscriberLocationReportRequest subscriberLocationReportRequestIndication) {
-
+    public void onSubscriberLocationReportRequest(SubscriberLocationReportRequest subscriberLocationReportRequest) {
+        /*
+         * This is an error condition. Client should never receive onSubscriberLocationReportRequest.
+         */
+        logger.error(String.format("onProvideSubscriberLocationRequest for Dialog=%d and invokeId=%d",
+            subscriberLocationReportRequest.getMAPDialog().getLocalDialogId(), subscriberLocationReportRequest.getInvokeId()));
     }
 
     @Override
-    public void onSubscriberLocationReportResponse(SubscriberLocationReportResponse subscriberLocationReportResponseIndication) {
+    public void onSubscriberLocationReportResponse(SubscriberLocationReportResponse subscriberLocationReportResponse) {
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("onSubscriberLocationReportResponse  for DialogId=%d",
+                subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+        } else {
+            logger.info(String.format("onSubscriberLocationReportResponse  for DialogId=%d",
+                subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+        }
+
+        try {
+
+            if (subscriberLocationReportResponse.getNaESRD() != null) {
+                ISDNAddressString naEsrd = subscriberLocationReportResponse.getNaESRD();
+                String naESRDaddress = naEsrd.getAddress();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSubscriberLocationReportResponse NaESRD = %s " + naESRDaddress +
+                        "for DialogId=%d", subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSubscriberLocationReportResponse NaESRD: "
+                            + subscriberLocationReportResponse.getNaESRD() + ", for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSubscriberLocationReportResponse, Bad NaESRD received for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSubscriberLocationReportResponse, Bad NaESRD received for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (subscriberLocationReportResponse.getNaESRK() != null) {
+                ISDNAddressString naEsrk = subscriberLocationReportResponse.getNaESRD();
+                String naESRKaddress = naEsrk.getAddress();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSubscriberLocationReportResponse NaESRK = %s " + naESRKaddress +
+                        "for DialogId=%d", subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSubscriberLocationReportResponse NaESRK: "
+                            + subscriberLocationReportResponse.getNaESRK() + ", for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSubscriberLocationReportResponse, Bad NaESRK received for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSubscriberLocationReportResponse, Bad NaESRK received for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+            if (subscriberLocationReportResponse.getExtensionContainer() != null) {
+                MAPExtensionContainer extContainer = subscriberLocationReportResponse.getExtensionContainer();
+                String mapExtensionContainer = extContainer.toString();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Rx onSubscriberLocationReportResponse MAPExtensionContainer = %s " + mapExtensionContainer +
+                        "for DialogId=%d", subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+
+                } else {
+                    logger.info(String.format("Rx onSubscriberLocationReportResponse MAPExtensionContainer: "
+                            + subscriberLocationReportResponse.getExtensionContainer() + ", for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onSubscriberLocationReportResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onSubscriberLocationReportResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error(String.format("Error while processing onProvideSubscriberLocationResponse for Dialog=%d",
+                subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
+        }
 
     }
 
