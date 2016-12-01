@@ -21,8 +21,10 @@
 
 package org.mobicents.protocols.ss7.gmlc.load;
 
-import java.io.Serializable;
-import javolution.util.FastMap;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+// import java.io.Serializable;
+// import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.mobicents.protocols.api.IpChannelType;
@@ -44,6 +46,7 @@ import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
+import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortSource;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPNoticeProblemDiagnostic;
@@ -64,35 +67,17 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.Restor
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.RestoreDataResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.PurgeMSRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.PurgeMSResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.SendIdentificationRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.SendIdentificationResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.UpdateGprsLocationRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.UpdateGprsLocationResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.UpdateLocationRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.UpdateLocationResponse;
+import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.*;
 import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeRequest_Mobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeResponse_Mobility;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.ProvideSubscriberInfoRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.ProvideSubscriberInfoResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.RequestedInfo;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberInfo;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataResponse;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataRequest;
-import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataResponse;
-import org.mobicents.protocols.ss7.gmlc.load.Client;
-import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
-import org.mobicents.protocols.ss7.map.primitives.GSNAddressImpl;
-import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
-import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
-import org.mobicents.protocols.ss7.map.service.lsm.LocationTypeImpl;
+import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.*;
+import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.*;
+import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
+import org.mobicents.protocols.ss7.map.primitives.*;
+import org.mobicents.protocols.ss7.map.service.lsm.*;
+import org.mobicents.protocols.ss7.map.service.mobility.locationManagement.SupportedLCSCapabilitySetsImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
+import org.mobicents.protocols.ss7.map.service.mobility.subscriberManagement.APNImpl;
 import org.mobicents.protocols.ss7.sccp.LoadSharingAlgorithm;
 import org.mobicents.protocols.ss7.sccp.NetworkIdState;
 import org.mobicents.protocols.ss7.sccp.OriginationType;
@@ -102,11 +87,11 @@ import org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
+import org.mobicents.protocols.ss7.sccp.message.SccpMessage;
 import org.mobicents.protocols.ss7.sccp.parameter.EncodingScheme;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.protocols.ss7.tcap.TCAPStackImpl;
-import org.mobicents.protocols.ss7.tcap.api.TCAPProvider;
 import org.mobicents.protocols.ss7.tcap.api.TCAPStack;
 import org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName;
 import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
@@ -118,7 +103,7 @@ import static org.mobicents.protocols.ss7.map.api.service.lsm.LocationEstimateTy
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
 /**
- * @author Fernando Mendioroz (fernando.mendioroz@telestax.com)
+ * @author <a href="mailto:fernando.mendioroz@telestax.com"> Fernando Mendioroz </a>
  *
  */
 public class Client extends TestHarness implements MAPServiceMobilityListener, MAPServiceLsmListener {
@@ -135,6 +120,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
     // SCCP
     private SccpStackImpl sccpStack;
     private SccpResource sccpResource;
+    private SccpMessage sccpMessage;
 
     // M3UA
     private M3UAManagementImpl clientM3UAMgmt;
@@ -389,8 +375,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                     // logger.warn("StartTime = " + client.start);
                 }
 
-                client.initiateMapAti();
-                // client.initiateMapSRIforLCS();
+                // client.initiateMapAti();
+                client.initiateMapSRIforLCS();
                 // client.initiateMapPSL();
                 // client.initiateMapSLR();
             }
@@ -432,7 +418,16 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
             SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
 
-            RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
+            boolean locationInformation = true;
+            boolean subscriberState = true;
+            MAPExtensionContainer mapExtensionContainer = null;
+            boolean currentLocation = false;
+            DomainType requestedDomain = null;
+            boolean imei = false;
+            boolean msClassmark = false;
+            boolean mnpRequestedInfo = false;
+            RequestedInfo requestedInfo = new RequestedInfoImpl(locationInformation, subscriberState, mapExtensionContainer,
+                currentLocation, requestedDomain, imei, msClassmark, false);
             // requestedInfo (MAP ATI): last known location and state (idle or busy), no IMEI/MS Classmark/MNP
 
             ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
@@ -446,6 +441,441 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
 
         } catch (MAPException e) {
             logger.error(String.format("Error while sending MAP ATI:" + e));
+        }
+
+    }
+
+    private void initiateMapSRIforLCS() throws MAPException {
+
+        try {
+            NetworkIdState networkIdState = this.mapStack.getMAPProvider().getNetworkIdState(0);
+            if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
+                // congestion or unavailable
+                logger.warn("Outgoing congestion control: MAP load test client: networkIdState=" + networkIdState);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            this.rateLimiterObj.acquire();
+
+            // First create Dialog
+            AddressString origRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "12345");
+            AddressString destRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
+            MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
+                .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcGatewayContext,
+                    MAPApplicationContextVersion.version3),
+                    SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
+
+            // Then, create parameters for concerning MAP operation
+            ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
+            SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
+
+            ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
+
+            MAPExtensionContainer mapExtensionContainer = null;
+
+            mapDialogLsm.addSendRoutingInfoForLCSRequest(gsmSCFAddress, msisdn, mapExtensionContainer);
+            logger.info("SRIforLCS msisdn:" + msisdn + ", sriForLCSIsdnAddress:" + gsmSCFAddress);
+
+            // This will initiate the TC-BEGIN with INVOKE component
+            mapDialogLsm.send();
+
+        } catch (MAPException e) {
+            logger.error(String.format("Error while sending MAP SRIforLCS:" + e));
+        }
+
+    }
+
+    private void initiateMapPSL() throws MAPException {
+        try {
+            NetworkIdState networkIdState = this.mapStack.getMAPProvider().getNetworkIdState(0);
+            if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
+                // congestion or unavailable
+                logger.warn("Outgoing congestion control: MAP load test client: networkIdState=" + networkIdState);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            this.rateLimiterObj.acquire();
+
+            // First create Dialog
+            AddressString origRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "12345");
+            AddressString destRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
+            MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
+                .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcEnquiryContext,
+                    MAPApplicationContextVersion.version3),
+                    SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
+
+            // Then, create parameters for concerning MAP operation
+            ISDNAddressString msisdn = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
+            // SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
+            ISDNAddressString mlcNumber = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
+            LocationEstimateType locationEstimateType = currentLocation;
+            // public enum LocationEstimateType {currentLocation(0), currentOrLastKnownLocation(1), initialLocation(2),
+            //                                   activateDeferredLocation(3), cancelDeferredLocation(4)..
+            DeferredLocationEventType deferredLocationEventType = new DeferredLocationEventTypeImpl();
+            deferredLocationEventType.getEnteringIntoArea();
+            // DeferredLocationEventType: boolean getMsAvailable(); getEnteringIntoArea(); getLeavingFromArea(); getBeingInsideArea();
+            LocationType locationType = new LocationTypeImpl(locationEstimateType, deferredLocationEventType);
+            ISDNAddressString externalAddress = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "444567");
+            MAPExtensionContainer mapExtensionContainer = null;
+            LCSClientExternalID lcsClientExternalID = new LCSClientExternalIDImpl(externalAddress, mapExtensionContainer);
+            LCSClientInternalID lcsClientInternalID = LCSClientInternalID.anonymousLocation;
+            String clientName = "abc012";
+            int cbsDataCodingSchemeCode = 15;
+            CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(cbsDataCodingSchemeCode);
+            String ussdLcsString = "*911#";
+            Charset gsm8Charset = Charset.defaultCharset();
+            USSDString ussdString = new USSDStringImpl(ussdLcsString, cbsDataCodingScheme, gsm8Charset);
+            LCSFormatIndicator lcsFormatIndicator = LCSFormatIndicator.url;
+            LCSClientName lcsClientName = new LCSClientNameImpl(cbsDataCodingScheme, ussdString, lcsFormatIndicator);
+            AddressString lcsClientDialedByMS = new AddressStringImpl(AddressNature.international_number, NumberingPlan.ISDN, clientName);
+            byte[] apn = hexStringToByteArray("8877665544");;
+            APN lcsAPN = new APNImpl(apn);
+            LCSClientID lcsClientID = new LCSClientIDImpl(LCSClientType.valueAddedServices, lcsClientExternalID, lcsClientInternalID, lcsClientName, lcsClientDialedByMS, lcsAPN, null);
+            Boolean privacyOverride = false;
+            IMSI imsi = new IMSIImpl("124356871012345");
+            byte[] lmsid = hexStringToByteArray("09876543");;
+            LMSI lmsi = new LMSIImpl(lmsid);
+            IMEI imei = new IMEIImpl("01171400466105");
+            LCSPriority lcsPriority = LCSPriority.normalPriority;
+            boolean ellipsoidPoint = true;
+            boolean ellipsoidPointWithUncertaintyCircle = true;
+            boolean ellipsoidPointWithUncertaintyEllipse = true;
+            boolean polygon = false;
+            boolean ellipsoidPointWithAltitude = false;
+            boolean ellipsoidPointWithAltitudeAndUncertaintyElipsoid = false;
+            boolean ellipsoidArc = false;
+            SupportedGADShapes supportedGADShapes = new SupportedGADShapesImpl(ellipsoidPoint, ellipsoidPointWithUncertaintyCircle,
+                ellipsoidPointWithUncertaintyEllipse, polygon, ellipsoidPointWithAltitude, ellipsoidPointWithAltitudeAndUncertaintyElipsoid, ellipsoidArc);
+            Integer lcsReferenceNumber = 379;
+            Integer lcsServiceTypeID = 1;
+            // DataCodingScheme codingScheme = new DataCodingSchemeImpl(1);
+            USSDString lcsCodewordString = new USSDStringImpl(ussdLcsString, cbsDataCodingScheme, gsm8Charset);
+            LCSCodeword lcsCodeword = new LCSCodewordImpl(cbsDataCodingScheme, lcsCodewordString);
+            Integer horizontalAccuracy = 100;
+            Integer verticalAccuracy = 1000;
+            boolean verticalCoordinateRequest = false;
+            ResponseTimeCategory responseTimeCategory = ResponseTimeCategory.delaytolerant;
+            ResponseTime responseTime = new ResponseTimeImpl(responseTimeCategory);
+            MAPExtensionContainer extensionContainer = null;
+            LCSQoS lcsQoS = new LCSQoSImpl(horizontalAccuracy, verticalAccuracy, verticalCoordinateRequest, responseTime, extensionContainer);
+            PrivacyCheckRelatedAction callSessionUnrelated = PrivacyCheckRelatedAction.allowedWithNotification;
+            PrivacyCheckRelatedAction callSessionRelated = PrivacyCheckRelatedAction.allowedIfNoResponse;
+            LCSPrivacyCheck lcsPrivacyCheck = new LCSPrivacyCheckImpl(callSessionUnrelated, callSessionRelated);
+            ArrayList<Area> areaList = new ArrayList<Area>();
+            AreaType areaType = AreaType.locationAreaId;
+            byte[] areaId = hexStringToByteArray("102132");
+            AreaIdentification areaIdentification = new AreaIdentificationImpl(areaId);
+            Area area1 = new AreaImpl(areaType, areaIdentification);
+            areaList.add(area1);
+            AreaDefinition areaDefinition = new AreaDefinitionImpl(areaList);
+            OccurrenceInfo occurrenceInfo = OccurrenceInfo.oneTimeEvent;
+            Integer intervalTime = 10;
+            AreaEventInfo areaEventInfo = new AreaEventInfoImpl(areaDefinition, occurrenceInfo, intervalTime);
+            byte[] homeGmlcAddress = hexStringToByteArray("999988887777");
+            GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
+            int reportingAmount = 3;
+            int reportingInterval = 60;
+            PeriodicLDRInfo periodicLDRInfo = new PeriodicLDRInfoImpl(reportingAmount, reportingInterval);
+            boolean plmnListPrioritized = false;
+            ArrayList<ReportingPLMN> plmnList = new ArrayList<ReportingPLMN>();
+            byte[] plmnID = hexStringToByteArray("885577");
+            PlmnId plmnId = new PlmnIdImpl(plmnID);
+            RANTechnology ranTechnology = RANTechnology.umts;
+            boolean ranPeriodicLocationSupport = true;
+            ReportingPLMN reportingPLMN = new ReportingPLMNImpl(plmnId, ranTechnology, ranPeriodicLocationSupport);
+            plmnList.add(reportingPLMN);
+            ReportingPLMNList reportingPLMNList = new ReportingPLMNListImpl(plmnListPrioritized, plmnList);
+
+            mapDialogLsm.addProvideSubscriberLocationRequest(locationType, mlcNumber, lcsClientID, privacyOverride, imsi, msisdn, lmsi, imei, lcsPriority,
+                lcsQoS, extensionContainer, supportedGADShapes, lcsReferenceNumber, lcsServiceTypeID, lcsCodeword,
+                lcsPrivacyCheck,areaEventInfo, hGmlcAddress, false, periodicLDRInfo, reportingPLMNList);
+            logger.info("MAP PSL: msisdn:" + msisdn + ", MLC Number:" + mlcNumber);
+
+            // This will initiate the TC-BEGIN with INVOKE component
+            mapDialogLsm.send();
+
+            /*
+            3GPP TS 29.002 MAP Specification v14.1.0 (2016-09-30)
+
+            13A.2	MAP-PROVIDE-SUBSCRIBER-LOCATION Service
+
+            13A.2.1	Definition
+            This service is used by a GMLC to request the location of a target MS from the visited MSC or SGSN at any time.
+            This is a confirmed service using the primitives from table 13A.2/1.
+
+            13A.2.2	Service Primitives
+
+            Table 13A.2/1: Provide_Subscriber_Location
+            Parameter name								Request	Indication	  Response	Confirm
+            Invoke id											M				M(=)          M(=)			M(=)
+            Location Type									M				M(=)
+            MLC Number										M				M(=)
+            LCS Client ID									M				M(=)
+            Privacy Override 							U				C(=)
+            IMSI													C				C(=)
+            MSISDN												C				C(=)
+            LMSI													C				C(=)
+            LCS Priority									C				C(=)
+            LCS QoS												C				C(=)
+            IMEI													U				C(=)
+            Supported GAD Shapes					C				C(=)
+            LCS-Reference Number					C				C(=)
+            LCS Codeword		 							C				C(=)
+            LCS Service Type Id						C				C(=)
+            LCS Privacy Check							C				C(=)
+            Area Event Info								C				C(=)
+            H-GMLC Address								C				C(=)
+            Reporting PLMN List						C				C(=)
+            PeriodicLDRInfo								C				C(=)
+            MO-LR Short Circuit Indicator	C				C(=)
+            Location Estimate																	M					M(=)
+            GERAN Positioning Data														C					C(=)
+            UTRAN Positioning Data														C					C(=)
+            GERAN GANSS Positioning Data											C					C(=)
+            UTRAN GANSS Positioning Data											C					C(=)
+            UTRAN Additional Positioning Data									C					C(=)
+            UTRAN Barometric Pressure Measurement							C					C(=)
+            UTRAN Civic Address																C					C(=)
+            Age of Location Estimate													C					C(=)
+            Additional Location Estimate											C					C(=)
+            Deferred MT-LR Response Indicator									C					C(=)
+            Cell Id Or SAI																		C					C(=)
+            Accuracy Fulfilment 															C					C(=)
+            Indicator						 															C					C(=)
+            Target Serving Node for Handover									C					C(=)
+            User error					 															C					C(=)
+            Provider error																							O
+             */
+
+        } catch (MAPException e) {
+            logger.error(String.format("Error while sending MAP PSL:" + e));
+        }
+
+    }
+
+    private void initiateMapSLR() throws MAPException {
+        try {
+            NetworkIdState networkIdState = this.mapStack.getMAPProvider().getNetworkIdState(0);
+            if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
+                // congestion or unavailable
+                logger.warn("Outgoing congestion control: MAP load test client: networkIdState=" + networkIdState);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            this.rateLimiterObj.acquire();
+            //this.sccpStack.setZMarginXudtMessage(40);
+
+            // First create Dialog
+            AddressString origRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "12345");
+            AddressString destRef = this.mapProvider.getMAPParameterFactory()
+                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
+            MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
+                .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcEnquiryContext,
+                    MAPApplicationContextVersion.version3),
+                    SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
+
+            // Then, create parameters for concerning MAP operation
+            ISDNAddressString msisdn = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
+            // SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
+            ISDNAddressString mscNumber = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "598990192837");
+            ISDNAddressString sgsnNumber = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "598990192837");
+            ISDNAddressString naEsrd = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "1110101");
+            ISDNAddressString naEsrk = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "9889277");
+            final LCSEvent lcsEvent = emergencyCallOrigination;
+            // LCS-Event ::= ENUMERATED { emergencyCallOrigination (0), emergencyCallRelease (1), mo-lr (2), ..., deferredmt-lrResponse (3) } -- exception handling: --
+            // a SubscriberLocationReport-Arg containing an unrecognized LCS-Event -- shall be rejected by a receiver with a return error cause of unexpected data value
+            final LocationEstimateType locationEstimateType = currentLocation;
+            // public enum LocationEstimateType {currentLocation(0), currentOrLastKnownLocation(1), initialLocation(2), activateDeferredLocation(3),
+            //                                   cancelDeferredLocation(4)..
+            ISDNAddressString externalAddress = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "444567");
+            MAPExtensionContainer mapExtensionContainer = null;
+            LCSClientExternalID lcsClientExternalID = new LCSClientExternalIDImpl(externalAddress, mapExtensionContainer);
+            LCSClientInternalID lcsClientInternalID = LCSClientInternalID.broadcastService;
+            String clientName = "GMLCclient01";
+            int cbsDataCodingSchemeCode = 15;
+            CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(cbsDataCodingSchemeCode);
+            String ussdLcsString = "*911#";
+            Charset gsm8Charset = Charset.defaultCharset();
+            USSDString ussdString = new USSDStringImpl(ussdLcsString, cbsDataCodingScheme, gsm8Charset);
+            LCSFormatIndicator lcsFormatIndicator = LCSFormatIndicator.url;
+            LCSClientName lcsClientName = new LCSClientNameImpl(cbsDataCodingScheme, ussdString, lcsFormatIndicator);
+            AddressString lcsClientDialedByMS = new AddressStringImpl(AddressNature.international_number, NumberingPlan.ISDN, clientName);
+            byte[] apn = hexStringToByteArray("6763ae38b4890");;
+            APN lcsAPN = new APNImpl(apn);
+            LCSClientID lcsClientID = new LCSClientIDImpl(LCSClientType.valueAddedServices, lcsClientExternalID, lcsClientInternalID, lcsClientName, lcsClientDialedByMS, lcsAPN, null);
+            ISDNAddressString networkNodeNumber = new ISDNAddressStringImpl(AddressNature.international_number,
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5983392892");
+            byte[] lmsid = hexStringToByteArray("3539383939303737393130");
+            LMSI lmsi = new LMSIImpl(lmsid);
+            boolean gprsNodeIndicator = true;
+            AdditionalNumber additionalNumber = new AdditionalNumberImpl(null, sgsnNumber);
+            boolean lcsCapabilitySetRelease98_99 = true;
+            boolean lcsCapabilitySetRelease4 = true;
+            boolean lcsCapabilitySetRelease5 = true;
+            boolean lcsCapabilitySetRelease6 = true;
+            boolean lcsCapabilitySetRelease7 = false;
+            SupportedLCSCapabilitySets supportedLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
+                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
+            SupportedLCSCapabilitySets additionalLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
+                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, true);
+            byte[] mme = hexStringToByteArray("8721cd0a36a8743e01");
+            DiameterIdentity mmeName = new DiameterIdentityImpl(mme);
+            byte[] aaa = hexStringToByteArray("a5382c342");
+            DiameterIdentity aaaServerName = new DiameterIdentityImpl(aaa);
+            LCSLocationInfo lcsLocationInfo = new LCSLocationInfoImpl(networkNodeNumber, lmsi, mapExtensionContainer, gprsNodeIndicator, additionalNumber,
+                supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
+            IMSI imsi = new IMSIImpl("748031234567890");
+            IMEI imei = new IMEIImpl("011714004661057");
+            Integer ageOfLocationEstimate = 0;
+            TypeOfShape typeOfShape = TypeOfShape.EllipsoidArc;
+            Double latitude = 34.789123;
+            Double longitude = -124.902033;
+            Double uncertainty = 100.0;
+            Double uncertaintySemiMajorAxis = 40.0;
+            Double uncertaintySemiMinorAxis = 20.0;
+            Double angleOfMajorAxis = 30.0;
+            int confidence = 0;
+            int altitude = 1500;
+            Double uncertaintyAltitude = 500.0;
+            int innerRadius = 5;
+            Double uncertaintyRadius = 1.50;
+            Double offsetAngle = 20.0;
+            Double includedAngle = 20.0;
+            ExtGeographicalInformation extGeographicalInformation = new ExtGeographicalInformationImpl(typeOfShape, latitude, longitude, uncertainty, uncertaintySemiMajorAxis,
+                uncertaintySemiMinorAxis, angleOfMajorAxis, confidence, altitude, uncertaintyAltitude, innerRadius, uncertaintyRadius, offsetAngle, includedAngle);
+            SLRArgExtensionContainer slrArgExtensionContainer = null;
+            byte[] addLocationEstimate = hexStringToByteArray("0000000002");;
+            AddGeographicalInformation addGeographicalInformation = new AddGeographicalInformationImpl(addLocationEstimate);
+            boolean msAvailable = false;
+            boolean enteringIntoArea = true;
+            boolean leavingFromArea = true;
+            boolean beingInsideArea = true;
+            DeferredLocationEventType deferredLocationEventType = new DeferredLocationEventTypeImpl(msAvailable, enteringIntoArea, leavingFromArea, beingInsideArea);
+            TerminationCause terminationCause = TerminationCause.congestion;
+            DeferredmtlrData deferredmtlrData = new DeferredmtlrDataImpl(deferredLocationEventType, terminationCause, lcsLocationInfo);
+            byte[] data = hexStringToByteArray("123456789a1234");
+            PositioningDataInformation positioningDataInformation = new PositioningDataInformationImpl(data);
+            byte[] utranData = hexStringToByteArray("4321a987654321");
+            UtranPositioningDataInfo utranPositioningDataInfo = new UtranPositioningDataInfoImpl(utranData);
+            Integer lcsServiceTypeID = 1;
+            boolean saiPresent = true;
+            Boolean pseudonymIndicator = false;
+            AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = AccuracyFulfilmentIndicator.requestedAccuracyNotFulfilled;
+            byte[] velEstimate = hexStringToByteArray("0000000001");
+            VelocityEstimate velocityEstimate = new VelocityEstimateImpl(velEstimate);
+            int reportingAmount = 3;
+            int reportingInterval = 600;
+            PeriodicLDRInfo periodicLDRInfo = new PeriodicLDRInfoImpl(reportingAmount, reportingInterval);
+            boolean b2 = false;
+            byte[] cidOrSaiFixedLength = hexStringToByteArray("349a0123bc43219876ba0101");
+            CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = new CellGlobalIdOrServiceAreaIdFixedLengthImpl(cidOrSaiFixedLength);
+            CellGlobalIdOrServiceAreaIdOrLAI cellIdOrSai = new CellGlobalIdOrServiceAreaIdOrLAIImpl(cellGlobalIdOrServiceAreaIdFixedLength);
+            byte[] gGanss = hexStringToByteArray("666601019999");
+            GeranGANSSpositioningData geranGanssPositioningData = new GeranGANSSpositioningDataImpl(gGanss);
+            byte[] uGanss = hexStringToByteArray("777701019898");
+            UtranGANSSpositioningData utranGanssPositioningData = new UtranGANSSpositioningDataImpl(uGanss);
+            boolean isMsc = true;
+            ServingNodeAddress servingNodeAddress = new ServingNodeAddressImpl(networkNodeNumber, isMsc);
+            Integer lcsReferenceNumber = 379;
+            Integer integer3 = 0;
+            byte[] homeGmlcAddress = hexStringToByteArray("3734383439323337");
+            GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
+
+            mapDialogLsm.addSubscriberLocationReportRequest(lcsEvent, lcsClientID, lcsLocationInfo, msisdn, imsi, imei, naEsrd, naEsrk, extGeographicalInformation,
+                ageOfLocationEstimate, slrArgExtensionContainer, addGeographicalInformation, deferredmtlrData,
+                lcsReferenceNumber, positioningDataInformation, utranPositioningDataInfo, cellIdOrSai, hGmlcAddress,
+                lcsServiceTypeID, saiPresent, pseudonymIndicator, accuracyFulfilmentIndicator, velocityEstimate,
+                integer3, periodicLDRInfo, b2, geranGanssPositioningData, utranGanssPositioningData, servingNodeAddress);
+
+            logger.info("MAP SLR: msisdn:" + msisdn + ", LCSEvent:" + lcsEvent);
+            // This will initiate the TC-BEGIN with INVOKE component
+            mapDialogLsm.send();
+
+            /*
+						3GPP TS 29.002 MAP Specification v14.1.0 (2016-09-30)
+
+            13A.3	MAP-SUBSCRIBER-LOCATION-REPORT Service
+
+            13A.3.1	Definition
+            This service is used by a VMSC or SGSN to provide the location of a target MS to a GMLC
+						when a request for location is either implicitly administered or made at some	earlier time.
+						This is a confirmed service using the primitives from table 13A.3/1.
+
+						Table 13A.3/1: Subscriber_Location_Report
+						Parameter name												Request	Indication		Response	Confirm
+						Invoke id															M				M(=)					M(=)			M(=)
+						LCS Event															M				M(=)
+						LCS Client ID 												M				M(=)
+						Network Node Number										M				M(=)
+						IMSI																	C				C(=)
+						MSISDN																C				C(=)
+						NA-ESRD																C				C(=)					C					C(=)
+						NA-ESRK																C				C(=)					C					C(=)
+						IMEI																	U				C(=)
+						Location Estimate											C				C(=)
+						GERAN Positioning Data								C				C(=)
+						UTRAN Positioning Data								C				C(=)
+						GERAN GANSS Positioning Data					C				C(=)
+						UTRAN GANSS Positioning Data					C				C(=)
+						UTRAN Additional Positioning Data			C				C(=)
+						UTRAN Barometric Pressure Measurement	C	  		C(=)
+						UTRAN Civic Address										C				C(=)
+						Age of Location Estimate							C				C(=)
+						LMSI																	U				C(=)
+						GPRS Node Indicator										C				C(=)
+						Additional Location Estimate					C				C(=)
+						Deferred MT-LR Data										C				C(=)
+						LCS-Reference Number									C				C(=)					C					C(=)
+						NA-ESRK Request												C				C(=)
+						Cell Id Or SAI												C				C(=)
+						H-GMLC Address												C				C(=)					C					C(=)
+						LCS Service Type Id										C				C(=)
+						Pseudonym Indicator										C				C(=)
+						Accuracy Fulfilment Indicator					C				C(=)
+						Sequence Number												C				C(=)
+						Periodic LDR Info											C				C(=)
+						MO-LR Short Circuit Indicator					C				C(=)					C					C(=)
+						Target Serving Node for Handover			C				C(=)
+						Reporting PLMN List																					C					C(=)
+						User error				 																					C					C(=)
+						Provider error																												O
+						*/
+
+        } catch (MAPException e) {
+            logger.error(String.format("Error while sending MAP SLR:" + e));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -559,211 +989,6 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 atiResp.getMAPDialog().getLocalDialogId()));
 
         }
-    }
-
-    private void initiateMapSRIforLCS() throws MAPException {
-
-        try {
-            NetworkIdState networkIdState = this.mapStack.getMAPProvider().getNetworkIdState(0);
-            if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
-                // congestion or unavailable
-                logger.warn("Outgoing congestion control: MAP load test client: networkIdState=" + networkIdState);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-
-            this.rateLimiterObj.acquire();
-
-            // First create Dialog
-            AddressString origRef = this.mapProvider.getMAPParameterFactory()
-                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "12345");
-            AddressString destRef = this.mapProvider.getMAPParameterFactory()
-                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
-            MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
-                .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcGatewayContext,
-                    MAPApplicationContextVersion.version3),
-                    SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
-
-            // Then, create parameters for concerning MAP operation
-            ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
-            SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
-
-            ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
-
-//            Long	addSendRoutingInfoForLCSRequest(ISDNAddressString gmlcNumber, SubscriberIdentity targetMS, MAPExtensionContainer extensionContainer)
-            mapDialogLsm.addSendRoutingInfoForLCSRequest(gsmSCFAddress, msisdn, null);
-            logger.info("SRIforLCS msisdn:" + msisdn + ", sriForLCSIsdnAddress:" + gsmSCFAddress);
-
-            // This will initiate the TC-BEGIN with INVOKE component
-            mapDialogLsm.send();
-
-        } catch (MAPException e) {
-            logger.error(String.format("Error while sending MAP SRIforLCS:" + e));
-        }
-
-    }
-
-    private void initiateMapPSL() throws MAPException {
-        try {
-            NetworkIdState networkIdState = this.mapStack.getMAPProvider().getNetworkIdState(0);
-            if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
-                // congestion or unavailable
-                logger.warn("Outgoing congestion control: MAP load test client: networkIdState=" + networkIdState);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-
-            this.rateLimiterObj.acquire();
-
-            // First create Dialog
-            AddressString origRef = this.mapProvider.getMAPParameterFactory()
-                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "12345");
-            AddressString destRef = this.mapProvider.getMAPParameterFactory()
-                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
-            MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
-                .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcEnquiryContext,
-                    MAPApplicationContextVersion.version3),
-                    SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
-
-            // Then, create parameters for concerning MAP operation
-            ISDNAddressString msisdn = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
-            // SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
-            ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
-            final LocationEstimateType locationEstimateType = currentLocation;
-            // public enum LocationEstimateType {currentLocation(0), currentOrLastKnownLocation(1), initialLocation(2), activateDeferredLocation(3),
-            //                                   cancelDeferredLocation(4)..
-            final DeferredLocationEventType deferredLocationEventType = null;
-            // DeferredLocationEventType: boolean getMsAvailable(); getEnteringIntoArea(); getLeavingFromArea(); getBeingInsideArea();
-            // deferredLocationEventType.getEnteringIntoArea();
-            LocationType locationType = new LocationTypeImpl(locationEstimateType, deferredLocationEventType);
-            LCSClientID lcsClientID = null;
-            Boolean privacyOverride = false;
-            IMSI imsi = null;
-            LMSI lmsi = null;
-            IMEI imei = null;
-            LCSPriority lcsPriority = null;
-            LCSQoS lcsQoS = null;
-            SupportedGADShapes supportedGADShapes = null;
-            Integer lcsReferenceNumber = 379;
-            Integer lcsServiceTypeID = 0;
-            LCSCodeword lcsCodeword = null;
-            MAPExtensionContainer extensionContainer = null;
-            LCSPrivacyCheck lcsPrivacyCheck = null;
-            AreaEventInfo areaEventInfo = null;
-            byte[] homeGmlcAddress = hexStringToByteArray("3734383439323337");
-            GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
-            PeriodicLDRInfo periodicLDRInfo = null;
-            ReportingPLMNList reportingPLMNList = null;
-
-            mapDialogLsm.addProvideSubscriberLocationRequest(locationType, gsmSCFAddress, lcsClientID, privacyOverride, imsi, msisdn, lmsi, imei, lcsPriority,
-                lcsQoS, extensionContainer, supportedGADShapes, lcsReferenceNumber, lcsServiceTypeID, lcsCodeword,
-                lcsPrivacyCheck,areaEventInfo, hGmlcAddress, false, periodicLDRInfo, reportingPLMNList);
-            logger.info("MAP PSL: msisdn:" + msisdn + ", gsmSCFAddress:" + gsmSCFAddress);
-
-            // This will initiate the TC-BEGIN with INVOKE component
-            mapDialogLsm.send();
-
-        } catch (MAPException e) {
-            logger.error(String.format("Error while sending MAP SRIforLCS:" + e));
-        }
-
-    }
-
-    private void initiateMapSLR() throws MAPException {
-        try {
-            NetworkIdState networkIdState = this.mapStack.getMAPProvider().getNetworkIdState(0);
-            if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
-                // congestion or unavailable
-                logger.warn("Outgoing congestion control: MAP load test client: networkIdState=" + networkIdState);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-
-            this.rateLimiterObj.acquire();
-
-            // First create Dialog
-            AddressString origRef = this.mapProvider.getMAPParameterFactory()
-                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "12345");
-            AddressString destRef = this.mapProvider.getMAPParameterFactory()
-                .createAddressString(AddressNature.international_number, NumberingPlan.ISDN, "67890");
-            MAPDialogLsm mapDialogLsm = mapProvider.getMAPServiceLsm()
-                .createNewDialog(MAPApplicationContext.getInstance(MAPApplicationContextName.locationSvcEnquiryContext,
-                    MAPApplicationContextVersion.version3),
-                    SCCP_CLIENT_ADDRESS, origRef, SCCP_SERVER_ADDRESS, destRef);
-
-            // Then, create parameters for concerning MAP operation
-            ISDNAddressString msisdn = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
-            // SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
-            ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
-            ISDNAddressString naEsrd = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "1110101");
-            ISDNAddressString naEsrk = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "9889277");
-            final LCSEvent lcsEvent = emergencyCallOrigination;
-            // LCS-Event ::= ENUMERATED { emergencyCallOrigination (0), emergencyCallRelease (1), mo-lr (2), ..., deferredmt-lrResponse (3) } -- exception handling: --
-            // a SubscriberLocationReport-Arg containing an unrecognized LCS-Event -- shall be rejected by a receiver with a return error cause of unexpected data value
-            final LocationEstimateType locationEstimateType = currentLocation;
-            // public enum LocationEstimateType {currentLocation(0), currentOrLastKnownLocation(1), initialLocation(2), activateDeferredLocation(3),
-            //                                   cancelDeferredLocation(4)..
-            LCSClientID lcsClientID = null;
-            LCSLocationInfo lcsLocationInfo = null;
-            IMSI imsi = null;
-            IMEI imei = null;
-            Integer ageOfLocationEstimate = 0;
-            ExtGeographicalInformation extGeographicalInformation = null;
-            SLRArgExtensionContainer slrArgExtensionContainer = null;
-            byte[] addLocationEstimate = null;
-            AddGeographicalInformation addGeographicalInformation = null;
-            DeferredmtlrData deferredmtlrData = null;
-            PositioningDataInformation positioningDataInformation = null;
-            UtranPositioningDataInfo utranPositioningDataInfo = null;
-            Integer lcsServiceTypeID = 1;
-            boolean saiPresent = true;
-            Boolean pseudonymIndicator = false;
-            AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = null;
-            VelocityEstimate velocityEstimate = null;
-            PeriodicLDRInfo periodicLDRInfo = null;
-            boolean b2 = false;
-            CellGlobalIdOrServiceAreaIdOrLAI cellIdOrSai = null;
-            GeranGANSSpositioningData geranGanssPositioningData = null;
-            UtranGANSSpositioningData utranGanssPositioningData = null;
-            ServingNodeAddress servingNodeAddress = null;
-            Integer lcsReferenceNumber = 379;
-            Integer integer3 = 0;
-            byte[] homeGmlcAddress = hexStringToByteArray("3734383439323337");
-            GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
-
-            mapDialogLsm.addSubscriberLocationReportRequest(lcsEvent, lcsClientID, lcsLocationInfo, msisdn, imsi, imei, naEsrd, naEsrk, extGeographicalInformation,
-                ageOfLocationEstimate, slrArgExtensionContainer, addGeographicalInformation, deferredmtlrData,
-                lcsReferenceNumber, positioningDataInformation, utranPositioningDataInfo, cellIdOrSai, hGmlcAddress,
-                lcsServiceTypeID, saiPresent, pseudonymIndicator, accuracyFulfilmentIndicator, velocityEstimate,
-                integer3, periodicLDRInfo, b2, geranGanssPositioningData, utranGanssPositioningData, servingNodeAddress);
-
-            logger.info("MAP SLR: msisdn:" + msisdn + ", LCSEvent:" + lcsEvent);
-            // This will initiate the TC-BEGIN with INVOKE component
-            mapDialogLsm.send();
-        } catch (MAPException e) {
-            logger.error(String.format("Error while sending MAP SRIforLCS:" + e));
-        }
-
     }
 
     @Override

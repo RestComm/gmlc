@@ -40,7 +40,6 @@ import org.mobicents.protocols.ss7.map.MAPStackImpl;
 import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
-//import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortSource;
@@ -57,7 +56,7 @@ import org.mobicents.protocols.ss7.map.api.primitives.*;
 //import org.mobicents.protocols.ss7.map.api.primitives.SubscriberIdentity;
 import org.mobicents.protocols.ss7.map.api.service.lsm.*;
 import org.mobicents.protocols.ss7.map.api.service.mobility.MAPDialogMobility;
-import org.mobicents.protocols.ss7.map.api.service.mobility.MAPServiceMobilityListener;
+//import org.mobicents.protocols.ss7.map.api.service.mobility.MAPServiceMobilityListener;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportResponse;
 //import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportRequest;
@@ -78,8 +77,6 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.*
 //import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeRequest_Mobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeResponse_Mobility;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeRequest_Mobility;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeResponse_Mobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.GPRSMSClass;
@@ -95,28 +92,22 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformatio
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.PSSubscriberState;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.ProvideSubscriberInfoRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.ProvideSubscriberInfoResponse;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.RequestedInfo;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberInfo;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberState;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberStateChoice;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.UserCSGInformation;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataResponse;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.LSAIdentity;
 import org.mobicents.protocols.ss7.gmlc.load.Server;
 import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
-//import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.LocationInformationImpl;
-//import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
-//import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.SubscriberInfoImpl;
-//import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.SubscriberStateImpl;
-//import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
+import org.mobicents.protocols.ss7.map.primitives.DiameterIdentityImpl;
 import org.mobicents.protocols.ss7.map.primitives.GSNAddressImpl;
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
-//import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
+import org.mobicents.protocols.ss7.map.service.mobility.locationManagement.SupportedLCSCapabilitySetsImpl;
 import org.mobicents.protocols.ss7.sccp.LoadSharingAlgorithm;
 import org.mobicents.protocols.ss7.sccp.OriginationType;
 import org.mobicents.protocols.ss7.sccp.RuleType;
@@ -131,13 +122,12 @@ import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.protocols.ss7.tcap.TCAPStackImpl;
 import org.mobicents.protocols.ss7.tcap.api.TCAPStack;
 import org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName;
-//import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
 /**
- * @author Fernando Mendioroz (fernando.mendioroz@telestax.com)
+ * @author <a href="mailto:fernando.mendioroz@telestax.com"> Fernando Mendioroz </a>
  *
  */
 public class Server extends TestHarness {
@@ -607,7 +597,8 @@ public class Server extends TestHarness {
             MSClassmark2 msClassmark2 = null;
             GPRSMSClass gprsMSClass = null;
             MNPInfoRes mnpInfoRes = null;
-            SubscriberStateChoice subscriberStateChoice = SubscriberStateChoice.assumedIdle; // 0=assumedIdle, 1=camelBusy, 2=notProvidedFromVLR
+            SubscriberStateChoice subscriberStateChoice = SubscriberStateChoice.assumedIdle;
+            // 0=assumedIdle, 1=camelBusy, 2=notProvidedFromVLR
             NotReachableReason notReachableReason = null;
 
             LocationInformation locationInformation = mapFactory.createLocationInformation(ageOfLocationInformation,
@@ -667,29 +658,37 @@ public class Server extends TestHarness {
 //            ISDNAddressString additionalNumber = new ISDNAddressStringImpl(AddressNature.international_number,
 //                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123987");
             AdditionalNumber additionalNumber = null;
-            byte[] Lmsi = hexStringToByteArray("3734383439323337343239");
+            byte[] Lmsi = hexStringToByteArray("12345678");
             LMSI lmsi = mapFactory.createLMSI(Lmsi);
             Boolean gprsNodeIndicator = false;
-            SupportedLCSCapabilitySets supportedLCSCapabilitySets = mapFactory.createSupportedLCSCapabilitySets(true, true, true, true, true);
-            SupportedLCSCapabilitySets supportedAdditionalLCSCapabilitySets1 = mapFactory.createSupportedLCSCapabilitySets(false, false, false, false, false);
+            boolean lcsCapabilitySetRelease98_99 = true;
+            boolean lcsCapabilitySetRelease4 = true;
+            boolean lcsCapabilitySetRelease5 = true;
+            boolean lcsCapabilitySetRelease6 = true;
+            boolean lcsCapabilitySetRelease7 = false;
+            SupportedLCSCapabilitySets supportedLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
+                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
+            SupportedLCSCapabilitySets additionalLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
+                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, true);
             MAPExtensionContainer mapExtensionContainer = null;
-            DiameterIdentity mmeName = null;
-            DiameterIdentity aaaServerName = null;
+            byte[] mmeNom = hexStringToByteArray("00112233445566778899");
+            DiameterIdentity mmeName = new DiameterIdentityImpl(mmeNom);
+            byte[] aaaSN = hexStringToByteArray("0011223344556677889900");
+            DiameterIdentity aaaServerName = new DiameterIdentityImpl(aaaSN);
             ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "59899077937");
             SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
-            byte[] visitedGmlcAddress = null;
+            byte[] visitedGmlcAddress = hexStringToByteArray("112233445500");
             GSNAddress vGmlcAddress = new GSNAddressImpl(visitedGmlcAddress);
-            byte[] homeGmlcAddress = hexStringToByteArray("3734383439323337");
+            byte[] homeGmlcAddress = hexStringToByteArray("11223344556677");
             GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
-            byte[] pivacyProfileRegisterAddress = hexStringToByteArray("373438343932333777");
+            byte[] pivacyProfileRegisterAddress = hexStringToByteArray("112233445566");
             GSNAddress pprAddress = new GSNAddressImpl(pivacyProfileRegisterAddress);
-            byte[] addVGmlcAddress = null;
+            byte[] addVGmlcAddress = hexStringToByteArray("1122334455");
             GSNAddress additionalVGmlcAddress = new GSNAddressImpl(addVGmlcAddress);
 
             LCSLocationInfo lcsLocationInfo = mapFactory.createLCSLocationInfo(mscNumber, lmsi, mapExtensionContainer, gprsNodeIndicator,
-                null, supportedLCSCapabilitySets, supportedAdditionalLCSCapabilitySets1,
-                mmeName, aaaServerName);
+                null, supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
             GSNAddress gsnAddress1 = new GSNAddressImpl();
 //            addSendRoutingInfoForLCSResponse(long invokeId, SubscriberIdentity targetMS, LCSLocationInfo lcsLocationInfo,
 //                                             MAPExtensionContainer extensionContainer,
@@ -723,7 +722,7 @@ public class Server extends TestHarness {
             logger.debug(
                 String.format("onProvideSubscriberLocationRequest for DialogId=%d", provideSubscriberLocationRequest.getMAPDialog().getLocalDialogId()));
         } if (logger.isInfoEnabled()) {
-            logger.info(String.format("onProvideSubscriberLocationResponse for DialogId=%d", provideSubscriberLocationRequest.getMAPDialog().getLocalDialogId()));
+            logger.info(String.format("onProvideSubscriberLocationRequest for DialogId=%d", provideSubscriberLocationRequest.getMAPDialog().getLocalDialogId()));
         }
 
         try {
@@ -737,7 +736,7 @@ public class Server extends TestHarness {
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123007");
             ISDNAddressString sgsnNumber = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
-            byte[] Lmsi = hexStringToByteArray("3734383439323337343239");
+            byte[] Lmsi = hexStringToByteArray("87654321");
             LMSI lmsi = mapFactory.createLMSI(Lmsi);
             byte[] eGeographicalInformation = hexStringToByteArray("3333b034322736322e3830272753");
             ExtGeographicalInformation extGeographicalInformation = mapFactory.createExtGeographicalInformation(eGeographicalInformation);
@@ -745,7 +744,7 @@ public class Server extends TestHarness {
             PositioningDataInformation positioningDataInformation = mapFactory.createPositioningDataInformation(posDatanformation);
             UtranPositioningDataInfo utranPositioningDataInfo = null;
             Integer ageOfLocationEstimate = 1;
-            byte[] addLocationEstimate = hexStringToByteArray("5533b034322736322e383027278a");
+            byte[] addLocationEstimate = hexStringToByteArray("5533b034322736322a3830272780");
             AddGeographicalInformation additionalLocationEstimate = mapFactory.createAddGeographicalInformation(addLocationEstimate);
             MAPExtensionContainer mapExtensionContainer = null;
             boolean deferredMTLRResponseIndicator = false;
@@ -757,7 +756,7 @@ public class Server extends TestHarness {
             final AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = null;
             // AccuracyFulfilmentIndicator ::= ENUMERATED { requestedAccuracyFulfilled (0), requestedAccuracyNotFulfilled (1), ... }
             accuracyFulfilmentIndicator.getAccuracyFulfilmentIndicator(1);
-            byte[] velEst = hexStringToByteArray("0");
+            byte[] velEst = hexStringToByteArray("00000001");
             VelocityEstimate velocityEstimate = mapFactory.createVelocityEstimate(velEst);
             boolean moLrShortCircuitIndicator = false;
             GeranGANSSpositioningData geranGANSSpositioningData = null;
@@ -772,9 +771,9 @@ public class Server extends TestHarness {
             mapDialogLsm.close(false);
 
         } catch (MAPException mapException) {
-            logger.error("MAP Exception while processing onSendRoutingInfoForLCSRequest ", mapException);
+            logger.error("MAP Exception while processing onProvideSubscriberLocationRequest ", mapException);
         } catch (Exception e) {
-            logger.error("Exception while processing onSendRoutingInfoForLCSRequest ", e);
+            logger.error("Exception while processing onProvideSubscriberLocationRequest ", e);
         }
 
     }
@@ -816,11 +815,10 @@ public class Server extends TestHarness {
             mapDialogLsm.addSubscriberLocationReportResponse(invokeId, naEsrd, naEsrk, mapExtensionContainer);
 
         } catch (MAPException mapException) {
-            logger.error("MAP Exception while processing onSendRoutingInfoForLCSRequest ", mapException);
+            logger.error("MAP Exception while processing onSubscriberLocationReportRequest ", mapException);
         } catch (Exception e) {
-            logger.error("Exception while processing onSendRoutingInfoForLCSRequest ", e);
+            logger.error("Exception while processing onSubscriberLocationReportRequest ", e);
         }
-
 
     }
 

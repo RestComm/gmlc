@@ -55,12 +55,11 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformatio
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataResponse;
-import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 
 /**
- * @author Fernando Mendioroz (fernando.mendioroz@telestax.com)
+ * @author <a href="mailto:fernando.mendioroz@telestax.com"> Fernando Mendioroz </a>
  *
  */
 public abstract class TestHarness implements MAPDialogListener, MAPServiceMobilityListener, MAPServiceLsmListener {
