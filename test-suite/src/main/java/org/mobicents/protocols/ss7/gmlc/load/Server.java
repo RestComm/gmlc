@@ -108,14 +108,13 @@ import org.mobicents.protocols.ss7.map.primitives.GSNAddressImpl;
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.locationManagement.SupportedLCSCapabilitySetsImpl;
-import org.mobicents.protocols.ss7.sccp.LoadSharingAlgorithm;
-import org.mobicents.protocols.ss7.sccp.OriginationType;
-import org.mobicents.protocols.ss7.sccp.RuleType;
-import org.mobicents.protocols.ss7.sccp.SccpResource;
+import org.mobicents.protocols.ss7.sccp.*;
 import org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl;
+import org.mobicents.protocols.ss7.sccp.impl.message.SccpDataMessageImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
+import org.mobicents.protocols.ss7.sccp.message.SccpMessage;
 import org.mobicents.protocols.ss7.sccp.parameter.EncodingScheme;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
@@ -245,6 +244,7 @@ public class Server extends TestHarness {
             "K", 1, -1, null, 0);
         this.sccpStack.getRouter().addRule(2, RuleType.SOLITARY, LoadSharingAlgorithm.Bit0, OriginationType.LOCAL, pattern, "K",
             2, -1, null, 0);
+        this.sccpStack.getRouter().addLongMessageRule(1, 1, 16384, LongMessageRuleType.XUDT_ENABLED);
     }
 
     private void initTCAP() throws Exception {
@@ -738,13 +738,13 @@ public class Server extends TestHarness {
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
             byte[] Lmsi = hexStringToByteArray("87654321");
             LMSI lmsi = mapFactory.createLMSI(Lmsi);
-            byte[] eGeographicalInformation = hexStringToByteArray("3333b034322736322e3830272753");
+            byte[] eGeographicalInformation = hexStringToByteArray("014321a10022337799");
             ExtGeographicalInformation extGeographicalInformation = mapFactory.createExtGeographicalInformation(eGeographicalInformation);
-            byte[] posDatanformation = hexStringToByteArray("5533b034322736322e383027278a");
+            byte[] posDatanformation = hexStringToByteArray("5533ab01");
             PositioningDataInformation positioningDataInformation = mapFactory.createPositioningDataInformation(posDatanformation);
             UtranPositioningDataInfo utranPositioningDataInfo = null;
             Integer ageOfLocationEstimate = 1;
-            byte[] addLocationEstimate = hexStringToByteArray("5533b034322736322a3830272780");
+            byte[] addLocationEstimate = hexStringToByteArray("5533a100223377");
             AddGeographicalInformation additionalLocationEstimate = mapFactory.createAddGeographicalInformation(addLocationEstimate);
             MAPExtensionContainer mapExtensionContainer = null;
             boolean deferredMTLRResponseIndicator = false;

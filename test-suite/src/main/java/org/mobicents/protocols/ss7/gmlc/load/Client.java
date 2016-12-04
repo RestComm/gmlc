@@ -78,11 +78,7 @@ import org.mobicents.protocols.ss7.map.service.lsm.*;
 import org.mobicents.protocols.ss7.map.service.mobility.locationManagement.SupportedLCSCapabilitySetsImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberManagement.APNImpl;
-import org.mobicents.protocols.ss7.sccp.LoadSharingAlgorithm;
-import org.mobicents.protocols.ss7.sccp.NetworkIdState;
-import org.mobicents.protocols.ss7.sccp.OriginationType;
-import org.mobicents.protocols.ss7.sccp.RuleType;
-import org.mobicents.protocols.ss7.sccp.SccpResource;
+import org.mobicents.protocols.ss7.sccp.*;
 import org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
@@ -231,6 +227,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             "K", 1, -1, null, 0);
         this.sccpStack.getRouter().addRule(2, RuleType.SOLITARY, LoadSharingAlgorithm.Bit0, OriginationType.LOCAL, pattern, "K",
             2, -1, null, 0);
+        this.sccpStack.getRouter().addLongMessageRule(1, 1, 16384, LongMessageRuleType.XUDT_ENABLED);
     }
 
     private void initTCAP() throws Exception {
@@ -376,8 +373,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 }
 
                 // client.initiateMapAti();
-                client.initiateMapSRIforLCS();
-                // client.initiateMapPSL();
+                // client.initiateMapSRIforLCS();
+                client.initiateMapPSL();
                 // client.initiateMapSLR();
             }
 
@@ -592,6 +589,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             AreaEventInfo areaEventInfo = new AreaEventInfoImpl(areaDefinition, occurrenceInfo, intervalTime);
             byte[] homeGmlcAddress = hexStringToByteArray("999988887777");
             GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
+            boolean b1 = false;
             int reportingAmount = 3;
             int reportingInterval = 60;
             PeriodicLDRInfo periodicLDRInfo = new PeriodicLDRInfoImpl(reportingAmount, reportingInterval);
@@ -607,7 +605,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
 
             mapDialogLsm.addProvideSubscriberLocationRequest(locationType, mlcNumber, lcsClientID, privacyOverride, imsi, msisdn, lmsi, imei, lcsPriority,
                 lcsQoS, extensionContainer, supportedGADShapes, lcsReferenceNumber, lcsServiceTypeID, lcsCodeword,
-                lcsPrivacyCheck,areaEventInfo, hGmlcAddress, false, periodicLDRInfo, reportingPLMNList);
+                lcsPrivacyCheck,areaEventInfo, hGmlcAddress, b1, periodicLDRInfo, reportingPLMNList);
             logger.info("MAP PSL: msisdn:" + msisdn + ", MLC Number:" + mlcNumber);
 
             // This will initiate the TC-BEGIN with INVOKE component
@@ -784,9 +782,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             DeferredLocationEventType deferredLocationEventType = new DeferredLocationEventTypeImpl(msAvailable, enteringIntoArea, leavingFromArea, beingInsideArea);
             TerminationCause terminationCause = TerminationCause.congestion;
             DeferredmtlrData deferredmtlrData = new DeferredmtlrDataImpl(deferredLocationEventType, terminationCause, lcsLocationInfo);
-            byte[] data = hexStringToByteArray("123456789a1234");
+            byte[] data = hexStringToByteArray("123456789012");
             PositioningDataInformation positioningDataInformation = new PositioningDataInformationImpl(data);
-            byte[] utranData = hexStringToByteArray("4321a987654321");
+            byte[] utranData = hexStringToByteArray("43210987654321");
             UtranPositioningDataInfo utranPositioningDataInfo = new UtranPositioningDataInfoImpl(utranData);
             Integer lcsServiceTypeID = 1;
             boolean saiPresent = true;
