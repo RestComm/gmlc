@@ -103,10 +103,11 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.LSAIdentity;
 import org.mobicents.protocols.ss7.gmlc.load.Server;
 import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
-import org.mobicents.protocols.ss7.map.primitives.DiameterIdentityImpl;
-import org.mobicents.protocols.ss7.map.primitives.GSNAddressImpl;
-import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
-import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
+import org.mobicents.protocols.ss7.map.primitives.*;
+import org.mobicents.protocols.ss7.map.service.lsm.DeferredmtlrDataImpl;
+import org.mobicents.protocols.ss7.map.service.lsm.GeranGANSSpositioningDataImpl;
+import org.mobicents.protocols.ss7.map.service.lsm.UtranGANSSpositioningDataImpl;
+import org.mobicents.protocols.ss7.map.service.lsm.UtranPositioningDataInfoImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.locationManagement.SupportedLCSCapabilitySetsImpl;
 import org.mobicents.protocols.ss7.sccp.*;
 import org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl;
@@ -122,6 +123,8 @@ import org.mobicents.protocols.ss7.tcap.TCAPStackImpl;
 import org.mobicents.protocols.ss7.tcap.api.TCAPStack;
 import org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName;
 import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
+
+import java.util.ArrayList;
 
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
@@ -742,25 +745,36 @@ public class Server extends TestHarness {
             ExtGeographicalInformation extGeographicalInformation = mapFactory.createExtGeographicalInformation(eGeographicalInformation);
             byte[] posDatanformation = hexStringToByteArray("5533ab01");
             PositioningDataInformation positioningDataInformation = mapFactory.createPositioningDataInformation(posDatanformation);
-            UtranPositioningDataInfo utranPositioningDataInfo = null;
+            byte[] utranData = hexStringToByteArray("43210987654321");
+            UtranPositioningDataInfo utranPositioningDataInfo = new UtranPositioningDataInfoImpl(utranData);
             Integer ageOfLocationEstimate = 1;
             byte[] addLocationEstimate = hexStringToByteArray("5533a100223377");
             AddGeographicalInformation additionalLocationEstimate = mapFactory.createAddGeographicalInformation(addLocationEstimate);
+/*
+            long[] oid = {0, 0, 17, 773, 1, 1, 1};
+            byte[] privateExtData = hexStringToByteArray("1144");
+            MAPPrivateExtension mapPrivateExtension = new MAPPrivateExtensionImpl(oid, privateExtData);
+            ArrayList<MAPPrivateExtension> mapPrivateExtensions = new ArrayList<MAPPrivateExtension>();
+            mapPrivateExtensions.add(mapPrivateExtension);
+            byte[] pcsExtensions = hexStringToByteArray("1033");
+            MAPExtensionContainer mapExtensionContainer = new MAPExtensionContainerImpl(mapPrivateExtensions, pcsExtensions);
+*/
             MAPExtensionContainer mapExtensionContainer = null;
-            boolean deferredMTLRResponseIndicator = false;
+            Boolean deferredMTLRResponseIndicator = true;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
                 .createCellGlobalIdOrServiceAreaIdFixedLength(748, 1, 23, 369);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
                 .createCellGlobalIdOrServiceAreaIdOrLAI(cellGlobalIdOrServiceAreaIdFixedLength);
-            boolean saiPresent = true;
-            final AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = null;
+            Boolean saiPresent = true;
+            AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = AccuracyFulfilmentIndicator.getAccuracyFulfilmentIndicator(0);
             // AccuracyFulfilmentIndicator ::= ENUMERATED { requestedAccuracyFulfilled (0), requestedAccuracyNotFulfilled (1), ... }
-            accuracyFulfilmentIndicator.getAccuracyFulfilmentIndicator(1);
             byte[] velEst = hexStringToByteArray("00000001");
             VelocityEstimate velocityEstimate = mapFactory.createVelocityEstimate(velEst);
-            boolean moLrShortCircuitIndicator = false;
-            GeranGANSSpositioningData geranGANSSpositioningData = null;
-            UtranGANSSpositioningData utranGANSSpositioningData = null;
+            Boolean moLrShortCircuitIndicator = true;
+            byte[] gGanss = hexStringToByteArray("666601019999");
+            GeranGANSSpositioningData geranGANSSpositioningData = new GeranGANSSpositioningDataImpl(gGanss);
+            byte[] uGanss = hexStringToByteArray("777701019898");
+            UtranGANSSpositioningData utranGANSSpositioningData = new UtranGANSSpositioningDataImpl(uGanss);
             ServingNodeAddress servingNodeAddress = mapFactory.createServingNodeAddressMscNumber(mscNumber);
 
             mapDialogLsm.addProvideSubscriberLocationResponse(invokeId, extGeographicalInformation, positioningDataInformation, utranPositioningDataInfo,
@@ -810,6 +824,15 @@ public class Server extends TestHarness {
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123007");
             ISDNAddressString naEsrk = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
+/*
+            long[] oid = {0, 0, 17, 773, 1, 1, 1};
+            byte[] privateExtData = hexStringToByteArray("1144");
+            MAPPrivateExtension mapPrivateExtension = new MAPPrivateExtensionImpl(oid, privateExtData);
+            ArrayList<MAPPrivateExtension> mapPrivateExtensions = new ArrayList<MAPPrivateExtension>();
+            mapPrivateExtensions.add(mapPrivateExtension);
+            byte[] pcsExtensions = hexStringToByteArray("1033");
+            MAPExtensionContainer mapExtensionContainer = new MAPExtensionContainerImpl(mapPrivateExtensions, pcsExtensions);
+*/
             MAPExtensionContainer mapExtensionContainer = null;
 
             mapDialogLsm.addSubscriberLocationReportResponse(invokeId, naEsrd, naEsrk, mapExtensionContainer);
