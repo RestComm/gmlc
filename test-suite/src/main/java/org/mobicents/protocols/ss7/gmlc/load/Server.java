@@ -713,7 +713,7 @@ public class Server extends TestHarness {
         /*
          * This is an error condition. Server should never receive onSendRoutingInfoForLCSResponse.
          */
-        logger.error(String.format("onAnyTimeInterrogationRequest for Dialog=%d and invokeId=%d",
+        logger.error(String.format("onSendRoutingInfoForLCSResponse for Dialog=%d and invokeId=%d",
             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId(), sendRoutingInforForLCSResponse.getInvokeId()));
 
     }
@@ -837,6 +837,9 @@ public class Server extends TestHarness {
 
             mapDialogLsm.addSubscriberLocationReportResponse(invokeId, naEsrd, naEsrk, mapExtensionContainer);
 
+            // This will initiate the TC-BEGIN with INVOKE component
+            mapDialogLsm.close(false);
+
         } catch (MAPException mapException) {
             logger.error("MAP Exception while processing onSubscriberLocationReportRequest ", mapException);
         } catch (Exception e) {
@@ -851,7 +854,7 @@ public class Server extends TestHarness {
         /*
          * This is an error condition. Server should never receive onProvideSubscriberLocationResponse.
          */
-        logger.error(String.format("onProvideSubscriberLocationResponse for Dialog=%d and invokeId=%d",
+        logger.error(String.format("onSubscriberLocationReportResponse for Dialog=%d and invokeId=%d",
             subscriberLocationReportResponse.getMAPDialog().getLocalDialogId(), subscriberLocationReportResponse.getInvokeId()));
     }
 

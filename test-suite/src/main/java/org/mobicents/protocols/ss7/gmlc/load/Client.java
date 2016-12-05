@@ -372,10 +372,10 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                     // logger.warn("StartTime = " + client.start);
                 }
 
-                // client.initiateMapAti();
-                // client.initiateMapSRIforLCS();
+                client.initiateMapAti();
+                client.initiateMapSRIforLCS();
                 client.initiateMapPSL();
-                // client.initiateMapSLR();
+                client.initiateMapSLR();
             }
 
         } catch (Exception e) {
@@ -702,7 +702,6 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             }
 
             this.rateLimiterObj.acquire();
-            //this.sccpStack.setZMarginXudtMessage(40);
 
             // First create Dialog
             AddressString origRef = this.mapProvider.getMAPParameterFactory()
@@ -726,10 +725,10 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "1110101");
             ISDNAddressString naEsrk = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "9889277");
-            final LCSEvent lcsEvent = emergencyCallOrigination;
+            LCSEvent lcsEvent = emergencyCallOrigination;
             // LCS-Event ::= ENUMERATED { emergencyCallOrigination (0), emergencyCallRelease (1), mo-lr (2), ..., deferredmt-lrResponse (3) } -- exception handling: --
             // a SubscriberLocationReport-Arg containing an unrecognized LCS-Event -- shall be rejected by a receiver with a return error cause of unexpected data value
-            final LocationEstimateType locationEstimateType = currentLocation;
+            LocationEstimateType locationEstimateType = currentLocation;
             // public enum LocationEstimateType {currentLocation(0), currentOrLastKnownLocation(1), initialLocation(2), activateDeferredLocation(3),
             //                                   cancelDeferredLocation(4)..
             ISDNAddressString externalAddress = new ISDNAddressStringImpl(AddressNature.international_number,
@@ -746,21 +745,21 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             MAPExtensionContainer mapExtensionContainer = null;
             LCSClientExternalID lcsClientExternalID = new LCSClientExternalIDImpl(externalAddress, mapExtensionContainer);
             LCSClientInternalID lcsClientInternalID = LCSClientInternalID.broadcastService;
-            String clientName = "GMLCclient01";
+            String clientName = "219023";
             int cbsDataCodingSchemeCode = 15;
             CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(cbsDataCodingSchemeCode);
-            String ussdLcsString = "*911#";
+            String ussdLcsString = "911";
             Charset gsm8Charset = Charset.defaultCharset();
             USSDString ussdString = new USSDStringImpl(ussdLcsString, cbsDataCodingScheme, gsm8Charset);
             LCSFormatIndicator lcsFormatIndicator = LCSFormatIndicator.url;
             LCSClientName lcsClientName = new LCSClientNameImpl(cbsDataCodingScheme, ussdString, lcsFormatIndicator);
             AddressString lcsClientDialedByMS = new AddressStringImpl(AddressNature.international_number, NumberingPlan.ISDN, clientName);
-            byte[] apn = hexStringToByteArray("6763ae38b4890");;
+            byte[] apn = hexStringToByteArray("6763a20b0890");;
             APN lcsAPN = new APNImpl(apn);
             LCSClientID lcsClientID = new LCSClientIDImpl(LCSClientType.valueAddedServices, lcsClientExternalID, lcsClientInternalID, lcsClientName, lcsClientDialedByMS, lcsAPN, null);
             ISDNAddressString networkNodeNumber = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5983392892");
-            byte[] lmsid = hexStringToByteArray("3539383939303737393130");
+            byte[] lmsid = hexStringToByteArray("0a010203");
             LMSI lmsi = new LMSIImpl(lmsid);
             boolean gprsNodeIndicator = true;
             AdditionalNumber additionalNumber = new AdditionalNumberImpl(null, sgsnNumber);
@@ -773,9 +772,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
             SupportedLCSCapabilitySets additionalLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
                 lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, true);
-            byte[] mme = hexStringToByteArray("8721cd0a36a8743e01");
+            byte[] mme = hexStringToByteArray("8720c00a30a1743401000a");
             DiameterIdentity mmeName = new DiameterIdentityImpl(mme);
-            byte[] aaa = hexStringToByteArray("a5382c342");
+            byte[] aaa = hexStringToByteArray("8720c00a30a1743401101112");
             DiameterIdentity aaaServerName = new DiameterIdentityImpl(aaa);
             LCSLocationInfo lcsLocationInfo = new LCSLocationInfoImpl(networkNodeNumber, lmsi, mapExtensionContainer, gprsNodeIndicator, additionalNumber,
                 supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
@@ -822,7 +821,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             int reportingInterval = 600;
             PeriodicLDRInfo periodicLDRInfo = new PeriodicLDRInfoImpl(reportingAmount, reportingInterval);
             boolean b2 = false;
-            byte[] cidOrSaiFixedLength = hexStringToByteArray("349a0123bc43219876ba0101");
+            byte[] cidOrSaiFixedLength = hexStringToByteArray("349a0120b04321");
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = new CellGlobalIdOrServiceAreaIdFixedLengthImpl(cidOrSaiFixedLength);
             CellGlobalIdOrServiceAreaIdOrLAI cellIdOrSai = new CellGlobalIdOrServiceAreaIdOrLAIImpl(cellGlobalIdOrServiceAreaIdFixedLength);
             byte[] gGanss = hexStringToByteArray("666601019999");
@@ -990,11 +989,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si + "for DialogId=%d",
+                            "Rx onAnyTimeInterrogationResponse, Incorrect Subscriber State received: " + si + "for DialogId=%d",
                             atiResp.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onAnyTimeInterrogationResponse, Bad Subscriber State received: " + si + "for DialogId=%d",
+                            "Rx onAnyTimeInterrogationResponse, Incorrect Subscriber State received: " + si + "for DialogId=%d",
                             atiResp.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1010,7 +1009,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
 
         } catch (Exception e) {
             logger.error(String.format("Error while processing onAnyTimeInterrogationResponse for Dialog=%d",
-                atiResp.getMAPDialog().getLocalDialogId()));
+                atiResp.getMAPDialog().getLocalDialogId(), ", Exception: "+e.getStackTrace()));
 
         }
     }
@@ -1053,11 +1052,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad NetworkNodeNumber received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect NetworkNodeNumber received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad NetworkNodeNumber received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect NetworkNodeNumber received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1074,11 +1073,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad LMSI received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect LMSI received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad LMSI received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect LMSI received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1095,11 +1094,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad Supported LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Supported LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad Supported LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Supported LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1116,11 +1115,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad Additional LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad Additional LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional LCS Capability Sets received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1137,11 +1136,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1159,11 +1158,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad GPRS Node Indicator received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect GPRS Node Indicator received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Bad GPRS Node Indicator received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect GPRS Node Indicator received: " + lcsLocationInfo + "for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1214,11 +1213,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad LocationEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect LocationEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad LocationEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect LocationEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1238,11 +1237,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad GeranPositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect GeranPositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad GeranPositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect GeranPositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1262,11 +1261,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad UtranPositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect UtranPositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad UtranPositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect UtranPositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1285,11 +1284,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad AgeOfLocationEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect AgeOfLocationEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad AgeOfLocationEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect AgeOfLocationEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1312,11 +1311,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad AdditionalLocationEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect AdditionalLocationEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad AdditionalLocationEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect AdditionalLocationEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1335,11 +1334,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, NULL MAPExtensionContainer received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, NULL MAPExtensionContainer received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1352,15 +1351,20 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
 
                 } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format(
-                            "Rx onProvideSubscriberLocationResponse, Bad DeferredMTLRResponseIndicator received for DialogId=%d",
-                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
-                    } else {
-                        logger.info(String.format(
-                            "Rx onProvideSubscriberLocationResponse, Bad DeferredMTLRResponseIndicator received for DialogId=%d",
-                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
-                    }
+                    logger.info(String.format("Rx onProvideSubscriberLocationResponse DeferredMTLRResponseIndicator: "
+                            + provideSubscriberLocationResponse.getDeferredMTLRResponseIndicator() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onProvideSubscriberLocationResponse, INCORRECT DeferredMTLRResponseIndicator = "
+                            + provideSubscriberLocationResponse.getDeferredMTLRResponseIndicator() + " " +
+                            "received for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format("Rx onProvideSubscriberLocationResponse, INCORRECT DeferredMTLRResponseIndicator = "
+                        + provideSubscriberLocationResponse.getDeferredMTLRResponseIndicator() + " " +
+                        "received for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
 
@@ -1381,11 +1385,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad CellIdOrSai received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect CellIdOrSai received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad CellIdOrSai received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect CellIdOrSai received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1400,11 +1404,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onProvideSubscriberLocationResponse, Bad SaiPresent received for DialogId=%d",
+                            "Rx onProvideSubscriberLocationResponse, Incorrect SaiPresent received for DialogId=%d",
                             provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onProvideSubscriberLocationResponse, Bad SaiPresent received for DialogId=%d",
+                            "Rx onProvideSubscriberLocationResponse, Incorrect SaiPresent received for DialogId=%d",
                             provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1425,11 +1429,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad AccuracyFulfilmentIndicator received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect AccuracyFulfilmentIndicator received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad AccuracyFulfilmentIndicator received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect AccuracyFulfilmentIndicator received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1451,11 +1455,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad VelocityEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect VelocityEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad VelocityEstimate received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect VelocityEstimate received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1468,15 +1472,20 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
 
                 } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format(
-                            "Rx onProvideSubscriberLocationResponse, Bad MoLrShortCircuitIndicator received for DialogId=%d",
-                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
-                    } else {
-                        logger.info(String.format(
-                            "Rx onProvideSubscriberLocationResponse, Bad MoLrShortCircuitIndicator received for DialogId=%d",
-                            provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
-                    }
+                    logger.info(String.format("Rx onProvideSubscriberLocationResponse SaiPresent: "
+                            + provideSubscriberLocationResponse.getMoLrShortCircuitIndicator() + ", for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+
+                }
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format(
+                        "Rx onProvideSubscriberLocationResponse, Incorrect MoLrShortCircuitIndicator received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                } else {
+                    logger.info(String.format(
+                        "Rx onProvideSubscriberLocationResponse, Incorrect MoLrShortCircuitIndicator received for DialogId=%d",
+                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
 
@@ -1495,11 +1504,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad GeranGANSSPositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect GeranGANSSPositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad GeranGANSSPositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect GeranGANSSPositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1519,11 +1528,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect UtranGANSSpositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect UtranGANSSpositioningData received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1538,25 +1547,25 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                         ", for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
 
                 } else {
-                    logger.info(String.format("Rx onProvideSubscriberLocationResponse UtranGANSSpositioningData: "
-                            + provideSubscriberLocationResponse.getUtranGANSSpositioningData() + ", for DialogId=%d",
-                        provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+                    logger.info(String.format("Rx onProvideSubscriberLocationResponse ServingNode, MSC Number = %s " + mscNumber +
+                        ", SGSN Number = %s " + sgsnNumber +
+                        ", for DialogId=%d", provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect ServingNode received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onProvideSubscriberLocationResponse, Bad UtranGANSSpositioningData received for DialogId=%d",
+                        "Rx onProvideSubscriberLocationResponse, Incorrect ServingNode received for DialogId=%d",
                         provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
 
         } catch (Exception e) {
-            logger.error(String.format("Error while processing onProvideSubscriberLocationResponse for Dialog=%d",
-                provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId()));
+            logger.info(String.format("onProvideSubscriberLocationResponse for Dialog=%d",
+                provideSubscriberLocationResponse.getMAPDialog().getLocalDialogId(), ", thrown: "+e.getStackTrace()));
         }
     }
 
@@ -1597,11 +1606,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onSubscriberLocationReportResponse, Bad NaESRD received for DialogId=%d",
+                        "Rx onSubscriberLocationReportResponse, Incorrect NaESRD received for DialogId=%d",
                         subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onSubscriberLocationReportResponse, Bad NaESRD received for DialogId=%d",
+                        "Rx onSubscriberLocationReportResponse, Incorrect NaESRD received for DialogId=%d",
                         subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1621,11 +1630,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onSubscriberLocationReportResponse, Bad NaESRK received for DialogId=%d",
+                        "Rx onSubscriberLocationReportResponse, Incorrect NaESRK received for DialogId=%d",
                         subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onSubscriberLocationReportResponse, Bad NaESRK received for DialogId=%d",
+                        "Rx onSubscriberLocationReportResponse, Incorrect NaESRK received for DialogId=%d",
                         subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
@@ -1645,11 +1654,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             } else {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                        "Rx onSubscriberLocationReportResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        "Rx onSubscriberLocationReportResponse, Incorrect MAPExtensionContainer received for DialogId=%d",
                         subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
                 } else {
                     logger.info(String.format(
-                        "Rx onSubscriberLocationReportResponse, Bad MAPExtensionContainer received for DialogId=%d",
+                        "Rx onSubscriberLocationReportResponse, Incorrect MAPExtensionContainer received for DialogId=%d",
                         subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
                 }
             }
