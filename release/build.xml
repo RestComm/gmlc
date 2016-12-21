@@ -24,7 +24,7 @@
 	<property name="restcomm-slee.http.ra.tag" value="2.8.56" />
 
 	<property name="restcomm.gmlc.git.tag" value="master"/>
-	<property name="restcomm.gmlc.release.version" value="1.0.0-SNAPSHOT"/>
+	<property name="restcomm.gmlc.release.version" value="2.0.0-SNAPSHOT"/>
 
 	<!-- Options for referring to release resoure verions -->
 	<!-- SLEE staff -->
