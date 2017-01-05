@@ -19,11 +19,14 @@ CGI represents the location information with greatest error margin retrievable b
 As for 3GPP specs, hypothetically a Stand-Alone SMLC
 can be placed within the BSC for triggering more precise location procedures, but in practice this is hardly found. More accurate positioning methods were developed for cellular networks, particularly from 3G (UMTS) and beyond. Naturally, accuracy comes with a price. When these dearer location capabilities are available, the GMLC may request routing information from the HLR via the Lh interface or HSS (Home Subscriber Server) via the SLh/Lh interface. 
 
-image::images/LCS_2G-3G_interfaces.png[]
+image::images/LCS-GSM-UMTS.png[]
 
-While Lh interface reside in a Circuit-Switched Core Network and therefore demands SS7 MAP operations, SLh is placed in the Evolved Packet Core (EPC) and is a Diameter-based interface for LTE location services, as specified by 3GPP TS 29.173. After performing registration authorization, it may send positioning requests to either VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node), MSCS (Mobile Switching Centre Server) or MME (Mobility Management Entity) and receives final location estimates from the corresponding entity via  the Lg, Lgd or SLg interface. Again, Lg/Lgd interfaces demand SS7 MAP operations while SLg is a Diameter-based interface for LTE location occupying ELP procedures, where ELP stands for EPC Location Protocol as specified by 3GPP TS 29.172.
+While Lh interface resides in a Circuit-Switched Core Network and therefore demands SS7 MAP operations, SLh is placed in the Evolved Packet Core (EPC) and is a Diameter-based interface for LTE location services, as specified by 3GPP TS 29.173. After performing registration authorization, it may send positioning requests to either VMSC (Visited Mobile Switching Centre), SGSN (Serving GPRS Support Node), MSCS (Mobile Switching Centre Server) or MME (Mobility Management Entity) and receives final location estimates from the corresponding entity via  the Lg, Lgd or SLg interface. Again, Lg/Lgd interfaces demand SS7 MAP operations while SLg is a Diameter-based interface for LTE location occupying ELP procedures, where ELP stands for EPC Location Protocol as specified by 3GPP TS 29.172.
 
-image::images/LCS-LTE_interfaces.png[]
+image::images/LCS-LTE.png[]
+
+In summary, location information retrieval within the control plane of a Mobile Core Network is done through the GMLC and its counterparts, the Stand-Alone Serving Mobile Location Centre (SAS) for location within the UTRAN (UMTS Terrestrial Radio Access Network) or Enhanced-SMLC (E-SMLC) for location within the E-UTRAN (Enhanced-UTRAN or LTE), along with the positioning methods available in the RAN (OTDOA, UTDOA, E-OTD, etc.). Location information retrieval in the control plane is performed through a positioning system using OMA’s Secure User Plane Location (SUPL) protocol, also known as SLP (SUPL Location Platform). Control plane positioning is depicted in previous figure too, although it's not part of {this-platform} {this-application} albeit it's in TeleStax' R&D roadmap. Moreover, SUPL demands SETs (SUPL Enabled Terminals), which scarce nowadays. Nevertheless, it's placed there as it will be added in the future and a combination of a solution in either planes is considered the ideal by the industry for location services in Next Generation Networks.
+
 
 Up to this point, what is known as "Immediate Location Request" has been covered. A GMLC can also handle "Deferred Location Request", which represents retrieving of location contingent on some current or future events where the response from the LCS Server to the LCS Client may occur some time after the request was sent, as described in 3GPP TS 23.271. When a deferred location request is triggered by the GMLC, event-based "Subscriber Location Reports", either conveyed through MAP or ELP are sent back to the GMLC by the entity at which the target mobile equipment is attached to (VMSC, MSCS, SGSN or MME).
 
@@ -313,19 +316,27 @@ An MLP SLIA including an unsuccessful location information retrieval due to "Sys
 
 === HTTP and MAP messages flow for UMTS Location Services
 
-Following figure displays the signal flow between an application, RestComm Geolocation API and {this-platform} {this-application} within an UMTS Core Network. The term RAN (Radio Access Network) might involve the RNC (Radio Network Controller), a Stand-Alone SMLC (Serving Mobile Location Centre), the NB (Node B -base station-) and the UE (User Equipment).
+Following figure displays the signaling call flow between an application, RestComm Geolocation API and {this-platform} {this-application} within an UMTS Core Network. The term RAN (Radio Access Network) might involve the RNC (Radio Network Controller), a Stand-Alone SMLC (Serving Mobile Location Centre), the NB (Node B -base station-) and the UE (User Equipment).
 
 image::images/RestComm-GMLC-UMTS_flow.png[]
 
 The terms MLP SLIR/SLIA and SLIREP stand for Mobile Location Protocol Standard Location Immediate Request/Response/Report as for OMA (Open Mobile Alliance) Mobile Location Protocol 3.2 specification.
 
+Next figure shows an example signal flow exclusively between {this-platform} {this-application} within an UMTS Core Network for location retrieval by means of MAP operations destined to a Circuit-Switched Core Network where a Stand-Alone SMLC (Serving Mobile Location Center) is operational and positioning methods are available at the Radio Access Network (e.g. OTDOA). Then, UMTS Terrestrial Radio Access Network (UTRAN) comprises positioning procedures involving the Stand-Alone SMLC (SAS), NB (Node Basestation), and the UE.The example considers a location report sent back to {this-platform} {this-application}, triggered by an event previously armed at the Radio Access Network (e.g. a UE exiting a geofence).
+
+image::images/GMLC-UMTS_call_flow.png[]
+
 === HTTP and Diameter-based messages flow for LTE Location Services
 
-Next figure displays the signal flow between an application, RestComm Geolocation API and {this-platform} {this-application} within an EPS (Evolved Packet System) for LTE/LTE-Advanced location services. The Radio Access Network in this case involves positioning procedures involving the E-SMLC (Evolved SMLC), eNB (evolved NB), and the UE.
+Next figure shows an example signaling call flow exclusively between {this-platform} {this-application} within an Evolved Packet Core Network for location retrieval by means of Diameter based procedures as for 3GPP TS 29.172 and 29.173 (i.e. SLg and SLh interfaces). These Diameter requests are destined to a Packet-Switched Core Network like LTE's EPC, where an Evolved-SMLC is operational and positioning methods are available at the Radio Access Network (e.g. OTDOA). Then, LTE's Radio Access Network (EUTRAN) involves positioning procedures comprising the E-SMLC (Evolved SMLC), eNB (evolved NB), and the UE. The example considers a location report sent back to {this-platform} {this-application}, triggered by an event previously armed at the Radio Access Network (e.g. a UE entering a geofence).
+
+image::images/GMLC-LTE_call_flow.png[]
+
+Next figure displays the analogue call flow as previous, but including RestComm Geolocation API and {this-platform} {this-application} within an EPS (Evolved Packet System) for LTE/LTE-Advanced/LTE-Pro location services.
 
 image::images/RestComm-GMLC-LTE_flow.png[]
 
-An analogous signal flow as the one explained before for GSM location but consistent with previous signal flow for LTE location is described next. The mentioned MLP SLIR example would be almost identical to the one shown for GSM location, but with some additions as following:
+An analogous signal call flow as the one explained before for GSM location but consistent with previous signal flow for LTE location is described next. The mentioned MLP SLIR example would be almost identical to the one shown for GSM location, but with some additions as following:
 
 ....
 <?xml version="1.0" encoding="UTF-8"?> 
@@ -666,9 +677,19 @@ HTTP interface:::
 MLP:::
   Location requests can be sent to the {this-platform} {this-application} using plain XML over HTTP(S), with the request being encoded in OMA MLP (Mobile Location Protocol). See the full OMA MLP technical specification here: http://technical.openmobilealliance.org/Technical/technical-information/release-program/current-releases/mlp-v3-1
 
+JAIN SLEE:::
+  JAIN SLEE (Java API for Integrated Networks Service Logic Execution Environment) specification constitutes the JAVA community framework for the high standards in terms of performance, availability, portability, scalability, robustness, event oriented execution logic, etc., suitable for services/applications inter-working within telecommunication networks.
+  JAIN SLEE architecture, through its Resource Adaptors (RA), adjusts information from peripheral agents of the SLEE, namely: Mobile Switching Centre Servers (MSC/MSCS), Media Gateways (MGW, MGC/MGCF), Signaling Gateways (SGW), Mobility Management Entities (MME), SIP servers/proxies like Serving/Interrogating/Proxy-Call Session Control Functions (S-CSCF, I-CSCF, P-CSCF), Media Resource Function Control, mobile subscribers data base query to HSS/HLR through Diameter/MAP respectively, Signaling Control Points (SCP) through CAP/INAP, and other service protocols like SOAP (Simple Object Access Protocol), OSA/Parlay, LDAP (Lightweight Directory Access Protocol), JDBC (Java Data Base Connectivity), JPA (Java Persistence API), etc.
+  The components that carry out logic implementation of services/applications according to JAIN SLEE are named Service Building Blocks or SBB. The SBB are executed within a «components container», which controls their life cycle and eases their composition. An SBB may comprise multiple child SBBs, which are also reusable for other services, encompassing Java code usually generated in a dynamic Service Creation Environment or SCE (e.g. RestComm Visual Designer RVD) or middleware platforms containing JAIN SLEE SBBs (e.g. RestComm GMLC).
+  JAIN SLEE service developer undergoes SBB construction by gathering logic items which represent events during the process of a service. As JAIN SLEE has been specially designed for event oriented logic execution, services are initiated by events like Diameter Requests/Answers. The generated SBBs then act together with the RAs under the JAIN SLEE framework so as to provide service to diverse external entities.  Every arriving event at the SLEE through the RAs is distributed among the SBBs in order to process them. This functionality is carried out by the «event router» as it is named within the functional structure of the JAIN SLEE framework.
+
 Easy Configuration and Management:::
   {this-platform} {this-application} comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the  Gateway at run-time and manage it using simple commands rather than do everything manually.
-  {this-platform} {this-application} also comes with a Graphical User Interface that will allow you to configure, monitor and manage the Gateway through a convenient user-friendly interface. 
+  {this-platform} {this-application} also comes with a Graphical User Interface that will allow you to configure, monitor and manage the Gateway through a convenient user-friendly interface.
+
+Next figure shows an architectural overview of {this-platform} {this-application} and its external interfaces, servers and clients, either within the infrastructure of a Mobile Network Operator or the Internet and specifically, with Restcomm Geolocation API.
+
+image::images/GMLC_Architecture.png[]
 
 [[_mobicents_gmlc_overview_tech_spec]]
 === Technical Specifications
