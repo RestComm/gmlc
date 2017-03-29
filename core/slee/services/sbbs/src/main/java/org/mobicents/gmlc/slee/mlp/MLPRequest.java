@@ -4,8 +4,10 @@ import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
 import org.jibx.runtime.JiBXException;
+import org.oma.protocols.mlp.svc_init.Serviceid;
 
 import javax.slee.facilities.Tracer;
+
 import java.io.InputStream;
 
 /**
@@ -35,7 +37,7 @@ public class MLPRequest {
      */
     public String parseRequest(InputStream requestStream) throws MLPException {
         // Result XML
-        String requestingMSISDN = null;
+        String requestingserviceid,requestingMSISDN = null;
 
         // Process the request
         try {
@@ -51,8 +53,11 @@ public class MLPRequest {
             org.oma.protocols.mlp.svc_init.Msids.Choice c = msids.getChoiceList().get(0);
             org.oma.protocols.mlp.svc_init.Msid msisdn = c.getMsid();
             requestingMSISDN = msisdn.getString();
+            //Process the location request for serviceid
+            org.oma.protocols.mlp.svc_init.Serviceid serviceidd = svcInit.getHdr().getClient().getServiceid();            
+            requestingserviceid= serviceidd.getServiceid();
             this.logger.info("Parsed location request for MSISDN: " + requestingMSISDN);
-            return requestingMSISDN;
+            return requestingMSISDN+";"+requestingserviceid;
         } catch (JiBXException e) {
             e.printStackTrace();
             this.logger.info("Exception while unmarshalling XML request data: " + e.getMessage());
