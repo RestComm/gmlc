@@ -33,6 +33,7 @@ import org.apache.log4j.SimpleLayout;
 import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
 import org.mobicents.protocols.ss7.m3ua.impl.parameter.ParameterFactoryImpl;
 import org.mobicents.protocols.ss7.map.api.MAPDialogListener;
+import org.mobicents.protocols.ss7.map.api.service.lsm.*;
 import org.mobicents.protocols.ss7.map.api.service.mobility.MAPServiceMobilityListener;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoResponse;
@@ -54,15 +55,14 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformatio
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.DeleteSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataResponse;
-import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 
 /**
- * @author Fernando Mendioroz (fernando.mendioroz@telestax.com)
+ * @author <a href="mailto:fernando.mendioroz@telestax.com"> Fernando Mendioroz </a>
  *
  */
-public abstract class TestHarness implements MAPDialogListener, MAPServiceMobilityListener {
+public abstract class TestHarness implements MAPDialogListener, MAPServiceMobilityListener, MAPServiceLsmListener {
 
     private static final Logger logger = Logger.getLogger("map.test");
 
@@ -79,7 +79,7 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
     protected static int NETWORK_INDICATOR = 2; // National Network
     protected static int SERVICE_INDICATOR = 3; // upper layer is SCCP
     protected static int CLIENT_SSN = 145; // Client Sub-System Number
-    protected static int SERVER_SSN = 6; // Client Sub-System Number   
+    protected static int SERVER_SSN = 6; // Client Sub-System Number
 
     // M3UA details
     protected static String CLIENT_IP = "127.0.0.1";
@@ -101,9 +101,9 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
     protected static final int MAX_DIALOGS = 500000;
 
     protected final SccpAddress SCCP_CLIENT_ADDRESS = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_DPC_AND_SSN, null,
-            CLIENT_SPC, CLIENT_SSN);
+        CLIENT_SPC, CLIENT_SSN);
     protected final SccpAddress SCCP_SERVER_ADDRESS = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_DPC_AND_SSN, null,
-            SERVER_SPC, SERVER_SSN);
+        SERVER_SPC, SERVER_SSN);
 
     protected final ParameterFactoryImpl factory = new ParameterFactoryImpl();
 
@@ -187,5 +187,17 @@ public abstract class TestHarness implements MAPDialogListener, MAPServiceMobili
     public abstract void onUpdateLocationRequest(UpdateLocationRequest arg0);
 
     public abstract void onUpdateLocationResponse(UpdateLocationResponse arg0);
+
+    public abstract void onProvideSubscriberLocationRequest(ProvideSubscriberLocationRequest provideSubscriberLocationRequestIndication);;
+
+    public abstract void onProvideSubscriberLocationResponse(ProvideSubscriberLocationResponse provideSubscriberLocationResponseIndication);
+
+    public abstract void onSubscriberLocationReportRequest(SubscriberLocationReportRequest subscriberLocationReportRequestIndication);
+
+    public abstract void onSubscriberLocationReportResponse(SubscriberLocationReportResponse subscriberLocationReportResponseIndication);
+
+    public abstract void onSendRoutingInfoForLCSRequest(SendRoutingInfoForLCSRequest sendRoutingInforForLCSRequestIndication);
+
+    public abstract void onSendRoutingInfoForLCSResponse(SendRoutingInfoForLCSResponse sendRoutingInforForLCSResponseIndication);
 
 }
