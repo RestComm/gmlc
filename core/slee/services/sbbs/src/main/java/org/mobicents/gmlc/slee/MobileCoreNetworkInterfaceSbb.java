@@ -52,16 +52,20 @@ import org.mobicents.protocols.ss7.map.api.MAPProvider;
 import org.mobicents.protocols.ss7.map.api.errors.MAPErrorCode;
 import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressNature;
+import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
 import org.mobicents.protocols.ss7.map.api.primitives.CellGlobalIdOrServiceAreaIdOrLAI;
 import org.mobicents.protocols.ss7.map.api.primitives.ISDNAddressString;
 import org.mobicents.protocols.ss7.map.api.primitives.SubscriberIdentity;
 import org.mobicents.protocols.ss7.map.api.service.mobility.MAPDialogMobility;
+import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.DomainType;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.RequestedInfo;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.SubscriberInfo;
+import org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer;
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.SubscriberIdentityImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
+import org.mobicents.protocols.ss7.sccp.parameter.EncodingScheme;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.ParameterFactory;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
@@ -482,20 +486,34 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
      * Retrieve the location for the specified MSISDN via ATI request to the HLR
      */
     private void getSingleMSISDNLocation(String requestingMSISDN) {
+
         if (!requestingMSISDN.equals(fakeNumber)) {
             try {
+                AddressString addressString, addressString1;
+                addressString = addressString1 = null;
                 MAPDialogMobility mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(
-                        this.getSRIMAPApplicationContext(), this.getGmlcSccpAddress(), null,
-                        getHlrSCCPAddress(requestingMSISDN), null);
+                        this.getSRIMAPApplicationContext(), this.getGmlcSccpAddress(), addressString,
+                        getHlrSCCPAddress(requestingMSISDN), addressString1);
 
                 ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, requestingMSISDN);
                 SubscriberIdentity subsId = new SubscriberIdentityImpl(isdnAdd);
-                RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
-                // requestedInfoImpl (MAP ATI) params:
-                // locationInformation: true; response includes mcc, mnc, lac, cellid, aol, vlrNumber
-                // subscriberState: true; response can be idle, busy or notProvidedByVlr
-                // extensionContainer: null; currentLocation: false; requestedDomain: null; imei: false; msClassmark: false; mnpRequestedInfo: false.
+                boolean locationInformation = true;
+                boolean subscriberState = true;
+                MAPExtensionContainer mapExtensionContainer = null;
+                boolean currentLocation = false;
+                DomainType requestedDomain = null;
+                boolean imei = false;
+                boolean msClassmark = false;
+                boolean mnpRequestedInfo = false;
+                RequestedInfo requestedInfo = new RequestedInfoImpl(locationInformation, subscriberState, mapExtensionContainer, currentLocation,
+                    requestedDomain, imei, msClassmark, mnpRequestedInfo);
+                // requestedInfo (MAP ATI):
+                // locationInformation: true (response includes mcc, mnc, lac, cellid, aol, vlrNumber)
+                // subscriberState: true (response can be idle, busy or notProvidedByVlr)
+                // Rest of params are null or not requested, i.e.
+                // mapExtensionContainer: null; currentLocation: false; requestedDomain: null;
+                // imei: false; msClassmark: false; mnpRequestedInfo: false.
                 ISDNAddressString gscmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN,
                         gmlcPropertiesManagement.getGmlcGt());
@@ -505,6 +523,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 ActivityContextInterface sriDialogACI = this.mapAcif.getActivityContextInterface(mapDialogMobility);
                 sriDialogACI.attach(this.sbbContext.getSbbLocalObject());
                 mapDialogMobility.send();
+
             } catch (MAPException e) {
                 this.logger.severe("MAPException while trying to send ATI request for MSISDN=" + requestingMSISDN, e);
                 this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null,
@@ -514,29 +533,34 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 this.handleLocationResponse(MLPResponse.MLPResultType.SYSTEM_FAILURE, null,
                         "System Failure: Failed to send request to network for position: " + e.getMessage());
             }
-        }
-        else {
-            // Handle fake success
-            if (this.fakeLocationType == MLPResponse.MLPResultType.OK) {
-                CGIResponse response = new CGIResponse();
-                response.cell = fakeCellId;
-                response.x = fakeLocationX;
-                response.y = fakeLocationY;
-                response.radius = fakeLocationRadius;
-                this.handleLocationResponse(MLPResponse.MLPResultType.OK, response, null);
-            }
-            else {
-                this.handleLocationResponse(this.fakeLocationType, null, this.fakeLocationAdditionalInfoErrorString);
+
+        } else {
+          // Handle fake success
+          if (this.fakeLocationType == MLPResponse.MLPResultType.OK) {
+            CGIResponse response = new CGIResponse();
+            response.cell = fakeCellId;
+            response.x = fakeLocationX;
+            response.y = fakeLocationY;
+            response.radius = fakeLocationRadius;
+            this.handleLocationResponse(MLPResponse.MLPResultType.OK, response, null);
+
+          } else {
+              CGIResponse response;
+              response = null;
+              this.handleLocationResponse(this.fakeLocationType, response, this.fakeLocationAdditionalInfoErrorString);
             }
         }
     }
 
 	protected SccpAddress getGmlcSccpAddress() {
-		if (this.gmlcSCCPAddress == null) {
-            GlobalTitle gt = sccpParameterFact.createGlobalTitle(gmlcPropertiesManagement.getGmlcGt(), 0,
-                    NumberingPlan.ISDN_TELEPHONY, null, NatureOfAddress.INTERNATIONAL);
-            this.gmlcSCCPAddress = sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
-                    gt, 0, gmlcPropertiesManagement.getGmlcSsn());
+
+        if (this.gmlcSCCPAddress == null) {
+          int translationType = 0; // Translation Type = 0 : Unknown
+		  EncodingScheme encodingScheme = null;
+          GlobalTitle gt = sccpParameterFact.createGlobalTitle(gmlcPropertiesManagement.getGmlcGt(), translationType,
+                NumberingPlan.ISDN_TELEPHONY, encodingScheme, NatureOfAddress.INTERNATIONAL);
+          this.gmlcSCCPAddress = sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE,
+                gt, translationType, gmlcPropertiesManagement.getGmlcSsn());
 
 //			GlobalTitle0100 gt = new GlobalTitle0100Impl(gmlcPropertiesManagement.getGmlcGt(),0,BCDEvenEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY,NatureOfAddress.INTERNATIONAL);
 //			this.serviceCenterSCCPAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0, gmlcPropertiesManagement.getGmlcSsn());
@@ -545,7 +569,8 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	}
 
 	private MAPApplicationContext getSRIMAPApplicationContext() {
-		if (this.anyTimeEnquiryContext == null) {
+
+        if (this.anyTimeEnquiryContext == null) {
 			this.anyTimeEnquiryContext = MAPApplicationContext.getInstance(
 					MAPApplicationContextName.anyTimeEnquiryContext, MAPApplicationContextVersion.version3);
 		}
@@ -553,9 +578,12 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	}
 
 	private SccpAddress getHlrSCCPAddress(String address) {
-        GlobalTitle gt = sccpParameterFact.createGlobalTitle(address, 0, NumberingPlan.ISDN_TELEPHONY, null,
+
+        int translationType = 0; // Translation Type = 0 : Unknown
+        EncodingScheme encodingScheme = null;
+        GlobalTitle gt = sccpParameterFact.createGlobalTitle(address, translationType, NumberingPlan.ISDN_TELEPHONY, encodingScheme,
                 NatureOfAddress.INTERNATIONAL);
-        return sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
+        return sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, translationType,
                 gmlcPropertiesManagement.getHlrSsn());
 
 //	    GlobalTitle0100 gt = new GlobalTitle0100Impl(address, 0, BCDEvenEncodingScheme.INSTANCE,NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
