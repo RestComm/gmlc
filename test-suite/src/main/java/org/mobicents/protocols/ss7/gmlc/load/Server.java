@@ -576,8 +576,12 @@ public class Server extends TestHarness {
 
             // Create Subscriber Information parameters including Location Information and Subscriber State
             // for concerning MAP operation
+            int mcc = 748;
+            int mnc = 1;
+            int lac = 23;
+            int cellIdOrServiceAreaCode = 369;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
-                .createCellGlobalIdOrServiceAreaIdFixedLength(748, 1, 23, 369);
+                .createCellGlobalIdOrServiceAreaIdFixedLength(mcc, mnc, lac, cellIdOrServiceAreaCode);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
                 .createCellGlobalIdOrServiceAreaIdOrLAI(cellGlobalIdOrServiceAreaIdFixedLength);
             ISDNAddressString vlrNumber = new ISDNAddressStringImpl(AddressNature.international_number,
@@ -671,8 +675,9 @@ public class Server extends TestHarness {
             boolean lcsCapabilitySetRelease7 = false;
             SupportedLCSCapabilitySets supportedLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
                 lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
+            lcsCapabilitySetRelease7 = true;
             SupportedLCSCapabilitySets additionalLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
-                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, true);
+                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
             MAPExtensionContainer mapExtensionContainer = null;
             byte[] mmeNom = hexStringToByteArray("00112233445566778899");
             DiameterIdentity mmeName = new DiameterIdentityImpl(mmeNom);
@@ -761,8 +766,12 @@ public class Server extends TestHarness {
 */
             MAPExtensionContainer mapExtensionContainer = null;
             Boolean deferredMTLRResponseIndicator = true;
+            int mcc = 748;
+            int mnc = 1;
+            int lac = 23;
+            int cellIdOrServiceAreaCode = 369;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
-                .createCellGlobalIdOrServiceAreaIdFixedLength(748, 1, 23, 369);
+                .createCellGlobalIdOrServiceAreaIdFixedLength(mcc, mnc, lac, cellIdOrServiceAreaCode);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
                 .createCellGlobalIdOrServiceAreaIdOrLAI(cellGlobalIdOrServiceAreaIdFixedLength);
             Boolean saiPresent = true;

@@ -551,7 +551,40 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
     }
 
     private void initiateMapSRIforLCS() throws MAPException {
+        /*
+        3GPP TS 29.002 MAP Specification v15.0.0 (2017-03-15)
 
+        13A.1	MAP-SEND-ROUTING-INFO-FOR-LCS Service
+
+        13A.1.1	Definition
+            This service is used between the GMLC and the HLR to retrieve the routing information needed for routing a location service request
+            to the servicing VMSC, SGSN, MME or 3GPP AAA server.
+            The MAP-SEND-ROUTING-INFO-FOR-LCS is a confirmed service using the primitives from table 13A.1/1.
+
+        13A.1.2	Service Primitives
+
+        Table 13A.1/1: MAP-SEND-ROUTING-INFO-FOR-LCS
+            Parameter name              Request     Indication  Response    Confirm
+            Invoke Id                      M           M(=)        M(=)       M(=)
+            MLC Number                     M           M(=)
+            MSISDN                         C           C(=)        C          C(=)
+            IMSI                           C           C(=)        C          C(=)
+            LMSI                                                   C          C(=)
+            Network Node Number                                    C          C(=)
+            GPRS Node Indicator                                    C          C(=)
+            Additional Number                                      C          C(=)
+            Supported LCS Capability Sets                          C          C(=)
+            Additional LCS Capability Sets                         C          C(=)
+            MME Name                                               C          C(=)
+            SGSN Name                                              C          C(=)
+            AAA Server Name                                        C          C(=)
+            V-GMLC Address                                         U          C(=)
+            Additional V-GMLC Address                              U          C(=)
+            H-GMLC Address                                         C          C(=)
+            PPR Address                                            U          C(=)
+            User error                                             C          C(=)
+            Provider error                                                    O
+        */
         try {
             NetworkIdState networkIdState = this.clientMapStack.getMAPProvider().getNetworkIdState(0);
             if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
@@ -608,6 +641,57 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
     }
 
     private void initiateMapPSL() throws MAPException {
+        /*
+        3GPP TS 29.002 MAP Specification v15.0.0 (2017-03-15)
+
+        13A.2	MAP-PROVIDE-SUBSCRIBER-LOCATION Service
+
+        13A.2.1	Definition
+            This service is used by a GMLC to request the location of a target MS from the visited MSC or SGSN at any time.
+            This is a confirmed service using the primitives from table 13A.2/1.
+
+        13A.2.2	Service Primitives
+
+        Table 13A.2/1: Provide_Subscriber_Location
+            Parameter name								Request	        Indication	      Response	        Confirm
+            Invoke id										M				M(=)            M(=)			   M(=)
+            Location Type									M				M(=)
+            MLC Number										M				M(=)
+            LCS Client ID									M				M(=)
+            Privacy Override 							    U				C(=)
+            IMSI											C				C(=)
+            MSISDN											C				C(=)
+            LMSI											C				C(=)
+            LCS Priority									C				C(=)
+            LCS QoS											C				C(=)
+            IMEI											U				C(=)
+            Supported GAD Shapes					        C				C(=)
+            LCS-Reference Number					        C				C(=)
+            LCS Codeword		 							C				C(=)
+            LCS Service Type Id						        C				C(=)
+            LCS Privacy Check							    C				C(=)
+            Area Event Info								    C				C(=)
+            H-GMLC Address								    C				C(=)
+            Reporting PLMN List						        C				C(=)
+            PeriodicLDRInfo								    C				C(=)
+            MO-LR Short Circuit Indicator	                C				C(=)		    C					C(=)
+            Location Estimate															    M					M(=)
+            GERAN Positioning Data														    C					C(=)
+            UTRAN Positioning Data														    C					C(=)
+            GERAN GANSS Positioning Data					    						    C					C(=)
+            UTRAN GANSS Positioning Data						    					    C					C(=)
+            UTRAN Additional Positioning Data						        			    C					C(=)
+            UTRAN Barometric Pressure Measurement							                C					C(=)
+            UTRAN Civic Address															    C					C(=)
+            Age of Location Estimate													    C					C(=)
+            Additional Location Estimate											        C					C(=)
+            Deferred MT-LR Response Indicator									            C					C(=)
+            Cell Id Or SAI																    C					C(=)
+            Accuracy Fulfilment Indicator												    C					C(=)
+            Target Serving Node for Handover									            C					C(=)
+            User error					 												    C					C(=)
+            Provider error																                        O
+        */
         try {
             NetworkIdState networkIdState = this.clientMapStack.getMAPProvider().getNetworkIdState(0);
             if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
@@ -736,59 +820,6 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
             // This will initiate the TC-BEGIN with INVOKE component
             mapDialogLsm.send();
 
-            /*
-            3GPP TS 29.002 MAP Specification v14.1.0 (2016-09-30)
-
-            13A.2	MAP-PROVIDE-SUBSCRIBER-LOCATION Service
-
-            13A.2.1	Definition
-            This service is used by a GMLC to request the location of a target MS from the visited MSC or SGSN at any time.
-            This is a confirmed service using the primitives from table 13A.2/1.
-
-            13A.2.2	Service Primitives
-
-            Table 13A.2/1: Provide_Subscriber_Location
-            Parameter name								Request	Indication	  Response	Confirm
-            Invoke id											M				M(=)          M(=)			M(=)
-            Location Type									M				M(=)
-            MLC Number										M				M(=)
-            LCS Client ID									M				M(=)
-            Privacy Override 							U				C(=)
-            IMSI													C				C(=)
-            MSISDN												C				C(=)
-            LMSI													C				C(=)
-            LCS Priority									C				C(=)
-            LCS QoS												C				C(=)
-            IMEI													U				C(=)
-            Supported GAD Shapes					C				C(=)
-            LCS-Reference Number					C				C(=)
-            LCS Codeword		 							C				C(=)
-            LCS Service Type Id						C				C(=)
-            LCS Privacy Check							C				C(=)
-            Area Event Info								C				C(=)
-            H-GMLC Address								C				C(=)
-            Reporting PLMN List						C				C(=)
-            PeriodicLDRInfo								C				C(=)
-            MO-LR Short Circuit Indicator	C				C(=)
-            Location Estimate																	M					M(=)
-            GERAN Positioning Data														C					C(=)
-            UTRAN Positioning Data														C					C(=)
-            GERAN GANSS Positioning Data											C					C(=)
-            UTRAN GANSS Positioning Data											C					C(=)
-            UTRAN Additional Positioning Data									C					C(=)
-            UTRAN Barometric Pressure Measurement							C					C(=)
-            UTRAN Civic Address																C					C(=)
-            Age of Location Estimate													C					C(=)
-            Additional Location Estimate											C					C(=)
-            Deferred MT-LR Response Indicator									C					C(=)
-            Cell Id Or SAI																		C					C(=)
-            Accuracy Fulfilment 															C					C(=)
-            Indicator						 															C					C(=)
-            Target Serving Node for Handover									C					C(=)
-            User error					 															C					C(=)
-            Provider error																							O
-             */
-
         } catch (MAPException e) {
             logger.error(String.format("Error while sending MAP PSL:" + e));
         }
@@ -796,6 +827,55 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
     }
 
     private void initiateMapSLR() throws MAPException {
+        /*
+		3GPP TS 29.002 MAP Specification v15.0.0 (2017-03-15)
+
+        13A.3	MAP-SUBSCRIBER-LOCATION-REPORT Service
+
+        13A.3.1	Definition
+            This service is used by a VMSC or SGSN to provide the location of a target MS to a GMLC
+			when a request for location is either implicitly administered or made at some	earlier time.
+			This is a confirmed service using the primitives from table 13A.3/1.
+
+		Table 13A.3/1: Subscriber_Location_Report
+			Parameter name										Request	        Indication	     Response	  Confirm
+			Invoke id												M		        M(=)            M(=)	    M(=)
+			LCS Event												M				M(=)
+			LCS Client ID 											M				M(=)
+			Network Node Number										M				M(=)
+			IMSI													C				C(=)
+			MSISDN													C				C(=)
+			NA-ESRD													C				C(=)		    C			C(=)
+			NA-ESRK													C				C(=)		    C			C(=)
+			IMEI													U				C(=)
+			Location Estimate										C				C(=)
+			GERAN Positioning Data								    C				C(=)
+			UTRAN Positioning Data								    C				C(=)
+			GERAN GANSS Positioning Data					        C				C(=)
+			UTRAN GANSS Positioning Data					        C				C(=)
+			UTRAN Additional Positioning Data			            C				C(=)
+			UTRAN Barometric Pressure Measurement	                C	  		    C(=)
+			UTRAN Civic Address										C				C(=)
+			Age of Location Estimate							    C				C(=)
+			LMSI													U				C(=)
+			GPRS Node Indicator										C				C(=)
+			Additional Location Estimate					        C				C(=)
+			Deferred MT-LR Data										C				C(=)
+			LCS-Reference Number									C				C(=)			C					C(=)
+			NA-ESRK Request											C				C(=)
+			Cell Id Or SAI											C				C(=)
+			H-GMLC Address											C				C(=)			C					C(=)
+			LCS Service Type Id										C				C(=)
+			Pseudonym Indicator										C				C(=)
+			Accuracy Fulfilment Indicator					        C				C(=)
+			Sequence Number											C				C(=)
+			Periodic LDR Info										C				C(=)
+			MO-LR Short Circuit Indicator					        C				C(=)			C					C(=)
+			Target Serving Node for Handover			            C				C(=)
+			Reporting PLMN List																		C					C(=)
+			User error				 																C					C(=)
+			Provider error																								O
+		*/
         try {
             NetworkIdState networkIdState = this.clientMapStack.getMAPProvider().getNetworkIdState(0);
             if (!(networkIdState == null || networkIdState.isAvailavle() && networkIdState.getCongLevel() == 0)) {
@@ -870,7 +950,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
             byte[] lmsid = hexStringToByteArray("0a010203");
             LMSI lmsi = new LMSIImpl(lmsid);
             boolean gprsNodeIndicator = true;
-            AdditionalNumber additionalNumber = new AdditionalNumberImpl(null, sgsnNumber);
+            AdditionalNumber additionalNumber = new AdditionalNumberImpl(mscNumber, sgsnNumber);
             boolean lcsCapabilitySetRelease98_99 = true;
             boolean lcsCapabilitySetRelease4 = true;
             boolean lcsCapabilitySetRelease5 = true;
@@ -879,7 +959,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
             SupportedLCSCapabilitySets supportedLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
                 lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
             SupportedLCSCapabilitySets additionalLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
-                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, true);
+                lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
             byte[] mme = hexStringToByteArray("8720c00a30a1743401000a");
             DiameterIdentity mmeName = new DiameterIdentityImpl(mme);
             byte[] aaa = hexStringToByteArray("8720c00a30a1743401101112");
@@ -953,56 +1033,6 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
             // This will initiate the TC-BEGIN with INVOKE component
             mapDialogLsm.send();
 
-            /*
-						3GPP TS 29.002 MAP Specification v14.1.0 (2016-09-30)
-
-            13A.3	MAP-SUBSCRIBER-LOCATION-REPORT Service
-
-            13A.3.1	Definition
-            This service is used by a VMSC or SGSN to provide the location of a target MS to a GMLC
-						when a request for location is either implicitly administered or made at some	earlier time.
-						This is a confirmed service using the primitives from table 13A.3/1.
-
-						Table 13A.3/1: Subscriber_Location_Report
-						Parameter name												Request	Indication		Response	Confirm
-						Invoke id															M				M(=)					M(=)			M(=)
-						LCS Event															M				M(=)
-						LCS Client ID 												M				M(=)
-						Network Node Number										M				M(=)
-						IMSI																	C				C(=)
-						MSISDN																C				C(=)
-						NA-ESRD																C				C(=)					C					C(=)
-						NA-ESRK																C				C(=)					C					C(=)
-						IMEI																	U				C(=)
-						Location Estimate											C				C(=)
-						GERAN Positioning Data								C				C(=)
-						UTRAN Positioning Data								C				C(=)
-						GERAN GANSS Positioning Data					C				C(=)
-						UTRAN GANSS Positioning Data					C				C(=)
-						UTRAN Additional Positioning Data			C				C(=)
-						UTRAN Barometric Pressure Measurement	C	  		C(=)
-						UTRAN Civic Address										C				C(=)
-						Age of Location Estimate							C				C(=)
-						LMSI																	U				C(=)
-						GPRS Node Indicator										C				C(=)
-						Additional Location Estimate					C				C(=)
-						Deferred MT-LR Data										C				C(=)
-						LCS-Reference Number									C				C(=)					C					C(=)
-						NA-ESRK Request												C				C(=)
-						Cell Id Or SAI												C				C(=)
-						H-GMLC Address												C				C(=)					C					C(=)
-						LCS Service Type Id										C				C(=)
-						Pseudonym Indicator										C				C(=)
-						Accuracy Fulfilment Indicator					C				C(=)
-						Sequence Number												C				C(=)
-						Periodic LDR Info											C				C(=)
-						MO-LR Short Circuit Indicator					C				C(=)					C					C(=)
-						Target Serving Node for Handover			C				C(=)
-						Reporting PLMN List																					C					C(=)
-						User error				 																					C					C(=)
-						Provider error																												O
-						*/
-
         } catch (MAPException e) {
             logger.error(String.format("Error while sending MAP SLR:" + e));
         } catch (Exception e) {
@@ -1032,8 +1062,12 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 
             // Create Subscriber Information parameters including Location Information and Subscriber State
             // for concerning MAP operation
+            int mcc = 748;
+            int mnc = 1;
+            int lac = 23;
+            int cellIdOrServiceAreaCode = 369;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
-                .createCellGlobalIdOrServiceAreaIdFixedLength(748, 1, 23, 369);
+                .createCellGlobalIdOrServiceAreaIdFixedLength(mcc, mnc, lac, cellIdOrServiceAreaCode);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
                 .createCellGlobalIdOrServiceAreaIdOrLAI(cellGlobalIdOrServiceAreaIdFixedLength);
             ISDNAddressString vlrNumber = new ISDNAddressStringImpl(AddressNature.international_number,
