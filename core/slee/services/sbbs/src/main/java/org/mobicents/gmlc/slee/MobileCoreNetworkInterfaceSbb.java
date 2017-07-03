@@ -70,9 +70,13 @@ import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
 
 /**
  * 
- * @author amit bhayani
- * @author sergey vetyutnev
- * @modify Loay Dawoud
+ * @author <a href="mailto:abhayani@gmail.com"> Amit Bhayani </a>
+ * @author <a href="mailto:serg.vetyutnev@gmail.com"> Sergey Vetyutnev </a>
+ * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
+ * @author <a href="mailto:nhanth87@gmail.com"> Tran Huu Nhan </a>
+ * @author <a href="mailto:eross@locatrix.com"> Andrew Eross </a>
+ * @author <a href="mailto:lucas@locatrix.com"> Lucas Brown </a>
+ * @modify <a href="mailto:l.dawoud@mobiadd.co.uk">  Loay Dawoud </a>
  */
 public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
@@ -197,7 +201,6 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 	}
 
 	public void sbbPostCreate() throws CreateException {
-
 	}
 
 	public void sbbActivate() {
@@ -417,8 +420,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         String requestingMLP,requestingMSISDN,serviceid = null;
 
         switch (httpRequestType) {
-            case REST:
-            	{
+            case REST: {
                 requestingMSISDN = httpServletRequest.getParameter("msisdn");
                 serviceid =  httpServletRequest.getParameter("serviceid");
             	}
@@ -490,7 +492,10 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, requestingMSISDN);
                 SubscriberIdentity subsId = new SubscriberIdentityImpl(isdnAdd);
                 RequestedInfo requestedInfo = new RequestedInfoImpl(true, true, null, false, null, false, false, false);
-                // requestedInfo (MAP ATI): last known location and state (idle or busy), no IMEI/MS Classmark/MNP
+                // requestedInfoImpl (MAP ATI) params:
+                // locationInformation: true; response includes mcc, mnc, lac, cellid, aol, vlrNumber
+                // subscriberState: true; response can be idle, busy or notProvidedByVlr
+                // extensionContainer: null; currentLocation: false; requestedDomain: null; imei: false; msClassmark: false; mnpRequestedInfo: false.
                 ISDNAddressString gscmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
                         org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN,
                         gmlcPropertiesManagement.getGmlcGt());
