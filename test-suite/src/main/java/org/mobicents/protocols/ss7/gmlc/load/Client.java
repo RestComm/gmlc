@@ -450,8 +450,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
 
         13A.1.1	Definition
             This service is used between the GMLC and the HLR to retrieve the routing information needed for routing a location service request
-            to the servicing VMSC, SGSN, MME or 3GPP AAA server.
-            The MAP-SEND-ROUTING-INFO-FOR-LCS is a confirmed service using the primitives from table 13A.1/1.
+            to the servicing VMSC, SGSN, MME or 3GPP AAA server. The MAP-SEND-ROUTING-INFO-FOR-LCS is a confirmed service using the primitives
+            from table 13A.1/1.
 
         13A.1.2	Service Primitives
 
@@ -507,7 +507,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "3797554321");
             SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
 
-            ISDNAddressString gsmSCFAddress = new ISDNAddressStringImpl(AddressNature.international_number,
+            ISDNAddressString gmlcAddress = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
 /*
             long[] oid = {0, 0, 17, 773, 1, 1, 1};
@@ -520,8 +520,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
 */
             MAPExtensionContainer mapExtensionContainer = null;
 
-            mapDialogLsm.addSendRoutingInfoForLCSRequest(gsmSCFAddress, msisdn, mapExtensionContainer);
-            logger.info("SRIforLCS msisdn:" + msisdn + ", sriForLCSIsdnAddress:" + gsmSCFAddress);
+            mapDialogLsm.addSendRoutingInfoForLCSRequest(gmlcAddress, msisdn, mapExtensionContainer);
+            logger.info("SRIforLCS msisdn:" + msisdn + ", sriForLCSIsdnAddress:" + gmlcAddress);
 
             // This will initiate the TC-BEGIN with INVOKE component
             mapDialogLsm.send();
@@ -623,11 +623,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             // DeferredLocationEventType: boolean getMsAvailable(); getEnteringIntoArea(); getLeavingFromArea(); getBeingInsideArea();
             LocationType locationType = new LocationTypeImpl(locationEstimateType, deferredLocationEventType);
             ISDNAddressString externalAddress = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "444567");
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "340444567");
             MAPExtensionContainer mapExtensionContainer = null;
             LCSClientExternalID lcsClientExternalID = new LCSClientExternalIDImpl(externalAddress, mapExtensionContainer);
             LCSClientInternalID lcsClientInternalID = LCSClientInternalID.anonymousLocation;
-            String clientName = "abc012";
+            String clientName = "340012";
             int cbsDataCodingSchemeCode = 15;
             CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(cbsDataCodingSchemeCode);
             String ussdLcsString = "*911#";
@@ -1075,7 +1075,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 if (lcsLocationInfo.getNetworkNodeNumber() != null) {
                     String networkNodeNumber = lcsLocationInfo.getNetworkNodeNumber().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse NetworkNodeNumber = %s " + networkNodeNumber +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse NetworkNodeNumber = " + networkNodeNumber +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse NetworkNodeNumber: "
@@ -1096,7 +1096,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 if (lcsLocationInfo.getLMSI() != null) {
                     String lmsi = lcsLocationInfo.getLMSI().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse LMSI = %s " + lmsi +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse LMSI = " + lmsi +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse LMSI: "
@@ -1117,7 +1117,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 if (lcsLocationInfo.getSupportedLCSCapabilitySets() != null) {
                     String supportedLCSCapabilitySets = lcsLocationInfo.getSupportedLCSCapabilitySets().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Supported LCS Capability Sets = %s " + supportedLCSCapabilitySets +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Supported LCS Capability Sets = " + supportedLCSCapabilitySets +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse Supported LCS Capability Sets: "
@@ -1138,7 +1138,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 if (lcsLocationInfo.getAdditionalLCSCapabilitySets() != null) {
                     String additionalLCSCapabilitySets = lcsLocationInfo.getAdditionalLCSCapabilitySets().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Additional LCS Capability Sets = %s " + additionalLCSCapabilitySets +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Additional LCS Capability Sets = " + additionalLCSCapabilitySets +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse Additional LCS Capability Sets: "
@@ -1157,22 +1157,25 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 }
 
                 if (lcsLocationInfo.getAdditionalNumber() != null) {
-                    String additionalLCSCapabilitySets = lcsLocationInfo.getAdditionalNumber().toString();
+                    String sgsnNumber = lcsLocationInfo.getAdditionalNumber().getSGSNNumber().toString();
+                    String mscNumber = lcsLocationInfo.getAdditionalNumber().getSGSNNumber().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Additional Number = %s " + additionalLCSCapabilitySets +
+                        logger.debug(String.format("Rx Additional Number onSendRoutingInfoForLCSResponse, " +
+                            "SGSN Number = " + sgsnNumber + ", MSC Number: " +mscNumber +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
-                        logger.info(String.format("Rx onSendRoutingInfoForLCSResponse Additional Number: "
-                            + lcsLocationInfo.getAdditionalNumber() + "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
+                        logger.info(String.format("Rx Additional Number onSendRoutingInfoForLCSResponse, " +
+                            "SGSN Number: " + sgsnNumber + ", MSC Number: " +mscNumber +
+                            "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1180,11 +1183,11 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 if (lcsLocationInfo.getGprsNodeIndicator() != true) {
                     String gprsNodeIndicator = "false";
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = %s " + gprsNodeIndicator +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = " + gprsNodeIndicator +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         gprsNodeIndicator = "true";
-                        logger.info(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = %s " + gprsNodeIndicator +
+                        logger.info(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = " + gprsNodeIndicator +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 } else {
@@ -1696,7 +1699,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             }
 
         } catch (Exception e) {
-            logger.error(String.format("Error while processing onProvideSubscriberLocationResponse for Dialog=%d",
+            logger.error(String.format("Error while processing onSubscriberLocationReportResponse for Dialog=%d",
                 subscriberLocationReportResponse.getMAPDialog().getLocalDialogId()));
         }
 

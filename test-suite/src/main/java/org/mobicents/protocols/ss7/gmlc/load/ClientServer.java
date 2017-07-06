@@ -558,8 +558,8 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 
         13A.1.1	Definition
             This service is used between the GMLC and the HLR to retrieve the routing information needed for routing a location service request
-            to the servicing VMSC, SGSN, MME or 3GPP AAA server.
-            The MAP-SEND-ROUTING-INFO-FOR-LCS is a confirmed service using the primitives from table 13A.1/1.
+            to the servicing VMSC, SGSN, MME or 3GPP AAA server. The MAP-SEND-ROUTING-INFO-FOR-LCS is a confirmed service using the primitives
+            from table 13A.1/1.
 
         13A.1.2	Service Primitives
 
@@ -735,7 +735,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
             MAPExtensionContainer mapExtensionContainer = null;
             LCSClientExternalID lcsClientExternalID = new LCSClientExternalIDImpl(externalAddress, mapExtensionContainer);
             LCSClientInternalID lcsClientInternalID = LCSClientInternalID.anonymousLocation;
-            String clientName = "abc012";
+            String clientName = "340012";
             int cbsDataCodingSchemeCode = 15;
             CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(cbsDataCodingSchemeCode);
             String ussdLcsString = "*911#";
@@ -1062,10 +1062,11 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 
             // Create Subscriber Information parameters including Location Information and Subscriber State
             // for concerning MAP operation
-            int mcc = 748;
-            int mnc = 1;
-            int lac = 23;
-            int cellIdOrServiceAreaCode = 369;
+            int mcc, mnc, lac, cellIdOrServiceAreaCode;
+            mcc = 748;
+            mnc = 1;
+            lac = 23;
+            cellIdOrServiceAreaCode =369;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
                 .createCellGlobalIdOrServiceAreaIdFixedLength(mcc, mnc, lac, cellIdOrServiceAreaCode);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
@@ -1236,13 +1237,13 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 
             // Create Routing Information parameters for concerning MAP operation
             MAPParameterFactoryImpl mapFactory = new MAPParameterFactoryImpl();
+            String mscAddress = "5982123007";
+            String sgsnAddress = "5982123009";
             ISDNAddressString mscNumber = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123007");
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, mscAddress);
             ISDNAddressString sgsnNumber = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
-//            ISDNAddressString additionalNumber = new ISDNAddressStringImpl(AddressNature.international_number,
-//                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123987");
-            AdditionalNumber additionalNumber = null;
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, sgsnAddress);
+            AdditionalNumber additionalNumber = new AdditionalNumberImpl(null, sgsnNumber);
             byte[] Lmsi = hexStringToByteArray("12345678");
             LMSI lmsi = mapFactory.createLMSI(Lmsi);
             Boolean gprsNodeIndicator = false;
@@ -1273,8 +1274,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
             GSNAddress additionalVGmlcAddress = new GSNAddressImpl(addVGmlcAddress);
 
             LCSLocationInfo lcsLocationInfo = mapFactory.createLCSLocationInfo(mscNumber, lmsi, mapExtensionContainer, gprsNodeIndicator,
-                null, supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
-            GSNAddress gsnAddress1 = new GSNAddressImpl();
+                additionalNumber, supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
 //            addSendRoutingInfoForLCSResponse(long invokeId, SubscriberIdentity targetMS, LCSLocationInfo lcsLocationInfo,
 //                                             MAPExtensionContainer extensionContainer,
 //                                            byte[] vgmlcAddress, byte[] hGmlcAddress, byte[] pprAddress, byte[] additionalVGmlcAddress)
@@ -1310,7 +1310,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                 if (lcsLocationInfo.getNetworkNodeNumber() != null) {
                     String networkNodeNumber = lcsLocationInfo.getNetworkNodeNumber().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse NetworkNodeNumber = %s " + networkNodeNumber +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse NetworkNodeNumber = " + networkNodeNumber +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse NetworkNodeNumber: "
@@ -1331,7 +1331,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                 if (lcsLocationInfo.getLMSI() != null) {
                     String lmsi = lcsLocationInfo.getLMSI().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse LMSI = %s " + lmsi +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse LMSI = " + lmsi +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse LMSI: "
@@ -1352,7 +1352,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                 if (lcsLocationInfo.getSupportedLCSCapabilitySets() != null) {
                     String supportedLCSCapabilitySets = lcsLocationInfo.getSupportedLCSCapabilitySets().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Supported LCS Capability Sets = %s " + supportedLCSCapabilitySets +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Supported LCS Capability Sets = " + supportedLCSCapabilitySets +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse Supported LCS Capability Sets: "
@@ -1373,7 +1373,7 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                 if (lcsLocationInfo.getAdditionalLCSCapabilitySets() != null) {
                     String additionalLCSCapabilitySets = lcsLocationInfo.getAdditionalLCSCapabilitySets().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Additional LCS Capability Sets = %s " + additionalLCSCapabilitySets +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Additional LCS Capability Sets = " + additionalLCSCapabilitySets +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format("Rx onSendRoutingInfoForLCSResponse Additional LCS Capability Sets: "
@@ -1392,22 +1392,25 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                 }
 
                 if (lcsLocationInfo.getAdditionalNumber() != null) {
-                    String additionalLCSCapabilitySets = lcsLocationInfo.getAdditionalNumber().toString();
+                    String sgsnNumber = lcsLocationInfo.getAdditionalNumber().getSGSNNumber().toString();
+                    String mscNumber = lcsLocationInfo.getAdditionalNumber().getSGSNNumber().toString();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse Additional Number = %s " + additionalLCSCapabilitySets +
+                        logger.debug(String.format("Rx Additional Number onSendRoutingInfoForLCSResponse, " +
+                            "SGSN Number = " + sgsnNumber + ", MSC Number: " +mscNumber +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
-                        logger.info(String.format("Rx onSendRoutingInfoForLCSResponse Additional Number: "
-                            + lcsLocationInfo.getAdditionalNumber() + "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
+                        logger.info(String.format("Rx Additional Number onSendRoutingInfoForLCSResponse, " +
+                            "SGSN Number: " + sgsnNumber + ", MSC Number: " +mscNumber +
+                            "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         logger.info(String.format(
-                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received: " + lcsLocationInfo + "for DialogId=%d",
+                            "Rx onSendRoutingInfoForLCSResponse, Incorrect Additional Number received for DialogId=%d",
                             sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 }
@@ -1415,11 +1418,11 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
                 if (lcsLocationInfo.getGprsNodeIndicator() != true) {
                     String gprsNodeIndicator = "false";
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = %s " + gprsNodeIndicator +
+                        logger.debug(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = " + gprsNodeIndicator +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     } else {
                         gprsNodeIndicator = "true";
-                        logger.info(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = %s " + gprsNodeIndicator +
+                        logger.info(String.format("Rx onSendRoutingInfoForLCSResponse GPRS Node Indicator = " + gprsNodeIndicator +
                             "for DialogId=%d", sendRoutingInforForLCSResponse.getMAPDialog().getLocalDialogId()));
                     }
                 } else {
@@ -1484,8 +1487,13 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
 */
             MAPExtensionContainer mapExtensionContainer = null;
             Boolean deferredMTLRResponseIndicator = true;
+            int mcc, mnc, lac, cellIdOrServiceAreaCode;
+            mcc = 748;
+            mnc = 1;
+            lac = 23;
+            cellIdOrServiceAreaCode =369;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
-                .createCellGlobalIdOrServiceAreaIdFixedLength(748, 1, 23, 369);
+                .createCellGlobalIdOrServiceAreaIdFixedLength(mcc, mnc, lac, cellIdOrServiceAreaCode);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
                 .createCellGlobalIdOrServiceAreaIdOrLAI(cellGlobalIdOrServiceAreaIdFixedLength);
             Boolean saiPresent = true;

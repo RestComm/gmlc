@@ -104,6 +104,7 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement
 import org.mobicents.protocols.ss7.gmlc.load.Server;
 import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
 import org.mobicents.protocols.ss7.map.primitives.*;
+import org.mobicents.protocols.ss7.map.service.lsm.AdditionalNumberImpl;
 import org.mobicents.protocols.ss7.map.service.lsm.DeferredmtlrDataImpl;
 import org.mobicents.protocols.ss7.map.service.lsm.GeranGANSSpositioningDataImpl;
 import org.mobicents.protocols.ss7.map.service.lsm.UtranGANSSpositioningDataImpl;
@@ -576,10 +577,11 @@ public class Server extends TestHarness {
 
             // Create Subscriber Information parameters including Location Information and Subscriber State
             // for concerning MAP operation
-            int mcc = 748;
-            int mnc = 1;
-            int lac = 23;
-            int cellIdOrServiceAreaCode = 369;
+            int mcc, mnc, lac, cellIdOrServiceAreaCode;
+            mcc = 748;
+            mnc = 1;
+            lac = 23;
+            cellIdOrServiceAreaCode =369;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
                 .createCellGlobalIdOrServiceAreaIdFixedLength(mcc, mnc, lac, cellIdOrServiceAreaCode);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
@@ -658,13 +660,13 @@ public class Server extends TestHarness {
 
             // Create Routing Information parameters for concerning MAP operation
             MAPParameterFactoryImpl mapFactory = new MAPParameterFactoryImpl();
+            String mscAddress = "5982123007";
+            String sgsnAddress = "5982123009";
             ISDNAddressString mscNumber = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123007");
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, mscAddress);
             ISDNAddressString sgsnNumber = new ISDNAddressStringImpl(AddressNature.international_number,
-                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
-//            ISDNAddressString additionalNumber = new ISDNAddressStringImpl(AddressNature.international_number,
-//                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123987");
-            AdditionalNumber additionalNumber = null;
+                org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, sgsnAddress);
+            AdditionalNumber additionalNumber = new AdditionalNumberImpl(null, sgsnNumber);
             byte[] Lmsi = hexStringToByteArray("12345678");
             LMSI lmsi = mapFactory.createLMSI(Lmsi);
             Boolean gprsNodeIndicator = false;
@@ -696,8 +698,7 @@ public class Server extends TestHarness {
             GSNAddress additionalVGmlcAddress = new GSNAddressImpl(addVGmlcAddress);
 
             LCSLocationInfo lcsLocationInfo = mapFactory.createLCSLocationInfo(mscNumber, lmsi, mapExtensionContainer, gprsNodeIndicator,
-                null, supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
-            GSNAddress gsnAddress1 = new GSNAddressImpl();
+                additionalNumber, supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
 //            addSendRoutingInfoForLCSResponse(long invokeId, SubscriberIdentity targetMS, LCSLocationInfo lcsLocationInfo,
 //                                             MAPExtensionContainer extensionContainer,
 //                                            byte[] vgmlcAddress, byte[] hGmlcAddress, byte[] pprAddress, byte[] additionalVGmlcAddress)
@@ -766,10 +767,11 @@ public class Server extends TestHarness {
 */
             MAPExtensionContainer mapExtensionContainer = null;
             Boolean deferredMTLRResponseIndicator = true;
-            int mcc = 748;
-            int mnc = 1;
-            int lac = 23;
-            int cellIdOrServiceAreaCode = 369;
+            int mcc, mnc, lac, cellIdOrServiceAreaCode;
+            mcc = 748;
+            mnc = 1;
+            lac = 23;
+            cellIdOrServiceAreaCode =369;
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = mapFactory
                 .createCellGlobalIdOrServiceAreaIdFixedLength(mcc, mnc, lac, cellIdOrServiceAreaCode);
             CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI = mapFactory
