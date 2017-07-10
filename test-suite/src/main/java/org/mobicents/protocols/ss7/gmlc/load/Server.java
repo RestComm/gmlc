@@ -130,7 +130,7 @@ import java.util.ArrayList;
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
 /**
- * @author <a href="mailto:fernando.mendioroz@telestax.com"> Fernando Mendioroz </a>
+ * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  *
  */
 public class Server extends TestHarness {

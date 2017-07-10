@@ -99,7 +99,7 @@ import static org.mobicents.protocols.ss7.map.api.service.lsm.LocationEstimateTy
 import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
 /**
- * @author <a href="mailto:fernando.mendioroz@telestax.com"> Fernando Mendioroz </a>
+ * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  *
  */
 public class Client extends TestHarness implements MAPServiceMobilityListener, MAPServiceLsmListener {
