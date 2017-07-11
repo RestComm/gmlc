@@ -354,13 +354,17 @@ public class ClientServer extends TestHarness implements MAPServiceMobilityListe
     }
 
     private void initServerMAP() throws Exception {
+
         this.serverMapStack = new MAPStackImpl("TestServer", this.serverTcapStack.getProvider());
         this.serverMapProvider = this.serverMapStack.getMAPProvider();
 
         this.serverMapProvider.addMAPDialogListener(this);
-        this.serverMapProvider.getMAPServiceMobility().addMAPServiceListener(this);
 
+        this.serverMapProvider.getMAPServiceMobility().addMAPServiceListener(this);
         this.serverMapProvider.getMAPServiceMobility().acivate();
+
+        this.serverMapProvider.getMAPServiceLsm().addMAPServiceListener(this);
+        this.serverMapProvider.getMAPServiceLsm().acivate();
 
         this.serverMapStack.start();
     }
