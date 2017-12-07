@@ -56,25 +56,17 @@ import org.mobicents.protocols.ss7.map.api.primitives.*;
 //import org.mobicents.protocols.ss7.map.api.primitives.SubscriberIdentity;
 import org.mobicents.protocols.ss7.map.api.service.lsm.*;
 import org.mobicents.protocols.ss7.map.api.service.mobility.MAPDialogMobility;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.MAPServiceMobilityListener;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportResponse;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportRequest;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.AuthenticationFailureReportResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.authentication.SendAuthenticationInfoResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.ForwardCheckSSIndicationRequest;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.ForwardCheckSSIndicationRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.ResetRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.RestoreDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.faultRecovery.RestoreDataResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.*;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiRequest;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.imei.CheckImeiResponse;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationRequest;
-//import org.mobicents.protocols.ss7.map.api.service.mobility.locationManagement.CancelLocationResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeRequest_Mobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.oam.ActivateTraceModeResponse_Mobility;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberInformation.AnyTimeInterrogationRequest;
@@ -101,22 +93,17 @@ import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataRequest;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.InsertSubscriberDataResponse;
 import org.mobicents.protocols.ss7.map.api.service.mobility.subscriberManagement.LSAIdentity;
-import org.mobicents.protocols.ss7.gmlc.load.Server;
-import org.mobicents.protocols.ss7.gmlc.load.TestHarness;
 import org.mobicents.protocols.ss7.map.primitives.*;
 import org.mobicents.protocols.ss7.map.service.lsm.AdditionalNumberImpl;
-import org.mobicents.protocols.ss7.map.service.lsm.DeferredmtlrDataImpl;
 import org.mobicents.protocols.ss7.map.service.lsm.GeranGANSSpositioningDataImpl;
 import org.mobicents.protocols.ss7.map.service.lsm.UtranGANSSpositioningDataImpl;
 import org.mobicents.protocols.ss7.map.service.lsm.UtranPositioningDataInfoImpl;
 import org.mobicents.protocols.ss7.map.service.mobility.locationManagement.SupportedLCSCapabilitySetsImpl;
 import org.mobicents.protocols.ss7.sccp.*;
 import org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl;
-import org.mobicents.protocols.ss7.sccp.impl.message.SccpDataMessageImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.BCDEvenEncodingScheme;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
-import org.mobicents.protocols.ss7.sccp.message.SccpMessage;
 import org.mobicents.protocols.ss7.sccp.parameter.EncodingScheme;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
@@ -125,9 +112,7 @@ import org.mobicents.protocols.ss7.tcap.api.TCAPStack;
 import org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName;
 import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
 
-import java.util.ArrayList;
-
-import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
+import java.math.BigInteger;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
@@ -667,7 +652,8 @@ public class Server extends TestHarness {
             ISDNAddressString sgsnNumber = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, sgsnAddress);
             AdditionalNumber additionalNumber = new AdditionalNumberImpl(null, sgsnNumber);
-            byte[] Lmsi = hexStringToByteArray("12345678");
+            String lmsiStr = "12345678";
+            byte[] Lmsi = lmsiStr.getBytes();
             LMSI lmsi = mapFactory.createLMSI(Lmsi);
             Boolean gprsNodeIndicator = false;
             boolean lcsCapabilitySetRelease98_99 = true;
@@ -681,20 +667,20 @@ public class Server extends TestHarness {
             SupportedLCSCapabilitySets additionalLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
                 lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
             MAPExtensionContainer mapExtensionContainer = null;
-            byte[] mmeNom = hexStringToByteArray("00112233445566778899");
+            byte[] mmeNom = new BigInteger("00112233445566778899", 16).toByteArray();
             DiameterIdentity mmeName = new DiameterIdentityImpl(mmeNom);
-            byte[] aaaSN = hexStringToByteArray("0011223344556677889900");
+            byte[] aaaSN = new BigInteger("0011223344556677889900", 16).toByteArray();
             DiameterIdentity aaaServerName = new DiameterIdentityImpl(aaaSN);
             ISDNAddressString isdnAdd = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "59899077937");
             SubscriberIdentity msisdn = new SubscriberIdentityImpl(isdnAdd);
-            byte[] visitedGmlcAddress = hexStringToByteArray("112233445500");
+            byte[] visitedGmlcAddress = new BigInteger("112233445500",16).toByteArray();
             GSNAddress vGmlcAddress = new GSNAddressImpl(visitedGmlcAddress);
-            byte[] homeGmlcAddress = hexStringToByteArray("11223344556677");
+            byte[] homeGmlcAddress = new BigInteger("11223344556677", 16).toByteArray();
             GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
-            byte[] pivacyProfileRegisterAddress = hexStringToByteArray("112233445566");
+            byte[] pivacyProfileRegisterAddress = new BigInteger("112233445566",16).toByteArray();
             GSNAddress pprAddress = new GSNAddressImpl(pivacyProfileRegisterAddress);
-            byte[] addVGmlcAddress = hexStringToByteArray("1122334455");
+            byte[] addVGmlcAddress = new BigInteger("8122334455",16).toByteArray();
             GSNAddress additionalVGmlcAddress = new GSNAddressImpl(addVGmlcAddress);
 
             LCSLocationInfo lcsLocationInfo = mapFactory.createLCSLocationInfo(mscNumber, lmsi, mapExtensionContainer, gprsNodeIndicator,
@@ -745,24 +731,28 @@ public class Server extends TestHarness {
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123007");
             ISDNAddressString sgsnNumber = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
-            byte[] Lmsi = hexStringToByteArray("87654321");
+            String lmsiStr = "87654321";
+            byte[] Lmsi = lmsiStr.getBytes();
             LMSI lmsi = mapFactory.createLMSI(Lmsi);
-            byte[] eGeographicalInformation = hexStringToByteArray("014321a10022337799");
+            byte[] eGeographicalInformation = new BigInteger("014321a10022337799", 16).toByteArray();
             ExtGeographicalInformation extGeographicalInformation = mapFactory.createExtGeographicalInformation(eGeographicalInformation);
-            byte[] posDatanformation = hexStringToByteArray("5533ab01");
-            PositioningDataInformation positioningDataInformation = mapFactory.createPositioningDataInformation(posDatanformation);
-            byte[] utranData = hexStringToByteArray("43210987654321");
+            String posDataInfo = "55338901";
+            byte[] posDataInformation = posDataInfo.getBytes();
+            PositioningDataInformation positioningDataInformation = mapFactory.createPositioningDataInformation(posDataInformation);
+            byte[] utranData = new BigInteger("43210987654321", 16).toByteArray();
             UtranPositioningDataInfo utranPositioningDataInfo = new UtranPositioningDataInfoImpl(utranData);
             Integer ageOfLocationEstimate = 1;
-            byte[] addLocationEstimate = hexStringToByteArray("5533a100223377");
+            byte[] addLocationEstimate = new BigInteger("5533a100223377", 16).toByteArray();
             AddGeographicalInformation additionalLocationEstimate = mapFactory.createAddGeographicalInformation(addLocationEstimate);
 /*
             long[] oid = {0, 0, 17, 773, 1, 1, 1};
-            byte[] privateExtData = hexStringToByteArray("1144");
+            String pExtData = "1144":
+            byte[] privateExtData = pExtData.getBytes();
             MAPPrivateExtension mapPrivateExtension = new MAPPrivateExtensionImpl(oid, privateExtData);
             ArrayList<MAPPrivateExtension> mapPrivateExtensions = new ArrayList<MAPPrivateExtension>();
             mapPrivateExtensions.add(mapPrivateExtension);
-            byte[] pcsExtensions = hexStringToByteArray("1033");
+            String pcsExt = "1033";
+            byte[] pcsExtensions = pcsExt.getBytes();
             MAPExtensionContainer mapExtensionContainer = new MAPExtensionContainerImpl(mapPrivateExtensions, pcsExtensions);
 */
             MAPExtensionContainer mapExtensionContainer = null;
@@ -779,12 +769,13 @@ public class Server extends TestHarness {
             Boolean saiPresent = true;
             AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = AccuracyFulfilmentIndicator.getAccuracyFulfilmentIndicator(0);
             // AccuracyFulfilmentIndicator ::= ENUMERATED { requestedAccuracyFulfilled (0), requestedAccuracyNotFulfilled (1), ... }
-            byte[] velEst = hexStringToByteArray("00000001");
+            String velEstStr = "00000001";
+            byte[] velEst = velEstStr.getBytes();
             VelocityEstimate velocityEstimate = mapFactory.createVelocityEstimate(velEst);
             Boolean moLrShortCircuitIndicator = true;
-            byte[] gGanss = hexStringToByteArray("666601019999");
+            byte[] gGanss = new BigInteger("666601019999", 16).toByteArray();
             GeranGANSSpositioningData geranGANSSpositioningData = new GeranGANSSpositioningDataImpl(gGanss);
-            byte[] uGanss = hexStringToByteArray("777701019898");
+            byte[] uGanss = new BigInteger("777701019898", 16).toByteArray();
             UtranGANSSpositioningData utranGANSSpositioningData = new UtranGANSSpositioningDataImpl(uGanss);
             ServingNodeAddress servingNodeAddress = mapFactory.createServingNodeAddressMscNumber(mscNumber);
 
@@ -837,11 +828,13 @@ public class Server extends TestHarness {
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5982123009");
 /*
             long[] oid = {0, 0, 17, 773, 1, 1, 1};
-            byte[] privateExtData = hexStringToByteArray("1144");
+            String privExtData = "1144";
+            byte[] privateExtData = privExtData.getBytes();
             MAPPrivateExtension mapPrivateExtension = new MAPPrivateExtensionImpl(oid, privateExtData);
             ArrayList<MAPPrivateExtension> mapPrivateExtensions = new ArrayList<MAPPrivateExtension>();
             mapPrivateExtensions.add(mapPrivateExtension);
-            byte[] pcsExtensions = hexStringToByteArray("1033");
+            String pcsExtStr = "1033";
+            byte[] pcsExtensions = pcsExtStr.getBytes();
             MAPExtensionContainer mapExtensionContainer = new MAPExtensionContainerImpl(mapPrivateExtensions, pcsExtensions);
 */
             MAPExtensionContainer mapExtensionContainer = null;

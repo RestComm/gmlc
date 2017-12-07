@@ -21,6 +21,7 @@
 
 package org.mobicents.protocols.ss7.gmlc.load;
 
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 // import java.io.Serializable;
@@ -96,7 +97,6 @@ import com.google.common.util.concurrent.RateLimiter;
 
 import static org.mobicents.protocols.ss7.map.api.service.lsm.LCSEvent.emergencyCallOrigination;
 import static org.mobicents.protocols.ss7.map.api.service.lsm.LocationEstimateType.currentLocation;
-import static sun.jdbc.odbc.JdbcOdbcObject.hexStringToByteArray;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
@@ -511,11 +511,13 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "222333");
 /*
             long[] oid = {0, 0, 17, 773, 1, 1, 1};
-            byte[] privateExtData = hexStringToByteArray("1144");
+            String pExtData = "1144";
+            byte[] privateExtData = pExtData.getBytes();
             MAPPrivateExtension mapPrivateExtension = new MAPPrivateExtensionImpl(oid, privateExtData);
             ArrayList<MAPPrivateExtension> mapPrivateExtensions = new ArrayList<MAPPrivateExtension>();
             mapPrivateExtensions.add(mapPrivateExtension);
-            byte[] pcsExtensions = hexStringToByteArray("1033");
+            String pcsExt = "1033";
+            byte[] pcsExtensions = pcsExt.getBytes();
             MAPExtensionContainer mapExtensionContainer = new MAPExtensionContainerImpl(mapPrivateExtensions, pcsExtensions);
 */
             MAPExtensionContainer mapExtensionContainer = null;
@@ -636,12 +638,13 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             LCSFormatIndicator lcsFormatIndicator = LCSFormatIndicator.url;
             LCSClientName lcsClientName = new LCSClientNameImpl(cbsDataCodingScheme, ussdString, lcsFormatIndicator);
             AddressString lcsClientDialedByMS = new AddressStringImpl(AddressNature.international_number, NumberingPlan.ISDN, clientName);
-            byte[] apn = hexStringToByteArray("8877665544");;
+            byte[] apn = new BigInteger("8877665544",16).toByteArray();
             APN lcsAPN = new APNImpl(apn);
             LCSClientID lcsClientID = new LCSClientIDImpl(LCSClientType.valueAddedServices, lcsClientExternalID, lcsClientInternalID, lcsClientName, lcsClientDialedByMS, lcsAPN, null);
             Boolean privacyOverride = false;
             IMSI imsi = new IMSIImpl("124356871012345");
-            byte[] lmsid = hexStringToByteArray("09876543");;
+            String lmsiId = "09876543";
+            byte[] lmsid = lmsiId.getBytes();
             LMSI lmsi = new LMSIImpl(lmsid);
             IMEI imei = new IMEIImpl("01171400466105");
             LCSPriority lcsPriority = LCSPriority.normalPriority;
@@ -666,11 +669,13 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             ResponseTime responseTime = new ResponseTimeImpl(responseTimeCategory);
 /*
             long[] oid = {0, 0, 17, 773, 1, 1, 1};
-            byte[] privateExtData = hexStringToByteArray("1144");
+            String pExtData = "1144";
+            byte[] privateExtData = pExtData.getBytes();
             MAPPrivateExtension mapPrivateExtension = new MAPPrivateExtensionImpl(oid, privateExtData);
             ArrayList<MAPPrivateExtension> mapPrivateExtensions = new ArrayList<MAPPrivateExtension>();
             mapPrivateExtensions.add(mapPrivateExtension);
-            byte[] pcsExtensions = hexStringToByteArray("1033");
+            String pcsExt = "1033";
+            byte[] pcsExtensions = pcsExt.getBytes();
             MAPExtensionContainer mapExtensionContainer = new MAPExtensionContainerImpl(mapPrivateExtensions, pcsExtensions);
 */
             MAPExtensionContainer extensionContainer = null;
@@ -680,7 +685,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             LCSPrivacyCheck lcsPrivacyCheck = new LCSPrivacyCheckImpl(callSessionUnrelated, callSessionRelated);
             ArrayList<Area> areaList = new ArrayList<Area>();
             AreaType areaType = AreaType.locationAreaId;
-            byte[] areaId = hexStringToByteArray("102132");
+            String aId = "102132";
+            byte[] areaId = aId.getBytes();
             AreaIdentification areaIdentification = new AreaIdentificationImpl(areaId);
             Area area1 = new AreaImpl(areaType, areaIdentification);
             areaList.add(area1);
@@ -688,7 +694,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             OccurrenceInfo occurrenceInfo = OccurrenceInfo.oneTimeEvent;
             Integer intervalTime = 10;
             AreaEventInfo areaEventInfo = new AreaEventInfoImpl(areaDefinition, occurrenceInfo, intervalTime);
-            byte[] homeGmlcAddress = hexStringToByteArray("999988887777");
+            byte[] homeGmlcAddress = new BigInteger("999988887777",16).toByteArray();
             GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
             boolean b1 = false;
             int reportingAmount = 3;
@@ -696,7 +702,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             PeriodicLDRInfo periodicLDRInfo = new PeriodicLDRInfoImpl(reportingAmount, reportingInterval);
             boolean plmnListPrioritized = false;
             ArrayList<ReportingPLMN> plmnList = new ArrayList<ReportingPLMN>();
-            byte[] plmnID = hexStringToByteArray("885577");
+            String plmnIdstr = "885577";
+            byte[] plmnID = plmnIdstr.getBytes();
             PlmnId plmnId = new PlmnIdImpl(plmnID);
             RANTechnology ranTechnology = RANTechnology.umts;
             boolean ranPeriodicLocationSupport = true;
@@ -835,12 +842,13 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             LCSFormatIndicator lcsFormatIndicator = LCSFormatIndicator.url;
             LCSClientName lcsClientName = new LCSClientNameImpl(cbsDataCodingScheme, ussdString, lcsFormatIndicator);
             AddressString lcsClientDialedByMS = new AddressStringImpl(AddressNature.international_number, NumberingPlan.ISDN, clientName);
-            byte[] apn = hexStringToByteArray("6763a20b0890");;
+            byte[] apn = new BigInteger("6763a20b0890",16).toByteArray();
             APN lcsAPN = new APNImpl(apn);
             LCSClientID lcsClientID = new LCSClientIDImpl(LCSClientType.valueAddedServices, lcsClientExternalID, lcsClientInternalID, lcsClientName, lcsClientDialedByMS, lcsAPN, null);
             ISDNAddressString networkNodeNumber = new ISDNAddressStringImpl(AddressNature.international_number,
                 org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, "5983392892");
-            byte[] lmsid = hexStringToByteArray("0a010203");
+            String lmsiStr = "0a010203";
+            byte[] lmsid = lmsiStr.getBytes();
             LMSI lmsi = new LMSIImpl(lmsid);
             boolean gprsNodeIndicator = true;
             AdditionalNumber additionalNumber = new AdditionalNumberImpl(null, sgsnNumber);
@@ -854,9 +862,9 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             lcsCapabilitySetRelease7 = true;
             SupportedLCSCapabilitySets additionalLCSCapabilitySets = new SupportedLCSCapabilitySetsImpl(lcsCapabilitySetRelease98_99, lcsCapabilitySetRelease4,
                 lcsCapabilitySetRelease5, lcsCapabilitySetRelease6, lcsCapabilitySetRelease7);
-            byte[] mme = hexStringToByteArray("8720c00a30a1743401000a");
+            byte[] mme = new BigInteger("8720c00a30a1743401000a", 16).toByteArray();
             DiameterIdentity mmeName = new DiameterIdentityImpl(mme);
-            byte[] aaa = hexStringToByteArray("8720c00a30a1743401101112");
+            byte[] aaa = new BigInteger("8720c00a30a1743401101112", 16).toByteArray();
             DiameterIdentity aaaServerName = new DiameterIdentityImpl(aaa);
             LCSLocationInfo lcsLocationInfo = new LCSLocationInfoImpl(networkNodeNumber, lmsi, mapExtensionContainer, gprsNodeIndicator, additionalNumber,
                 supportedLCSCapabilitySets, additionalLCSCapabilitySets, mmeName, aaaServerName);
@@ -880,7 +888,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             ExtGeographicalInformation extGeographicalInformation = new ExtGeographicalInformationImpl(typeOfShape, latitude, longitude, uncertainty, uncertaintySemiMajorAxis,
                 uncertaintySemiMinorAxis, angleOfMajorAxis, confidence, altitude, uncertaintyAltitude, innerRadius, uncertaintyRadius, offsetAngle, includedAngle);
             SLRArgExtensionContainer slrArgExtensionContainer = null;
-            byte[] addLocationEstimate = hexStringToByteArray("0000000002");;
+            byte[] addLocationEstimate = new BigInteger("8090009002", 16).toByteArray();
             AddGeographicalInformation addGeographicalInformation = new AddGeographicalInformationImpl(addLocationEstimate);
             boolean msAvailable = false;
             boolean enteringIntoArea = true;
@@ -889,32 +897,32 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
             DeferredLocationEventType deferredLocationEventType = new DeferredLocationEventTypeImpl(msAvailable, enteringIntoArea, leavingFromArea, beingInsideArea);
             TerminationCause terminationCause = TerminationCause.congestion;
             DeferredmtlrData deferredmtlrData = new DeferredmtlrDataImpl(deferredLocationEventType, terminationCause, lcsLocationInfo);
-            byte[] data = hexStringToByteArray("123456789012");
+            byte[] data = new BigInteger("123456789012",16).toByteArray();
             PositioningDataInformation positioningDataInformation = new PositioningDataInformationImpl(data);
-            byte[] utranData = hexStringToByteArray("43210987654321");
+            byte[] utranData = new BigInteger("00000000004c21",16).toByteArray();
             UtranPositioningDataInfo utranPositioningDataInfo = new UtranPositioningDataInfoImpl(utranData);
             Integer lcsServiceTypeID = 1;
             boolean saiPresent = true;
             Boolean pseudonymIndicator = false;
             AccuracyFulfilmentIndicator accuracyFulfilmentIndicator = AccuracyFulfilmentIndicator.requestedAccuracyNotFulfilled;
-            byte[] velEstimate = hexStringToByteArray("0000000001");
+            byte[] velEstimate = new BigInteger("4123567890",16).toByteArray();
             VelocityEstimate velocityEstimate = new VelocityEstimateImpl(velEstimate);
             int reportingAmount = 3;
             int reportingInterval = 600;
             PeriodicLDRInfo periodicLDRInfo = new PeriodicLDRInfoImpl(reportingAmount, reportingInterval);
             boolean b2 = false;
-            byte[] cidOrSaiFixedLength = hexStringToByteArray("349a0120b04321");
+            byte[] cidOrSaiFixedLength = new BigInteger("349a0120b04321",16).toByteArray();
             CellGlobalIdOrServiceAreaIdFixedLength cellGlobalIdOrServiceAreaIdFixedLength = new CellGlobalIdOrServiceAreaIdFixedLengthImpl(cidOrSaiFixedLength);
             CellGlobalIdOrServiceAreaIdOrLAI cellIdOrSai = new CellGlobalIdOrServiceAreaIdOrLAIImpl(cellGlobalIdOrServiceAreaIdFixedLength);
-            byte[] gGanss = hexStringToByteArray("666601019999");
+            byte[] gGanss = new BigInteger("666601019999",16).toByteArray();
             GeranGANSSpositioningData geranGanssPositioningData = new GeranGANSSpositioningDataImpl(gGanss);
-            byte[] uGanss = hexStringToByteArray("777701019898");
+            byte[] uGanss = new BigInteger("777701019898",16).toByteArray();
             UtranGANSSpositioningData utranGanssPositioningData = new UtranGANSSpositioningDataImpl(uGanss);
             boolean isMsc = true;
             ServingNodeAddress servingNodeAddress = new ServingNodeAddressImpl(networkNodeNumber, isMsc);
             Integer lcsReferenceNumber = 379;
             Integer integer3 = 0;
-            byte[] homeGmlcAddress = hexStringToByteArray("3734383439323337");
+            byte[] homeGmlcAddress = new BigInteger("3734383439323337",16).toByteArray();
             GSNAddress hGmlcAddress = new GSNAddressImpl(homeGmlcAddress);
 
             mapDialogLsm.addSubscriberLocationReportRequest(lcsEvent, lcsClientID, lcsLocationInfo, msisdn, imsi, imei, naEsrd, naEsrk, extGeographicalInformation,
