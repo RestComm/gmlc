@@ -1,23 +1,23 @@
-= GMLC 
+= GMLC
 
 [[_gmlc_overview]]
 == Overview
 
-GMLC stands for Gateway Mobile Location Centre and enables offering Location Based Services (LBS) to mobile subscribers roaming across several Mobile Network Operator's Radio Access Networks, regardless of the type of access (GERAN, UTRAN or E-UTRAN). 
+GMLC stands for Gateway Mobile Location Centre and enables offering Location Based Services (LBS) to mobile subscribers roaming across several Mobile Network Operator's Radio Access Networks, regardless of the type of access (GERAN, UTRAN or E-UTRAN).
 
 Existing PLMN (Public Land Mobile Network) network elements are proprietary and run on non-standard operating environments located in trusted operator’s zones which make it difficult to build and deploy new applications. Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over the Internet. The GMLC connects to these network elements and enables the flow of LCS messages to be extended to an open, standards-based Application Server (AS) located in the IP network. The AS also provides the tools and interfaces to enable access to content providers through the Internet.
 
-A GMLC is the first node an external LCS client accesses in a PLMN (Public Land Mobile Network). There may be more than one GMLC in a PLMN.   
+A GMLC is the first node an external LCS client accesses in a PLMN (Public Land Mobile Network). There may be more than one GMLC in a PLMN.
 
 The simplest location information a GMLC can retrieve is by issuing a MAP ATI (Any Time Interrogation) request to the HLR (Home Location register). MAP ATI is part of CAMEL phase 1. If the GMLC is allowed to proceed with the operation at the HLR, the latter will respond with the Cell Global Identity (CGI) as for the latest MAP Update Location operation carried out between the HLR and VLR at which the target mobile equipment is attached too (therefore, an additional parameter known as "Age of Location Information" is also included in the response). As shown in the figure below taken from 3GPP TS 23.003, CGI is made up of multiple components, namely, MCC (Mobile Country Code), MNC (Mobile Network Code), LAC (Location Area Code) and CI (Cell Identity). The combination of MCC and MNC represents the PLMN at which the cell is located, in other words, the country and Mobile Network Operator it belongs to. LAC represents a geographic location area in which a cluster of Base Transceiver Stations (BTS) are located for radio access, while CI, uniquely identifies the BTS providing service to the target subscriber in that area (more commonly known as cell). From CAMEL phase 4 compliance onward, MAP ATI can also retrieve the IMEI and MS Classmark.
 
 
 image::images/CGI.png[Cell Global Identity, align="center"]
 
-CGI represents the location information with greatest error margin retrievable by a GMLC in GSM based core networks. 
+CGI represents the location information with greatest error margin retrievable by a GMLC in GSM based core networks.
 
 As for 3GPP specs, hypothetically a Stand-Alone SMLC
-can be placed within the BSC for triggering more precise location procedures, but in practice this is hardly found. More accurate positioning methods were developed for cellular networks, particularly from 3G (UMTS) and beyond. Naturally, accuracy comes with a price. When these dearer location capabilities are available, the GMLC may request routing information from the HLR via the Lh interface or HSS (Home Subscriber Server) via the SLh/Lh interface. 
+can be placed within the BSC for triggering more precise location procedures, but in practice this is hardly found. More accurate positioning methods were developed for cellular networks, particularly from 3G (UMTS) and beyond. Naturally, accuracy comes with a price. When these dearer location capabilities are available, the GMLC may request routing information from the HLR via the Lh interface or HSS (Home Subscriber Server) via the SLh/Lh interface.
 
 image::images/LCS-GSM-UMTS.png[]
 
@@ -34,7 +34,7 @@ Next figure exhibits {this-platform} {this-application} architecture and interfa
 
 image::images/GMLC-RestComm-MNO.png[]
 
-Finally, {this-platform} {this-application} supports the following MAP and Diameter-based operations for LCS (Location Services) within Mobile Network Operators:
+Finally, {this-platform} {this-application} supports the following MAP and Diameter-based operations for LCS (Location Services) within Mobile Network Operators (some of them are under development, check next sections for further details):
 
 * MAP ATI: Any-Time-Interrogation, to gather Cell Global Identity, age of location information and state of the target mobile station from the HLR.
 * MAP SRIforLCS: Send Routing Information for Location Services, to gather IMSI and core network entity address (MSC or SGSN) to which send further location request.
@@ -88,7 +88,7 @@ TCAP
         dialogueRequest
             application-context-name: 0.4.0.0.1.0.29.3 (anyTimeInfoEnquiryContext-v3)
         components: 1 item
-            Component: invoke 
+            Component: invoke
                     invokeID: 0
                     opCode: localValue: 71
 GSM MAP
@@ -198,7 +198,7 @@ ReturnError: 1 : MAPErrorMessageUnknownSubscriber [, unknownSubscriberDiagnostic
 
 MAP ATI response received with other error messages:
 ....
-ReturnError: <error code> : <MAP Error message description>  
+ReturnError: <error code> : <MAP Error message description>
 ReturnError: 34 : MAPErrorMessageSystemFailure [networkResource=hlr]
 ....
 
@@ -248,7 +248,7 @@ Following, see an example of MLP payload included in HTTP POST request received 
      		<msids>
        			<msid type="MSISDN">59899077937</msid>
      		</msids>
-     		<loc_type type=""CURRENT_OR_LAST" />   	
+     		<loc_type type=""CURRENT_OR_LAST" />
     </slir>
 </svc_init>
 ....
@@ -316,6 +316,9 @@ An MLP SLIA including an unsuccessful location information retrieval due to "Sys
 
 === HTTP and MAP messages flow for UMTS Location Services
 
+UMTS Location Services under SS7 MAP Location Services Management (LSM) set of operations are currently under final stages of implementation and deployment.
+Every trace or log described next are taken from the work already done, including stress tests from MAP Stub for the aforementioned set of operations.
+
 Following figure displays the signaling call flow between an application, RestComm Geolocation API and {this-platform} {this-application} within an UMTS Core Network. The term RAN (Radio Access Network) might involve the RNC (Radio Network Controller), a Stand-Alone SMLC (Serving Mobile Location Centre), the NB (Node B -base station-) and the UE (User Equipment).
 
 image::images/RestComm-GMLC-UMTS_flow.png[]
@@ -328,6 +331,9 @@ image::images/GMLC-UMTS_call_flow.png[]
 
 === HTTP and Diameter-based messages flow for LTE Location Services
 
+As for UMTS Location Services under SS7 MAP Location Services Management (LSM) set of operations, LTE location services are also under final stages of implementation and deployment.
+Every trace or log described next are taken from the work already done, which includes already developed SLh and SLg interfaces in jDiameter, while JAIN SLEE resource adaptors for these interfaces are in a very advanced state of development (peer reviewing and QA).
+
 Next figure shows an example signaling call flow exclusively between {this-platform} {this-application} within an Evolved Packet Core Network for location retrieval by means of Diameter based procedures as for 3GPP TS 29.172 and 29.173 (i.e. SLg and SLh interfaces). These Diameter requests are destined to a Packet-Switched Core Network like LTE's EPC, where an Evolved-SMLC is operational and positioning methods are available at the Radio Access Network (e.g. OTDOA). Then, LTE's Radio Access Network (EUTRAN) involves positioning procedures comprising the E-SMLC (Evolved SMLC), eNB (evolved NB), and the UE. The example considers a location report sent back to {this-platform} {this-application}, triggered by an event previously armed at the Radio Access Network (e.g. a UE entering a geofence).
 
 image::images/GMLC-LTE_call_flow.png[]
@@ -339,18 +345,18 @@ image::images/RestComm-GMLC-LTE_flow.png[]
 An analogous signal call flow as the one explained before for GSM location but consistent with previous signal flow for LTE location is described next. The mentioned MLP SLIR example would be almost identical to the one shown for GSM location, but with some additions as following:
 
 ....
-<?xml version="1.0" encoding="UTF-8"?> 
-<!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.DTD"> 
-<svc_init xmlns="MLP_SVC_INIT_310.dtd"> 	    
-    <hdr> 		
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svc_init SYSTEM "MLP_SVC_INIT_310.DTD">
+<svc_init xmlns="MLP_SVC_INIT_310.dtd">
+    <hdr>
         <client>
             <id>ACae6e420f425248d6a26948c17a9e2acf</id>
             <pwd>f8bc1274677b173d1a1cf3b9924eaa7e</pwd>
-            <serviceid>0005</serviceid>      		
+            <serviceid>0005</serviceid>
         </client>
-    </hdr>    	
-    <slir>      		
-        <msids>        			
+    </hdr>
+    <slir>
+        <msids>
             <msid type="MSISDN">59899077937</msid>
         </msids>
         <loc_type type="CURRENT" />
@@ -373,7 +379,7 @@ An analogous signal call flow as the one explained before for GSM location but c
 		</change_area>
 		<duration>3600</duration>
 		<lcs_ref>579</lcs_ref>
-	</slir> 
+	</slir>
 </svc_init>
 ....
 
@@ -471,9 +477,9 @@ Location Immediate Answer) embedded in HTTP POST response is shown next.
 
 ....
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD"> 
-<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">     
-    <slia ver="3.1.0"> 
+<!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
+    <slia ver="3.1.0">
         <lcs_ref>579</lcs_ref>
         <pos>
             <msid>59899077937</msid>
@@ -603,8 +609,8 @@ The corresponding answer MLP SLREP (Standard Location Immediate Answer) embedded
 ....
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svc_result SYSTEM "MLP_SVC_RESULT_310.DTD">
-<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0"> 
-    <slirep ver="3.1.0"> 	
+<svc_result xmlns="MLP_SVC_RESULT_310.dtd" ver="3.1.0">
+    <slirep ver="3.1.0">
         <lcs_ref>579</lcs_ref>
 	    <pos>
 	        <msid>59899077937</msid>
@@ -639,35 +645,35 @@ The corresponding answer MLP SLREP (Standard Location Immediate Answer) embedded
 
 
 [[_restcomm_gmlc_overview]]
-== {this-platform} {this-application} 
+== {this-platform} {this-application}
 
 [[_restcomm_gmlc_overview_features]]
 === Major Features
 
-{this-platform} {this-application} implementation of GMLC is the first and only open source GMLC with a host of rich features and advantages. 
+{this-platform} {this-application} implementation of GMLC is the first and only open source GMLC with a host of rich features and advantages.
 
 Java-based:::
   {this-platform} {this-application} is the only Java based GMLC Gateway.
-  It is robust and reliable and can be installed on any Operating System that supports Java (JDK 7 and SCTP). 
+  It is robust and reliable and can be installed on any Operating System that supports Java (JDK 7 and SCTP).
 
 Open Source:::
   The Software is open-source, giving you the freedom to understand the code and customise it to your enterprise needs.
-  It is supported by a vibrant Open source community. 
+  It is supported by a vibrant Open source community.
 
 Carrier Grade Performance:::
   {this-platform} {this-application} has been developed to be deployed at Mobile Network Operators around the world so as to process billions of LCS transactions every day.
-  A single {this-platform} {this-application} node can process up to 1500's LCS/sec and can be adapted to the needs of Communication Service Providers of different sizes in any country reducing  CAPEX and OPEX costs. 
+  A single {this-platform} {this-application} node can process up to 1500's LCS/sec and can be adapted to the needs of Communication Service Providers of different sizes in any country reducing  CAPEX and OPEX costs.
 
 Cloud Ready:::
   {this-platform} {this-application} is Cloud-ready.
-  It can be deployed on dedicated hardware, private cloud infrastructure or public IaaS such as AWS. 
+  It can be deployed on dedicated hardware, private cloud infrastructure or public IaaS such as AWS.
 
 SS7 Hardware Cards:::
-  {this-platform} {this-application} can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only. 
+  {this-platform} {this-application} can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only.
 
 SIGTRAN (M3UA):::
   It also has in-built support for SIGTRAN (M3UA using SCTP).
-  
+
 Diameter-based SLh and SLg (ELP):::
   {this-platform} {this-application} also has in-built support for LCS in LTE networks.
 
@@ -695,21 +701,21 @@ image::images/GMLC_Architecture.png[]
 === Technical Specifications
 
 {this-platform} {this-application} is not restricted by Transaction Per Second model.
-The only restricting factor is memory + CPU capacity of the host servers, third-party applications or the underlying database service. 
+The only restricting factor is memory + CPU capacity of the host servers, third-party applications or the underlying database service.
 
 * {this-platform} {this-application} supports as many as 1073741823 incoming and 1073741823 outgoing concurrent sessions/dialogs.
 * {this-platform} {this-application} supports unlimited E1 links and the only limiting factor is the underlying TDM board used.
 * {this-platform} {this-application} SCTP supports as many associations as supported by the underlying Operating System.
   Can be setup in multihome.
 * {this-platform} {this-application} M3UA can be confgured to have as many ASP's / IPSP's as needed by the system.
-* {this-platform} {this-application} SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.        
+* {this-platform} {this-application} SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.
 
 [[_mobicents_gmlc_overview_http]]
 === HTTP Transfer Mechanism
 
 {this-platform} {this-application} makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). {this-platform} {this-application} receives location service requests from third-party applications and then translates these requests to SS7 MAP or Diameter based commands when applies. The HTTP callback mechanism allows the third-party application to be agnostic to Operating System, Programming Language and Framework.
-The third-party application can be either of the following technologies on any Operating System: 
+The third-party application can be either of the following technologies on any Operating System:
 
-* Apache Tomcat, JBoss AS, Oracle Application Server, IBM Websphere, etc. for JSP/Servlet on Java 
+* Apache Tomcat, JBoss AS, Oracle Application Server, IBM Websphere, etc. for JSP/Servlet on Java
 * PHP
 * Microsoft IIS for ASP
