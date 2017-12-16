@@ -453,9 +453,9 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
                 return;
         }
 
-        setHttpRequest(new HttpRequest(httpRequestType, requestingMSISDN,serviceid));
+        setHttpRequest(new HttpRequest(httpRequestType, requestingMSISDN, serviceid));
         if (logger.isFineEnabled()){
-            logger.fine(String.format("Handling %s request, MSISDN: %s from %s", httpRequestType.name().toUpperCase(), requestingMSISDN,serviceid));
+            logger.fine(String.format("Handling %s request, MSISDN: %s from %s", httpRequestType.name().toUpperCase(), requestingMSISDN, serviceid));
         }
 
         if (requestingMSISDN != null) {
