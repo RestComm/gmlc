@@ -1,4 +1,4 @@
-RestComm Location Server (GMLC)
+Restcomm Location Server (GMLC)
 ============
 
 [![Join the chat at https://gitter.im/RestComm/gmlc](https://badges.gitter.im/RestComm/gmlc.svg)](https://gitter.im/RestComm/gmlc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
