@@ -1,8 +1,7 @@
-/**
- * TeleStax, Open Source Cloud Communications  Copyright 2012. 
- * and individual contributors
- * by the @authors tag. See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+/*
+ * TeleStax, Open Source Cloud Communications
+ * Copyright 2011-2013, Telestax Inc and individual contributors
+ * by the @authors tag.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,6 +18,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.mobicents.gmlc;
 
 import java.io.File;
@@ -35,196 +35,197 @@ import javolution.xml.stream.XMLStreamException;
 import org.apache.log4j.Logger;
 
 /**
- * @author amit bhayani
- * 
+ *
+ * @author <a href="mailto:abhayani@gmail.com"> Amit Bhayani </a>
+ *
  */
 public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 
-	private static final Logger logger = Logger.getLogger(GmlcPropertiesManagement.class);
+  private static final Logger logger = Logger.getLogger(GmlcPropertiesManagement.class);
 
-	protected static final String GMLC_GT = "gmlcgt";
-	protected static final String GMLC_SSN = "gmlcssn";
-	protected static final String HLR_SSN = "hlrssn";
-	protected static final String MSC_SSN = "mscssn";
-	protected static final String MAX_MAP_VERSION = "maxmapv";
+  protected static final String GMLC_GT = "gmlcgt";
+  protected static final String GMLC_SSN = "gmlcssn";
+  protected static final String HLR_SSN = "hlrssn";
+  protected static final String MSC_SSN = "mscssn";
+  protected static final String MAX_MAP_VERSION = "maxmapv";
 
-	private static final String TAB_INDENT = "\t";
-	private static final String CLASS_ATTRIBUTE = "type";
-	private static final XMLBinding binding = new XMLBinding();
-	private static final String PERSIST_FILE_NAME = "gmlcproperties.xml";
+  private static final String TAB_INDENT = "\t";
+  private static final String CLASS_ATTRIBUTE = "type";
+  private static final XMLBinding binding = new XMLBinding();
+  private static final String PERSIST_FILE_NAME = "gmlcproperties.xml";
 
-	private static GmlcPropertiesManagement instance;
+  private static GmlcPropertiesManagement instance;
 
-	private final String name;
+  private final String name;
 
-	private String persistDir = null;
+  private String persistDir = null;
 
-	private final TextBuilder persistFile = TextBuilder.newInstance();
+  private final TextBuilder persistFile = TextBuilder.newInstance();
 
-	private String gmlcGt = "000000";
-	private int gmlcSsn = 145;
-	private int hlrSsn = 6;
-	private int mscSsn = 8;
-	private int maxMapVersion = 3;
+  private String gmlcGt = "000000";
+  private int gmlcSsn = 145;
+  private int hlrSsn = 6;
+  private int mscSsn = 8;
+  private int maxMapVersion = 3;
 
-	private GmlcPropertiesManagement(String name) {
-		this.name = name;
-		binding.setClassAttribute(CLASS_ATTRIBUTE);
-	}
+  private GmlcPropertiesManagement(String name) {
+    this.name = name;
+    binding.setClassAttribute(CLASS_ATTRIBUTE);
+  }
 
-	protected static GmlcPropertiesManagement getInstance(String name) {
-		if (instance == null) {
-			instance = new GmlcPropertiesManagement(name);
-		}
-		return instance;
-	}
+  protected static GmlcPropertiesManagement getInstance(String name) {
+    if (instance == null) {
+      instance = new GmlcPropertiesManagement(name);
+    }
+    return instance;
+  }
 
-	public static GmlcPropertiesManagement getInstance() {
-		return instance;
-	}
+  public static GmlcPropertiesManagement getInstance() {
+    return instance;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public String getPersistDir() {
-		return persistDir;
-	}
+  public String getPersistDir() {
+    return persistDir;
+  }
 
-	public void setPersistDir(String persistDir) {
-		this.persistDir = persistDir;
-	}
+  public void setPersistDir(String persistDir) {
+    this.persistDir = persistDir;
+  }
 
-	@Override
-	public String getGmlcGt() {
-		return gmlcGt;
-	}
+  @Override
+  public String getGmlcGt() {
+    return gmlcGt;
+  }
 
-	@Override
-	public void setGmlcGt(String gmlcGt) {
-		this.gmlcGt = gmlcGt;
-        this.store();
-	}
+  @Override
+  public void setGmlcGt(String gmlcGt) {
+    this.gmlcGt = gmlcGt;
+    this.store();
+  }
 
-	@Override
-	public int getGmlcSsn() {
-		return gmlcSsn;
-	}
+  @Override
+  public int getGmlcSsn() {
+    return gmlcSsn;
+  }
 
-	@Override
-	public void setGmlcSsn(int gmlcSsn) {
-		this.gmlcSsn = gmlcSsn;
-        this.store();
-	}
+  @Override
+  public void setGmlcSsn(int gmlcSsn) {
+    this.gmlcSsn = gmlcSsn;
+    this.store();
+  }
 
-	@Override
-	public int getHlrSsn() {
-		return hlrSsn;
-	}
+  @Override
+  public int getHlrSsn() {
+    return hlrSsn;
+  }
 
-	@Override
-	public void setHlrSsn(int hlrSsn) {
-		this.hlrSsn = hlrSsn;
-        this.store();
-	}
+  @Override
+  public void setHlrSsn(int hlrSsn) {
+    this.hlrSsn = hlrSsn;
+    this.store();
+  }
 
-	@Override
-	public int getMscSsn() {
-		return mscSsn;
-	}
+  @Override
+  public int getMscSsn() {
+    return mscSsn;
+  }
 
-	@Override
-	public void setMscSsn(int mscSsn) {
-		this.mscSsn = mscSsn;
-        this.store();
-	}
+  @Override
+  public void setMscSsn(int mscSsn) {
+    this.mscSsn = mscSsn;
+    this.store();
+  }
 
-	@Override
-	public int getMaxMapVersion() {
-		return maxMapVersion;
-	}
+  @Override
+  public int getMaxMapVersion() {
+    return maxMapVersion;
+  }
 
-	@Override
-	public void setMaxMapVersion(int maxMapVersion) {
-		this.maxMapVersion = maxMapVersion;
-        this.store();
-	}
+  @Override
+  public void setMaxMapVersion(int maxMapVersion) {
+    this.maxMapVersion = maxMapVersion;
+    this.store();
+  }
 
-	public void start() throws Exception {
+  public void start() throws Exception {
 
-		this.persistFile.clear();
+    this.persistFile.clear();
 
-		if (persistDir != null) {
-			this.persistFile.append(persistDir).append(File.separator).append(this.name).append("_")
-					.append(PERSIST_FILE_NAME);
-		} else {
-			persistFile
-					.append(System.getProperty(GmlcManagement.GMLC_PERSIST_DIR_KEY,
-							System.getProperty(GmlcManagement.USER_DIR_KEY))).append(File.separator).append(this.name)
-					.append("_").append(PERSIST_FILE_NAME);
-		}
+    if (persistDir != null) {
+      this.persistFile.append(persistDir).append(File.separator).append(this.name).append("_")
+          .append(PERSIST_FILE_NAME);
+    } else {
+      persistFile
+          .append(System.getProperty(GmlcManagement.GMLC_PERSIST_DIR_KEY,
+              System.getProperty(GmlcManagement.USER_DIR_KEY))).append(File.separator).append(this.name)
+          .append("_").append(PERSIST_FILE_NAME);
+    }
 
-		logger.info(String.format("Loading GMLC Properties from %s", persistFile.toString()));
+    logger.info(String.format("Loading GMLC Properties from %s", persistFile.toString()));
 
-		try {
-			this.load();
-		} catch (FileNotFoundException e) {
-			logger.warn(String.format("Failed to load the GMLC configuration file. \n%s", e.getMessage()));
-		}
+    try {
+      this.load();
+    } catch (FileNotFoundException e) {
+      logger.warn(String.format("Failed to load the GMLC configuration file. \n%s", e.getMessage()));
+    }
 
-	}
+  }
 
-	public void stop() throws Exception {
-	}
+  public void stop() throws Exception {
+  }
 
-	/**
-	 * Persist
-	 */
-	public void store() {
+  /**
+   * Persist
+   */
+  public void store() {
 
-		// TODO : Should we keep reference to Objects rather than recreating
-		// everytime?
-		try {
-			XMLObjectWriter writer = XMLObjectWriter.newInstance(new FileOutputStream(persistFile.toString()));
-			writer.setBinding(binding);
-			// Enables cross-references.
-			// writer.setReferenceResolver(new XMLReferenceResolver());
-			writer.setIndentation(TAB_INDENT);
+    // TODO : Should we keep reference to Objects rather than recreating
+    // everytime?
+    try {
+      XMLObjectWriter writer = XMLObjectWriter.newInstance(new FileOutputStream(persistFile.toString()));
+      writer.setBinding(binding);
+      // Enables cross-references.
+      // writer.setReferenceResolver(new XMLReferenceResolver());
+      writer.setIndentation(TAB_INDENT);
 
-			writer.write(this.gmlcGt, GMLC_GT, String.class);
-			writer.write(this.gmlcSsn, GMLC_SSN, Integer.class);
-			writer.write(this.hlrSsn, HLR_SSN, Integer.class);
-			writer.write(this.mscSsn, MSC_SSN, Integer.class);
-			writer.write(this.maxMapVersion, MAX_MAP_VERSION, Integer.class);
-			writer.close();
-		} catch (Exception e) {
-			logger.error("Error while persisting the Rule state in file", e);
-		}
-	}
+      writer.write(this.gmlcGt, GMLC_GT, String.class);
+      writer.write(this.gmlcSsn, GMLC_SSN, Integer.class);
+      writer.write(this.hlrSsn, HLR_SSN, Integer.class);
+      writer.write(this.mscSsn, MSC_SSN, Integer.class);
+      writer.write(this.maxMapVersion, MAX_MAP_VERSION, Integer.class);
+      writer.close();
+    } catch (Exception e) {
+      logger.error("Error while persisting the Rule state in file", e);
+    }
+  }
 
-	/**
-	 * Load and create LinkSets and Link from persisted file
-	 * 
-	 * @throws Exception
-	 */
-	public void load() throws FileNotFoundException {
+  /**
+   * Load and create LinkSets and Link from persisted file
+   *
+   * @throws Exception
+   */
+  public void load() throws FileNotFoundException {
 
-		XMLObjectReader reader = null;
-		try {
-			reader = XMLObjectReader.newInstance(new FileInputStream(persistFile.toString()));
+    XMLObjectReader reader = null;
+    try {
+      reader = XMLObjectReader.newInstance(new FileInputStream(persistFile.toString()));
 
-			reader.setBinding(binding);
-			this.gmlcGt = reader.read(GMLC_GT, String.class);
-			this.gmlcSsn = reader.read(GMLC_SSN, Integer.class);
-			this.hlrSsn = reader.read(HLR_SSN, Integer.class);
-			this.mscSsn = reader.read(MSC_SSN, Integer.class);
-			this.maxMapVersion = reader.read(MAX_MAP_VERSION, Integer.class);
+      reader.setBinding(binding);
+      this.gmlcGt = reader.read(GMLC_GT, String.class);
+      this.gmlcSsn = reader.read(GMLC_SSN, Integer.class);
+      this.hlrSsn = reader.read(HLR_SSN, Integer.class);
+      this.mscSsn = reader.read(MSC_SSN, Integer.class);
+      this.maxMapVersion = reader.read(MAX_MAP_VERSION, Integer.class);
 
-			reader.close();
-		} catch (XMLStreamException ex) {
-			// this.logger.info(
-			// "Error while re-creating Linksets from persisted file", ex);
-		}
-	}
+      reader.close();
+    } catch (XMLStreamException ex) {
+      // this.logger.info(
+      // "Error while re-creating Linksets from persisted file", ex);
+    }
+  }
 
 }

@@ -1,8 +1,7 @@
-/**
- * TeleStax, Open Source Cloud Communications  Copyright 2012. 
- * and individual contributors
- * by the @authors tag. See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+/*
+ * TeleStax, Open Source Cloud Communications
+ * Copyright 2011-2013, Telestax Inc and individual contributors
+ * by the @authors tag.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,31 +18,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.mobicents.gmlc;
 
 /**
- * 
- * @author amit bhayani
- * 
+ *
+ * @author <a href="mailto:abhayani@gmail.com"> Amit Bhayani </a>
+ *
  */
 public interface GmlcOAMMessages {
-	
-	/**
-	 * Generic constants
-	 */
-	public static final String TAB = "        ";
-	
-	public static final String SPACE = " ";
-	
-	public static final String NEW_LINE = "\n";
 
-	public static final String COMMA = ",";
-	
-	
+  /**
+   * Generic constants
+   */
+  public static final String TAB = "        ";
 
-	public static final String INVALID_COMMAND = "Invalid Command";
+  public static final String SPACE = " ";
 
-	public static final String PARAMETER_SUCCESSFULLY_SET = "Parameter has been successfully set";
-	
-	
+  public static final String NEW_LINE = "\n";
+
+  public static final String COMMA = ",";
+
+  public static final String INVALID_COMMAND = "Invalid Command";
+
+  public static final String PARAMETER_SUCCESSFULLY_SET = "Parameter has been successfully set";
+
+
 }

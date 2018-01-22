@@ -23,9 +23,7 @@
 package org.mobicents.gmlc.library;
 
 /**
- *
- * @author sergey vetyutnev
- *
+ * @author <a href="mailto:serg.vetyutnev@gmail.com"> Sergey Vetyutnev </a>
  */
 public class Test {
 }

@@ -1,8 +1,7 @@
-/**
- * TeleStax, Open Source Cloud Communications  Copyright 2012. 
- * and individual contributors
- * by the @authors tag. See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+/*
+ * TeleStax, Open Source Cloud Communications
+ * Copyright 2011-2013, Telestax Inc and individual contributors
+ * by the @authors tag.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,6 +18,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.mobicents.gmlc;
 
 import javax.management.MBeanServer;
@@ -29,63 +29,64 @@ import org.apache.log4j.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
 
 /**
- * @author amit bhayani
- * 
+ *
+ * @author <a href="mailto:abhayani@gmail.com"> Amit Bhayani </a>
+ *
  */
 public class GmlcManagement {
-	private static final Logger logger = Logger.getLogger(GmlcManagement.class);
+  private static final Logger logger = Logger.getLogger(GmlcManagement.class);
 
-	public static final String JMX_DOMAIN = "org.mobicents.gmlc";
+  public static final String JMX_DOMAIN = "org.mobicents.gmlc";
 
-	protected static final String GMLC_PERSIST_DIR_KEY = "gmlc.persist.dir";
-	protected static final String USER_DIR_KEY = "user.dir";
+  protected static final String GMLC_PERSIST_DIR_KEY = "gmlc.persist.dir";
+  protected static final String USER_DIR_KEY = "user.dir";
 
-	private String persistDir = null;
-	private final String name;
+  private String persistDir = null;
+  private final String name;
 
-	private GmlcPropertiesManagement gmlcPropertiesManagement = null;
+  private GmlcPropertiesManagement gmlcPropertiesManagement = null;
 
-	private MBeanServer mbeanServer = null;
+  private MBeanServer mbeanServer = null;
 
-	public GmlcManagement(String name) {
-		this.name = name;
-	}
+  public GmlcManagement(String name) {
+    this.name = name;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public String getPersistDir() {
-		return persistDir;
-	}
+  public String getPersistDir() {
+    return persistDir;
+  }
 
-	public void setPersistDir(String persistDir) {
-		this.persistDir = persistDir;
-	}
+  public void setPersistDir(String persistDir) {
+    this.persistDir = persistDir;
+  }
 
-	public void start() throws Exception {
-		this.gmlcPropertiesManagement = GmlcPropertiesManagement.getInstance(this.name);
-		this.gmlcPropertiesManagement.setPersistDir(this.persistDir);
-		this.gmlcPropertiesManagement.start();
+  public void start() throws Exception {
+    this.gmlcPropertiesManagement = GmlcPropertiesManagement.getInstance(this.name);
+    this.gmlcPropertiesManagement.setPersistDir(this.persistDir);
+    this.gmlcPropertiesManagement.start();
 
-		// Register the MBeans
-		this.mbeanServer = MBeanServerLocator.locateJBoss();
+    // Register the MBeans
+    this.mbeanServer = MBeanServerLocator.locateJBoss();
 
-		ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
-		StandardMBean gmlcPropMxBean = new StandardMBean(this.gmlcPropertiesManagement,
-				GmlcPropertiesManagementMBean.class, true);
-		this.mbeanServer.registerMBean(gmlcPropMxBean, gmlcPropObjNname);
+    ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
+    StandardMBean gmlcPropMxBean = new StandardMBean(this.gmlcPropertiesManagement,
+        GmlcPropertiesManagementMBean.class, true);
+    this.mbeanServer.registerMBean(gmlcPropMxBean, gmlcPropObjNname);
 
-		logger.info("Started GMLC Management");
-	}
+    logger.info("Started GMLC Management");
+  }
 
-	public void stop() throws Exception {
-		this.gmlcPropertiesManagement.stop();
+  public void stop() throws Exception {
+    this.gmlcPropertiesManagement.stop();
 
-		if (this.mbeanServer != null) {
+    if (this.mbeanServer != null) {
 
-			ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
-			this.mbeanServer.unregisterMBean(gmlcPropObjNname);
-		}
-	}
+      ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
+      this.mbeanServer.unregisterMBean(gmlcPropObjNname);
+    }
+  }
 }
