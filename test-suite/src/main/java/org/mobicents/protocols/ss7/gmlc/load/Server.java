@@ -1,6 +1,6 @@
 /*
  * TeleStax, Open Source Cloud Communications
- * Copyright 2011-2013, Telestax Inc and individual contributors
+ * Copyright 2011-2018, Telestax Inc and individual contributors
  * by the @authors tag.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -261,8 +261,7 @@ public class Server extends TestHarness {
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogDelimiter
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog)
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogDelimiter(org.mobicents.protocols.ss7.map.api.MAPDialog)
    */
   @Override
   public void onDialogDelimiter(MAPDialog mapDialog) {
@@ -399,8 +398,7 @@ public class Server extends TestHarness {
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogResease
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog)
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogResease(org.mobicents.protocols.ss7.map.api.MAPDialog)
    */
   @Override
   public void onDialogRelease(MAPDialog mapDialog) {
@@ -424,8 +422,7 @@ public class Server extends TestHarness {
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogTimeout
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog)
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogTimeout(org.mobicents.protocols.ss7.map.api.MAPDialog)
    */
   @Override
   public void onDialogTimeout(MAPDialog mapDialog) {

@@ -1,6 +1,6 @@
 /*
  * TeleStax, Open Source Cloud Communications
- * Copyright 2011-2013, Telestax Inc and individual contributors
+ * Copyright 2011-2018, Telestax Inc and individual contributors
  * by the @authors tag.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -303,11 +303,11 @@ public class MLPResponse {
   /**
    * Internal XML generation support function for above getSystemErrorResponseXML()
    *
-   * @param mlpClientErrorType    Error type to return to client
-   * @param mlpClientErrorMessage Error message to send to client
-   * @return String XML result to return to client
-   * @throws org.jibx.runtime.JiBXException JiBX had an internal failure of some kind while marshalling the XML
-   * @throws IOException                    IO error occurred while generating the XML result
+   * @param mlpClientErrorType                Error type to return to client
+   * @param mlpClientErrorMessage             Error message to send to client
+   * @return                                  String XML result to return to client
+   * @throws org.jibx.runtime.JiBXException   JiBX had an internal failure of some kind while marshalling the XML
+   * @throws IOException                      IO error occurred while generating the XML result
    */
   private String generateSystemErrorXML(MLPResultType mlpClientErrorType, String mlpClientErrorMessage)
       throws org.jibx.runtime.JiBXException, IOException {
@@ -404,9 +404,9 @@ public class MLPResponse {
    * @param msid                  Device MSISDN
    * @param mlpClientErrorType    Error type to return to client
    * @param mlpClientErrorMessage Error message to send to client
-   * @return String XML result to return to client
+   * @return                      String XML result to return to client
    * @throws org.jibx.runtime.JiBXException JiBX had an internal failure of some kind while marshalling the XML
-   * @throws IOException                    IO error occurred while generating the XML result
+   * @throws IOException          IO error occurred while generating the XML result
    */
   private String generatePositionErrorXML(String utcOffSet, String time, String msid, MLPResultType mlpClientErrorType, String mlpClientErrorMessage)
       throws org.jibx.runtime.JiBXException, IOException {
@@ -456,10 +456,10 @@ public class MLPResponse {
   /**
    * Create the svc_result XML result for any type of result (error or success)
    *
-   * @param mlpSvcResult Fully filled in SvcResult object to marshal (convert to XML)
-   * @return String of XML result to send to client
+   * @param mlpSvcResult  Fully filled in SvcResult object to marshal (convert to XML)
+   * @return              String of XML result to send to client
    * @throws org.jibx.runtime.JiBXException JiBX had an internal failure of some kind while marshalling the XML
-   * @throws IOException                    IO error occurred while generating the XML result
+   * @throws IOException  IO error occurred while generating the XML result
    */
   private String marshalMlpResult(org.oma.protocols.mlp.svc_result.SvcResult mlpSvcResult)
       throws org.jibx.runtime.JiBXException, IOException {

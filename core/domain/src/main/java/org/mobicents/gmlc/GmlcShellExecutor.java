@@ -1,6 +1,6 @@
 /*
  * TeleStax, Open Source Cloud Communications
- * Copyright 2011-2013, Telestax Inc and individual contributors
+ * Copyright 2011-2018, Telestax Inc and individual contributors
  * by the @authors tag.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -57,8 +57,7 @@ public class GmlcShellExecutor implements ShellExecutor {
    * (non-Javadoc)
    *
    * @see
-   * org.mobicents.ss7.management.console.ShellExecutor#execute(java.lang.
-   * String[])
+   * org.mobicents.ss7.management.console.ShellExecutor#execute(java.lang.String[])
    */
   @Override
   public String execute(String[] commands) {
@@ -85,8 +84,7 @@ public class GmlcShellExecutor implements ShellExecutor {
    * (non-Javadoc)
    *
    * @see
-   * org.mobicents.ss7.management.console.ShellExecutor#handles(java.lang.
-   * String)
+   * org.mobicents.ss7.management.console.ShellExecutor#handles(java.lang.String)
    */
   @Override
   public boolean handles(String command) {

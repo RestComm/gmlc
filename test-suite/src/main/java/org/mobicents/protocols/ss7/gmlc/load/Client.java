@@ -1,6 +1,6 @@
 /*
  * TeleStax, Open Source Cloud Communications
- * Copyright 2011-2013, Telestax Inc and individual contributors
+ * Copyright 2011-2018, Telestax Inc and individual contributors
  * by the @authors tag.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -24,8 +24,6 @@ package org.mobicents.protocols.ss7.gmlc.load;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-// import java.io.Serializable;
-// import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.mobicents.protocols.api.IpChannelType;
@@ -1717,8 +1715,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPServiceListener#onErrorComponent
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog, java.lang.Long,
+   * @see org.mobicents.protocols.ss7.map.api.MAPServiceListener#onErrorComponent(org.mobicents.protocols.ss7.map.api.MAPDialog, java.lang.Long,
    * org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage)
    */
   // @Override
@@ -1769,8 +1766,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogRequest
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog, org.mobicents.protocols.ss7.map.api.primitives.AddressString,
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogRequest(org.mobicents.protocols.ss7.map.api.MAPDialog,
+   * org.mobicents.protocols.ss7.map.api.primitives.AddressString,
    * org.mobicents.protocols.ss7.map.api.primitives.AddressString,
    * org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer)
    */
@@ -1791,9 +1788,10 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogRequestEricsson
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog, org.mobicents.protocols.ss7.map.api.primitives.AddressString,
-   * org.mobicents.protocols.ss7.map.api.primitives.AddressString, org.mobicents.protocols.ss7.map.api.primitives.IMSI,
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogRequestEricsson(org.mobicents.protocols.ss7.map.api.MAPDialog,
+   * org.mobicents.protocols.ss7.map.api.primitives.AddressString,
+   * org.mobicents.protocols.ss7.map.api.primitives.AddressString,
+   * org.mobicents.protocols.ss7.map.api.primitives.IMSI,
    * org.mobicents.protocols.ss7.map.api.primitives.AddressString)
    */
   @Override
@@ -1811,7 +1809,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogAccept( org.mobicents.protocols.ss7.map.api.MAPDialog,
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogAccept(org.mobicents.protocols.ss7.map.api.MAPDialog,
    * org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer)
    */
   @Override
@@ -1828,7 +1826,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogReject( org.mobicents.protocols.ss7.map.api.MAPDialog,
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogReject(org.mobicents.protocols.ss7.map.api.MAPDialog,
    * org.mobicents.protocols.ss7.map.api.dialog.MAPRefuseReason, org.mobicents.protocols.ss7.map.api.dialog.MAPProviderError,
    * org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName,
    * org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer)
@@ -1844,8 +1842,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogUserAbort
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog, org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice,
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogUserAbort(org.mobicents.protocols.ss7.map.api.MAPDialog,
+   * org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice,
    * org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer)
    */
   @Override
@@ -1858,8 +1856,8 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogProviderAbort
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog, org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason,
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogProviderAbort(org.mobicents.protocols.ss7.map.api.MAPDialog,
+   * org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason,
    * org.mobicents.protocols.ss7.map.api.dialog.MAPAbortSource,
    * org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer)
    */
@@ -1889,7 +1887,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogNotice( org.mobicents.protocols.ss7.map.api.MAPDialog,
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogNotice(org.mobicents.protocols.ss7.map.api.MAPDialog,
    * org.mobicents.protocols.ss7.map.api.dialog.MAPNoticeProblemDiagnostic)
    */
   @Override
@@ -1901,8 +1899,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogResease
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog)
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogResease(org.mobicents.protocols.ss7.map.api.MAPDialog)
    */
   @Override
   public void onDialogRelease(MAPDialog mapDialog) {
@@ -1937,8 +1934,7 @@ public class Client extends TestHarness implements MAPServiceMobilityListener, M
   /*
    * (non-Javadoc)
    *
-   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogTimeout
-   * (org.mobicents.protocols.ss7.map.api.MAPDialog)
+   * @see org.mobicents.protocols.ss7.map.api.MAPDialogListener#onDialogTimeout(org.mobicents.protocols.ss7.map.api.MAPDialog)
    */
   @Override
   public void onDialogTimeout(MAPDialog mapDialog) {
