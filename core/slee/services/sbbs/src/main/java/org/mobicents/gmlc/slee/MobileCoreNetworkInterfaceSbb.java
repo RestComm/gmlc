@@ -153,7 +153,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
   /**
    * Response Location
    */
-  private class CGIResponse implements Serializable {
+  private class ATIResponse implements Serializable {
     String x = "-1";
     String y = "-1";
     String radius = "-1";
@@ -163,6 +163,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     int lac = -1;
     int aol = -1;
     String vlr = "-1";
+    String subscriberState = "unknown";
   }
 
   /**
@@ -342,7 +343,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
       MAPDialogMobility mapDialogMobility = event.getMAPDialog();
       SubscriberInfo si = event.getSubscriberInfo();
       MLPResponse.MLPResultType result;
-      CGIResponse response = new CGIResponse();
+      ATIResponse response = new ATIResponse();
       String mlpClientErrorMessage = null;
 
       if (si != null) {
@@ -384,7 +385,12 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
           if (si.getLocationInformation().getVlrNumber() != null) {
             response.vlr = si.getLocationInformation().getVlrNumber().getAddress();
           }
-        } else if (si.getSubscriberState() != null) {
+
+          if (si.getSubscriberState() != null) {
+            response.subscriberState = si.getSubscriberState().getSubscriberStateChoice().toString();
+          }
+
+        } else if (si.getSubscriberState() == null) {
           result = MLPResponse.MLPResultType.ABSENT_SUBSCRIBER;
           mlpClientErrorMessage = "SubscriberState: " + si.getSubscriberState();
         } else {
@@ -555,7 +561,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
     } else {
       // Handle fake success
       if (this.fakeLocationType == MLPResponse.MLPResultType.OK) {
-        CGIResponse response = new CGIResponse();
+        ATIResponse response = new ATIResponse();
         response.cell = fakeCellId;
         response.x = fakeLocationX;
         response.y = fakeLocationY;
@@ -563,7 +569,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         this.handleLocationResponse(MLPResponse.MLPResultType.OK, response, null);
 
       } else {
-        CGIResponse response;
+        ATIResponse response;
         response = null;
         this.handleLocationResponse(this.fakeLocationType, response, this.fakeLocationAdditionalInfoErrorString);
       }
@@ -614,10 +620,10 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
    * because eventually the GET method will likely be removed
    *
    * @param mlpResultType         OK or error type to return to client
-   * @param response              CGIResponse on location attempt
+   * @param atiResponse           ATIResponse on location/state attempt
    * @param mlpClientErrorMessage Error message to send to client
    */
-  private void handleLocationResponse(MLPResponse.MLPResultType mlpResultType, CGIResponse response, String mlpClientErrorMessage) {
+  private void handleLocationResponse(MLPResponse.MLPResultType mlpResultType, ATIResponse atiResponse, String mlpClientErrorMessage) {
     HttpRequest request = getHttpRequest();
 
     switch (request.type) {
@@ -626,17 +632,19 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
 
           StringBuilder getResponse = new StringBuilder();
           getResponse.append("mcc=");
-          getResponse.append(response.mcc);
+          getResponse.append(atiResponse.mcc);
           getResponse.append(",mnc=");
-          getResponse.append(response.mnc);
+          getResponse.append(atiResponse.mnc);
           getResponse.append(",lac=");
-          getResponse.append(response.lac);
+          getResponse.append(atiResponse.lac);
           getResponse.append(",cellid=");
-          getResponse.append(response.cell);
+          getResponse.append(atiResponse.cell);
           getResponse.append(",aol=");
-          getResponse.append(response.aol);
+          getResponse.append(atiResponse.aol);
           getResponse.append(",vlrNumber=");
-          getResponse.append(response.vlr);
+          getResponse.append(atiResponse.vlr);
+          getResponse.append(",subscriberState=");
+          getResponse.append(atiResponse.subscriberState);
 
           this.sendHTTPResult(HttpServletResponse.SC_OK, getResponse.toString());
         } else {
@@ -649,7 +657,7 @@ public abstract class MobileCoreNetworkInterfaceSbb implements Sbb {
         MLPResponse mlpResponse = new MLPResponse(this.logger);
 
         if (mlpResultType == MLPResponse.MLPResultType.OK) {
-          svcResultXml = mlpResponse.getSinglePositionSuccessXML(response.x, response.y, response.radius, request.msisdn);
+          svcResultXml = mlpResponse.getSinglePositionSuccessXML(atiResponse.x, atiResponse.y, atiResponse.radius, request.msisdn);
         } else if (MLPResponse.isSystemError(mlpResultType)) {
           svcResultXml = mlpResponse.getSystemErrorResponseXML(mlpResultType, mlpClientErrorMessage);
         } else {
