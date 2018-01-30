@@ -10,8 +10,7 @@ GMLC is built on [RestComm jSS7](https://github.com/RestComm/jSS7) and [RestComm
 
 Downloads
 ========
-
-Download source code and build from [here](https://github.com/RestComm/gmlc/releases) or Continuous Delivery binary from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-GMLC/)
+Download one of the binaries from the [Restcomm site Downloads section](https://www.restcomm.com/downloads/), or clone this repo and build from source. 
 
 Installation
 ============
