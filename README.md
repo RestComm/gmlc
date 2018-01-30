@@ -18,7 +18,7 @@ The best way to install the RestComm GMLC is from the latest binary release zip 
 
 Binary Installation
 ===================
-### Download the latest [binary release](https://github.com/RestComm/gmlc/releases)
+### Download the latest [binary release](https://www.restcomm.com/downloads/)
 ```
 cd ~
 rm -rf RestComm
