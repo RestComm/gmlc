@@ -31,17 +31,17 @@ public interface GmlcOAMMessages {
   /**
    * Generic constants
    */
-  public static final String TAB = "        ";
+  String TAB = "        ";
 
-  public static final String SPACE = " ";
+  String SPACE = " ";
 
-  public static final String NEW_LINE = "\n";
+  String NEW_LINE = "\n";
 
-  public static final String COMMA = ",";
+  String COMMA = ",";
 
-  public static final String INVALID_COMMAND = "Invalid Command";
+  String INVALID_COMMAND = "Invalid Command";
 
-  public static final String PARAMETER_SUCCESSFULLY_SET = "Parameter has been successfully set";
+  String PARAMETER_SUCCESSFULLY_SET = "Parameter has been successfully set";
 
 
 }

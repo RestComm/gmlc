@@ -39,6 +39,12 @@
             <artifactId>http-servlet-ratype</artifactId>
             <version>${restcomm.resources.http.servlet.version}</version>
         </dependency>
+        <!-- jodatime -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
+        </dependency>
         <!-- JiBX for XML binding-->
         <dependency>
             <groupId>org.jibx</groupId>
@@ -47,7 +53,7 @@
         <dependency>
             <groupId>org.jibx</groupId>
             <artifactId>jibx-extras</artifactId>
-        </dependency>                
+        </dependency>
         <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
@@ -59,7 +65,8 @@
             <version>1.5.0</version>
         </dependency>
     </dependencies>
-	
+
+
     <profiles>
         <profile>
             <id>test</id>

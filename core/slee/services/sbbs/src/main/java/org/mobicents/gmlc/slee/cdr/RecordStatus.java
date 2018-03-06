@@ -1,0 +1,90 @@
+/*
+ * TeleStax, Open Source Cloud Communications
+ * Copyright 2011-2018, Telestax Inc and individual contributors
+ * by the @authors tag.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
+package org.mobicents.gmlc.slee.cdr;
+
+/**
+ *
+ * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
+ */
+public enum RecordStatus {
+
+  SUCCESS,
+  FAILED_INVOKE_TIMEOUT,
+  FAILED_DIALOG_TIMEOUT,
+  FAILED_APP_TIMEOUT,
+  FAILED_CORRUPTED_MESSAGE,
+  FAILED_TRANSPORT_ERROR,
+  FAILED_TRANSPORT_FAILURE,
+  FAILED_PROVIDER_ABORT,
+  FAILED_DIALOG_USER_ABORT,
+  FAILED_DIALOG_REJECTED,
+  FAILED_SYSTEM_FAILURE,
+  FAILED_ABSENT_SUBSCRIBER,
+  FAILED_ILLEGAL_SUBSCRIBER,
+  FAILED_MAP_ERROR_COMPONENT,
+  FAILED_MAP_REJECT_COMPONENT,
+  ABORT_APP,
+  ATI_CGI_SUCCESS,
+  ATI_STATE_SUCCESS,
+  ATI_LAI_SUCCESS,
+  ATI_CGI_STATE_SUCCESS,
+  ATI_LAI_STATE_SUCCESS,
+  ATI_CGI_OR_LAI_SUCCESS_STATE_FAILURE,
+  ATI_CGI_OR_LAI_FAILURE,
+  ATI_CGI_OR_LAI_OR_STATE_FAILURE,
+  ATI_SYSTEM_FAILURE,
+  ATI_NOT_ALLOWED,
+  ATI_DATA_MISSING,
+  ATI_UNEXPECTED_DATA_VALUE,
+  ATI_UNKNOWN_SUBSCRIBER,
+  TCAP_DIALOG_REJECTED,
+  TCAP_PROVIDER_ABORT,
+  TCAP_DIALOG_USER_ABORT,
+  TCAP_DIALOG_TIMEOUT,
+  MAP_REJECT_COMPONENT,
+  MAP_ERROR_COMPONENT,
+  SRI_SYSTEM_FAILURE,
+  SRI_DATA_MISSING,
+  SRI_UNEXPECTED_DATA_VALUE,
+  SRI_FACILITY_NOT_SUPPORTED,
+  SRI_UNKNOWN_SUBSCRIBER,
+  SRI_ABSENT_SUBSCRIBER,
+  SRI_UNAUTHORIZED_REQUESTING_NETWORK,
+  PSL_SYSTEM_FAILURE,
+  PSL_DATA_MISSING,
+  PSL_UNEXPECTED_DATA_VALUE,
+  PSL_FACILITY_NOT_SUPPORTED,
+  PSL_UNIDENTIFIED_SUBSCRIBER,
+  PSL_ILLEGAL_SUBSCRIBER,
+  PSL_ILLEGAL_EQUIPMENT,
+  PSL_ABSENT_SUBSCRIBER,
+  PSL_UNAUTHORIZED_REQUESTING_NETWORK,
+  PSL_UNAUTHORIZED_LCS_CLIENT,
+  PSL_POSITION_METHOD_FAILURE,
+  SLR_SYSTEM_FAILURE,
+  SLR_DATA_MISSING,
+  SLR_RESOURCE_LIMITATION,
+  SLR_UNEXPECTED_DATA_VALUE,
+  SLR_UNKNOWN_SUBSCRIBER,
+  SLR_UNAUTHORIZED_REQUESTING_NETWORK,
+  SLR_UNKNOWN_OR_UNREACHABLE_LCS_CLIENT,
+  ;
+
+}

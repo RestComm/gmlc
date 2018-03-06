@@ -40,6 +40,12 @@ include::Chapter-Running.adoc[]
 
 :leveloffset: 1
 
+include::Chapter-Running-WildFly.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
 include::Chapter-Configuring.adoc[]
 
 :leveloffset: 0

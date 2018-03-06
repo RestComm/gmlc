@@ -23,6 +23,9 @@
 				<!-- JiBX for XML binding -->
 				<include>org.jibx:jibx-run</include>
 
+				<!-- jodatime -->
+				<include>joda-time:joda-time</include>
+
 				<!-- Not strictly SS7, But needed by SS7 -->
 				<include>javolution:javolution</include>
 				<include>org.mobicents.protocols.sctp:sctp-api</include>

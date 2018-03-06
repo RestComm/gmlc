@@ -25,6 +25,28 @@ You will also find a lot of examples in the folder [path]_{this-folder}-gmlc-ver
 WARNING: HSQLDB must not be used in a production environment.
 You must ensure that you delete this datasource and configure a production-friendly Database like PostgreSQL or MySQL.
 
+For WildFly 10 datasource is configured in [path]_{this-folder}-gmlc-version>/wildfly-10.1.0.Final/standalone/configuration/standalone.xml file, "datasources" subsystem
+
+----
+<subsystem xmlns="urn:jboss:domain:datasources:4.0">
+            <datasources>
+                <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:h2:~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+                    <driver>h2</driver>
+                    <security>
+                        <user-name>sa</user-name>
+                        <password>sa</password>
+                    </security>
+                </datasource>
+                <drivers>
+                    <driver name="h2" module="com.h2database.h2">
+                        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+                    </driver>
+                </drivers>
+            </datasources>
+        </subsystem>
+----
+
 [[_ss7_gmlc_settings]]
 == Configuring the Gateway
 

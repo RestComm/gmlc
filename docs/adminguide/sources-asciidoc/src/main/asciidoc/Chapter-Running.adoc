@@ -1,4 +1,4 @@
-= Running
+= Running (JBoss AS)
 :doctype: book
 :sectnums:
 :toc: left

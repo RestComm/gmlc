@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 /**
  *
  * @author <a href="mailto:abhayani@gmail.com"> Amit Bhayani </a>
- *
+ * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
 public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
 
@@ -52,13 +52,24 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
   private static final String TAB_INDENT = "\t";
   private static final String CLASS_ATTRIBUTE = "type";
   private static final XMLBinding binding = new XMLBinding();
+  protected static final String CDR_LOGGING_TO = "cdrloggingto";
+  protected static final String MAX_ACTIVITY_COUNT = "maxactivitycount";
   private static final String PERSIST_FILE_NAME = "gmlcproperties.xml";
+
+  protected static final String SERVER_OVERLOADED_MESSAGE = "serveroverloadedmsg";
+  protected static final String SERVER_ERROR_MESSAGE = "servererrmssg";
+  protected static final String DIALOG_TIMEOUT_ERROR_MESSAGE = "dialogtimeouterrmssg";
+  private String serverOverloadedMessage = "Server is overloaded. Please try later";
+  private String serverErrorMessage = "Server error, please try again after sometime";
+  private String dialogTimeoutErrorMessage = "Request timeout please try again after sometime.";
 
   private static GmlcPropertiesManagement instance;
 
   private final String name;
 
   private String persistDir = null;
+
+  private long dialogTimeout = 30000;
 
   private final TextBuilder persistFile = TextBuilder.newInstance();
 
@@ -67,6 +78,11 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
   private int hlrSsn = 6;
   private int mscSsn = 8;
   private int maxMapVersion = 3;
+
+  private CdrLoggedType cdrLoggingTo = CdrLoggedType.Textfile;
+
+  // max count of TCAP Dialogs that are possible at the same time
+  private int maxActivityCount = 1000;
 
   private GmlcPropertiesManagement(String name) {
     this.name = name;
@@ -151,6 +167,62 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
     this.store();
   }
 
+  @Override
+  public long getDialogTimeout() {
+    return dialogTimeout;
+  }
+
+  @Override
+  public void setDialogTimeout(long dialogTimeout) {
+    this.dialogTimeout = dialogTimeout;
+    this.store();
+  }
+
+  public CdrLoggedType getCdrLoggingTo() {
+    return cdrLoggingTo;
+  }
+
+  public void setCdrLoggingTo(CdrLoggedType cdrLoggingTo) {
+    this.cdrLoggingTo = cdrLoggingTo;
+    this.store();
+  }
+
+  public int getMaxActivityCount() {
+    return maxActivityCount;
+  }
+
+  public void setMaxActivityCount(int maxActivityCount) {
+    this.maxActivityCount = maxActivityCount;
+    this.store();
+  }
+
+  public String getServerOverloadedMessage() {
+    return this.serverOverloadedMessage;
+  }
+
+  public void setServerOverloadedMessage(String serverOverloadedMessage) {
+    this.serverOverloadedMessage = serverOverloadedMessage;
+    this.store();
+  }
+
+  public String getServerErrorMessage() {
+    return this.serverErrorMessage;
+  }
+
+  public void setServerErrorMessage(String serverErrorMessage) {
+    this.serverErrorMessage = serverErrorMessage;
+    this.store();
+  }
+
+  public String getDialogTimeoutErrorMessage() {
+    return this.dialogTimeoutErrorMessage;
+  }
+
+  public void setDialogTimeoutErrorMessage(String dialogTimeoutErrorMessage) {
+    this.dialogTimeoutErrorMessage = dialogTimeoutErrorMessage;
+    this.store();
+  }
+
   public void start() throws Exception {
 
     this.persistFile.clear();
@@ -197,6 +269,8 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
       writer.write(this.hlrSsn, HLR_SSN, Integer.class);
       writer.write(this.mscSsn, MSC_SSN, Integer.class);
       writer.write(this.maxMapVersion, MAX_MAP_VERSION, Integer.class);
+      writer.write(this.cdrLoggingTo.toString(), CDR_LOGGING_TO, String.class);
+      writer.write(this.maxActivityCount, MAX_ACTIVITY_COUNT, Integer.class);
       writer.close();
     } catch (Exception e) {
       logger.error("Error while persisting the Rule state in file", e);
@@ -226,6 +300,10 @@ public class GmlcPropertiesManagement implements GmlcPropertiesManagementMBean {
       // this.logger.info(
       // "Error while re-creating Linksets from persisted file", ex);
     }
+  }
+
+  public enum CdrLoggedType {
+    Database, Textfile,
   }
 
 }

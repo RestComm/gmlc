@@ -22,18 +22,23 @@
 package org.mobicents.gmlc;
 
 import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
 
 import org.apache.log4j.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
 
+import java.lang.management.ManagementFactory;
+import java.util.List;
+
 /**
  *
  * @author <a href="mailto:abhayani@gmail.com"> Amit Bhayani </a>
  *
  */
-public class GmlcManagement {
+public class GmlcManagement implements GmlcManagementMBean {
+
   private static final Logger logger = Logger.getLogger(GmlcManagement.class);
 
   public static final String JMX_DOMAIN = "org.mobicents.gmlc";
@@ -48,8 +53,23 @@ public class GmlcManagement {
 
   private MBeanServer mbeanServer = null;
 
+  protected boolean isStarted;
+
+  protected static GmlcManagement instance = null;
+
   public GmlcManagement(String name) {
     this.name = name;
+  }
+
+  public static GmlcManagement getInstance(String name) {
+    if (instance == null) {
+      instance = new GmlcManagement(name);
+    }
+    return instance;
+  }
+
+  public static GmlcManagement getInstance() {
+    return instance;
   }
 
   public String getName() {
@@ -70,12 +90,33 @@ public class GmlcManagement {
     this.gmlcPropertiesManagement.start();
 
     // Register the MBeans
-    this.mbeanServer = MBeanServerLocator.locateJBoss();
+    boolean servFound = false;
+    String agentId = "jboss";
+    List<MBeanServer> servers = MBeanServerFactory.findMBeanServer(null);
+    if (servers != null && servers.size() > 0) {
+      for (MBeanServer server : servers) {
+        String defaultDomain = server.getDefaultDomain();
+
+        if (defaultDomain != null && defaultDomain.equals(agentId)) {
+          mbeanServer = server;
+          servFound = true;
+          logger.info(String.format("Found MBeanServer matching for agentId=%s", agentId));
+        } else {
+          logger.warn(String.format("Found non-matching MBeanServer with default domian = %s", defaultDomain));
+        }
+      }
+    }
+
+    if (!servFound) {
+      this.mbeanServer = ManagementFactory.getPlatformMBeanServer();
+    }
 
     ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
     StandardMBean gmlcPropMxBean = new StandardMBean(this.gmlcPropertiesManagement,
         GmlcPropertiesManagementMBean.class, true);
     this.mbeanServer.registerMBean(gmlcPropMxBean, gmlcPropObjNname);
+
+    this.isStarted = true;
 
     logger.info("Started GMLC Management");
   }
@@ -88,5 +129,13 @@ public class GmlcManagement {
       ObjectName gmlcPropObjNname = new ObjectName(GmlcManagement.JMX_DOMAIN + ":name=GmlcPropertiesManagement");
       this.mbeanServer.unregisterMBean(gmlcPropObjNname);
     }
+
+    this.isStarted = false;
   }
+
+  @Override
+  public boolean isStarted() {
+    return isStarted;
+  }
+
 }

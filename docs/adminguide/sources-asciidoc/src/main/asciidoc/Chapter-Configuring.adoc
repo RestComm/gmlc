@@ -14,7 +14,7 @@ This chapter will explain how to manage the Gateway effectively using both the G
 == Memory Settings
 
 You should fine tune the JVM memory settings based on your needs but we recommend you allocate a minimum of 3 GB for initial and maximum heap size.
-These settings are specified in the file[path]_{this-folder}-gmlc-/jboss-5.1.0.GA/bin/run.conf_. 
+These settings are specified in the file[path]_{this-folder}-gmlc-/jboss-5.1.0.GA/bin/run.conf_ for JBoss AS or [path]_{this-folder}-gmlc-/wildfly-10.1.0.Final/bin/standalone.conf for Wildfly 10.
 
 -Xms3072m::
   Initial heap size, set in megabytes

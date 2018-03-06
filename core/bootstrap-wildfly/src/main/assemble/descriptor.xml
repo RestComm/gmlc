@@ -1,0 +1,36 @@
+<assembly>
+
+	<id>wildfly</id>
+
+	<formats>
+		<format>dir</format>
+	</formats>
+
+	<baseDirectory>main</baseDirectory>
+
+	<fileSets>
+		<fileSet>
+			<directory>src/main/module</directory>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+		</fileSet>
+	</fileSets>
+
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/</outputDirectory>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<includes>
+				<!-- GMLC libraries -->
+				<include>org.mobicents.gmlc:bootstrap-wildfly</include>
+				<include>org.mobicents.gmlc:domain</include>
+
+				<!-- jodatime -->
+				<include>joda-time:joda-time</include>
+
+			</includes>
+		</dependencySet>
+	</dependencySets>
+
+</assembly>
