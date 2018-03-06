@@ -194,7 +194,7 @@
 	<!-- Shell Service -->
 	<!-- ==================================================================== -->
 	<!-- Define Shell Executor -->
-	<bean name="GMLC_ShellExecutor" class="org.mobicents.ss7.management.console.ShellServer">
+	<bean name="GMLC_ShellExecutor" class="org.mobicents.ss7.management.console.ShellServerJboss">
 		<constructor>
 			<parameter>
 				<inject bean="GMLC_SS7Scheduler" />
