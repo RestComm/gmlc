@@ -5,94 +5,115 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
-	<appender name="FILE" class="org.jboss.logging.appender.DailyRollingFileAppender">
-		<errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-		<param name="File" value="${jboss.server.log.dir}/server.log"/>
-		<param name="Append" value="false"/>
-		<param name="Threshold" value="WARN"/>
+    <appender name="FILE" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="File" value="${jboss.server.log.dir}/server.log"/>
+        <param name="Append" value="false"/>
+        <param name="Threshold" value="WARN"/>
 
-		<param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
 
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d %-5p [%c] (%t) %m%n"/>
-		</layout>
-	</appender>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] (%t) %m%n"/>
+        </layout>
+    </appender>
 
-	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-		<errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-		<param name="Target" value="System.out"/>
-		<param name="Threshold" value="WARN"/>
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="Target" value="System.out"/>
+        <param name="Threshold" value="WARN"/>
 
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] (%t) %m%n"/>
-		</layout>
-	</appender>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] (%t) %m%n"/>
+        </layout>
+    </appender>
 
-	<appender name="CDR" class="org.jboss.logging.appender.DailyRollingFileAppender"> 
-	    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/> 
-	    <param name="File" value="${jboss.server.home.dir}/log/cdr.log"/> 
-	    <param name="Append" value="true"/> 
-	    <param name="Threshold" value="DEBUG"/>
+    <appender name="CDR" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="File" value="${jboss.server.home.dir}/log/cdr.log"/>
+        <param name="Append" value="true"/>
+        <param name="Threshold" value="DEBUG"/>
 
-	    <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
 
-	    <layout class="org.apache.log4j.PatternLayout"> 
-		<param name="ConversionPattern" value="%d %-5p [%c] %m%n"/> 
-	    </layout> 
-	</appender> 
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
 
-	<appender name="STATS" class="org.jboss.logging.appender.DailyRollingFileAppender"> 
-	    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/> 
-	    <param name="File" value="${jboss.server.home.dir}/log/stats.log"/> 
-	    <param name="Append" value="true"/> 
-	    <param name="Threshold" value="DEBUG"/>
-	    
-	    <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+    <appender name="STATS" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="File" value="${jboss.server.home.dir}/log/stats.log"/>
+        <param name="Append" value="true"/>
+        <param name="Threshold" value="DEBUG"/>
 
-	    <layout class="org.apache.log4j.PatternLayout"> 
-		<param name="ConversionPattern" value="%d %-5p [%c] %m%n"/> 
-	    </layout> 
-	</appender>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
 
-	<appender name="CSVSTATS" class="org.jboss.logging.appender.DailyRollingFileAppender">
-		<errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-		<param name="File" value="${jboss.server.home.dir}/log/csvstats.log"/>
-		<param name="Append" value="true"/>
-		<param name="Threshold" value="DEBUG"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
 
-		<param name="DatePattern" value="'.'yyyy-MM-dd"/>
+    <appender name="CSVSTATS" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="File" value="${jboss.server.home.dir}/log/csvstats.log"/>
+        <param name="Append" value="true"/>
+        <param name="Threshold" value="DEBUG"/>
 
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-		</layout>
-	</appender>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
 
-	<category name="javax.slee">
-		<priority value="INFO" /> 
-	</category>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
 
-	<category name="org.mobicents.protocols.ss7.oam.common.statistics.StatsPrinter" additivity="false">
-		<priority value="DEBUG" /> 
-		<appender-ref ref="STATS"/> 
-	</category>
+    <!-- MobileCoreNetworkInterfaceSbb -->
+    <category
+            name="javax.slee.SbbNotification[service=ServiceID[name=mobicents-gmlc,vendor=org.mobicents,version=1.0],sbb=SbbID[name=MobileCoreNetworkInterfaceSbb,vendor=org.mobicents,version=1.0]]">
+        <priority value="DEBUG"/>
+    </category>
 
-	<category name="org.mobicents.protocols.ss7.oam.common.statistics.CsvStatsPrinter" additivity="false">
-		<priority value="DEBUG" />
-		<appender-ref ref="CSVSTATS"/>
-	</category>
+    <category name="javax.slee">
+        <priority value="INFO"/>
+    </category>
 
-	<category name="org.mobicents">
-		<priority value="INFO" />
-	</category>
-	
-	<category name="gov.nist">
-		<priority value="WARN" />
-	</category>
-	
-	<root>
-		<level value="WARN"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FILE"/>
-	</root>
+    <!-- CDRSbbPlain -->
+    <category
+            name="javax.slee.SbbNotification[service=ServiceID[name=mobicents-gmlc-cdr-plain,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbbPlain,vendor=org.mobicents,version=1.0]]">
+        <priority value="DEBUG"/>
+    </category>
+
+    <category name="org.mobicents.gmlc.slee.cdr.plain.CDRGeneratorSbb" additivity="false">
+        <priority value="DEBUG"/>
+        <appender-ref ref="CDR"/>
+    </category>
+
+    <!-- Stats -->
+    <category name="org.mobicents.protocols.ss7.oam.common.statistics.StatsPrinter" additivity="false">
+        <priority value="DEBUG"/>
+        <appender-ref ref="STATS"/>
+    </category>
+
+    <category name="org.mobicents.protocols.ss7.oam.common.statistics.CsvStatsPrinter" additivity="false">
+        <priority value="DEBUG"/>
+        <appender-ref ref="CSVSTATS"/>
+    </category>
+
+    <!-- org.mobicents -->
+    <category name="org.mobicents">
+        <priority value="INFO"/>
+    </category>
+
+    <!-- gov.nist -->
+    <category name="gov.nist">
+        <priority value="WARN"/>
+    </category>
+
+    <!-- root console -->
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
 
 </log4j:configuration>
