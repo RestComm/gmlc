@@ -179,7 +179,7 @@
 	<!-- RestComm SS7 Service -->
 	<!-- ==================================================================== -->
 	<bean name="MAPSS7Service" class="org.mobicents.gmlc.server.bootstrap.SS7Service">
-        <annotation>@org.jboss.aop.microcontainer.aspects.jmx.JMX(name="org.mobicents.ss7:service=SS7Service",exposedInterface=org.mobicents.gmlc.server.bootstrap.SS7ServiceMBean.class,registerDirectly=true)
+        <annotation>@org.jboss.aop.microcontainer.aspects.jmx.JMX(name="org.mobicents.ss7:service=MAPSS7Service",exposedInterface=org.mobicents.gmlc.server.bootstrap.SS7ServiceMBean.class,registerDirectly=true)
         </annotation>
 				<constructor>
 					<parameter>MAP</parameter>
@@ -194,7 +194,7 @@
 	<!-- Shell Service -->
 	<!-- ==================================================================== -->
 	<!-- Define Shell Executor -->
-	<bean name="GMLC_ShellExecutor" class="org.mobicents.ss7.management.console.ShellServer">
+	<bean name="GMLC_ShellExecutor" class="org.mobicents.ss7.management.console.ShellServerJboss">
 		<constructor>
 			<parameter>
 				<inject bean="GMLC_SS7Scheduler" />

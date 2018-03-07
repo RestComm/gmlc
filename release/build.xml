@@ -27,24 +27,31 @@
 	<property name="restcomm.gmlc.release.version" value="2.0.0-SNAPSHOT"/>
 
 	<!-- Options for referring to release resoure verions -->
-	<!-- SLEE staff -->
-	<property name="restcomm-slee.build-number" value="36.73" />
-	<property name="restcomm-slee.version" value="2.8" />
-	<property name="restcomm-slee.release" value="2.8.0.FINAL" />
+	<!-- SLEE stuff -->
+	<property name="restcomm-slee.build-number" value="148.102" /> <!-- 148.102 / 128.93 -->
+	<property name="restcomm-slee.version" value="2.9" />
+	<property name="restcomm-slee.release" value="2.9.148" />
 
 	<!-- jss7 stack and MAP RA -->
-	<property name="restcomm-jss7.build-number" value="1383" />
+	<property name="restcomm-jss7.build-number" value="102" />
+	<property name="restcomm-jss7.version" value="7.4.0-${restcomm-jss7.build-number}" />
+	<!-- <property name="restcomm-jss7.release" value="7.4.0-9" /> -->
+
+	<property name="restcomm-map-ra.build-number" value="177" />
+	<property name="restcomm-map-ra.version" value="7.4.0-${restcomm-map-ra.build-number}" />
+	<!--<property name="restcomm-jss7.build-number" value="1383" />
 	<property name="restcomm-jss7.version" value="7.0.${restcomm-jss7.build-number}" />
 	<property name="restcomm-jss7.release" value="7.0.1383" />
 
 	<property name="restcomm-map-ra.build-number" value="53" />
 	<property name="restcomm-map-ra.version" value="7.0.${restcomm-map-ra.build-number}" />
-	<property name="restcomm-map-ra.release" value="7.0.53" />
+	<property name="restcomm-map-ra.release" value="7.0.53" />-->
 
 	<!-- Diameter mux and RAs -->
-	<property name="restcomm-diam.build-number" value="89" />
+	<property name="restcomm-diam.build-number" value="178" />
 	<property name="restcomm-diam.version" value="1.7.0" />
-	<property name="restcomm-diam.resources.version" value="2.8.0-SNAPSHOT" />
+	<property name="restcomm-diam-ra.build-number" value="18" />
+	<property name="restcomm-diam.resources.version" value="7.1.18" />
 
 	<!-- JainSlee SIP RA DU - we do not use it now - getting from SLEE binaries -->
 	<property name="restcomm-slee-sip11.build-number" value="20" />	
@@ -62,19 +69,22 @@
 	<property name="restcomm-slee.download.url" value="${github.url}/jain-slee/releases/download/${restcomm-slee.release}/${restcomm-slee.download.distro.file}" />
 	<property name="restcomm-slee.distro.zip.path" value="${checkout.dir}/${restcomm-slee.download.distro.file}" />
 	<property name="restcomm-jss7.download.distro.file" value="restcomm-jss7-${restcomm-jss7.version}.zip" />
-	<property name="restcomm-jss7.download.url" value="${github.url}/jss7/releases/download/${restcomm-jss7.release}/${restcomm-jss7.download.distro.file}" />
+	<property name="restcomm-jss7.download.url" value="${github.url}/jss7/releases/download/${restcomm-jss7.version}/${restcomm-jss7.download.distro.file}" />
 	<property name="restcomm-jss7.distro.zip.path" value="${checkout.dir}/${restcomm-jss7.download.distro.file}" />
-	<property name="restcomm-map-ra.download.jar.file" value="restcomm-slee-ra-map-du-${restcomm-map-ra.version}.jar" />
+	<property name="restcomm-map-ra.download.jar.file" value="restcomm-slee-ra-map-du-jboss-${restcomm-map-ra.version}.jar" />
 	<property name="restcomm-map-ra.download.docs.file" value="RA_docs.zip" />
-	<property name="restcomm-map-ra.download.jar.url" value="${github.url}/jain-slee.ss7/releases/download/${restcomm-map-ra.release}/${restcomm-map-ra.download.jar.file}" />
-	<property name="restcomm-map-ra.download.docs.url" value="${github.url}/jain-slee.ss7/releases/download/${restcomm-map-ra.release}/${restcomm-map-ra.download.docs.file}" />
+	<property name="restcomm-map-ra.download.jar.url" value="${github.url}/jain-slee.ss7/releases/download/${restcomm-map-ra.version}/${restcomm-map-ra.download.jar.file}" />
+	<property name="restcomm-map-ra.download.docs.url" value="${github.url}/jain-slee.ss7/releases/download/${restcomm-map-ra.version}/${restcomm-map-ra.download.docs.file}" />
 	<property name="restcomm-map-ra.distro.jar.path" value="${checkout.dir}/${restcomm-map-ra.download.jar.file}" />
 	<property name="restcomm-map-ra.distro.docs.path" value="${checkout.dir}/${restcomm-map-ra.download.docs.file}" />
 
 	<property name="restcomm-diam.download.distro.file" value="restcomm-diameter-${restcomm-diam.version}.${restcomm-diam.build-number}.zip" />
 	<property name="restcomm-diam.download.url" value="${cloudbees.url}/job/RestComm-jDiameter-1.x/${restcomm-diam.build-number}/artifact/release/${restcomm-diam.download.distro.file}" />
 	<property name="restcomm-diam.distro.zip.path" value="${checkout.dir}/${restcomm-diam.download.distro.file}" />
-	
+	<property name="restcomm-diam-ra-base.download.jar.file" value="diameter-restcomm-slee-ra-diameter-base-ra-DU-${restcomm-diam.resources.version}.jar" />
+	<property name="restcomm-diam-ra-base.download.url" value="${cloudbees.url}/job/Restcomm-JAIN-SLEE-7-jDiameter-RAs/${restcomm-diam-ra.build-number}/artifact/resources/diameter-base/du/target/${restcomm-diam-ra-base.download.jar.file}" />
+	<property name="restcomm-diam-ra-base.distro.jar.path" value="${checkout.dir}/${restcomm-diam-ra-base.download.url}" />
+
 	<property name="restcomm-slee-sip11.download.distro.file" value="sip11-ra-DU-${restcomm-slee-sip11.version}.jar" />
 	<property name="restcomm-slee-sip11.download.url" value="${cloudbees.url}/job/Restcomm-JAIN-SLEE-SIP-RA/${restcomm-slee-sip11.build-number}/artifact/resources/sip11/du/target/${restcomm-slee-sip11.download.distro.file}" />
 	<property name="restcomm-slee-sip11.distro.zip.path" value="${checkout.dir}/${restcomm-slee-sip11.download.distro.file}" />
@@ -123,7 +133,7 @@
             <arg value="${restcomm-jss7.tag}" />
             <arg value="${checkout.restcomm-jss7-build.dir}" />
         </exec>
-		
+
         <echo>Building RestComm jss7 from sources</echo>
 		
 		<ant antfile="${checkout.restcomm-jss7-build.dir}/release/build.xml" target="build-asn"/>
@@ -240,7 +250,7 @@
 		<delete dir="${checkout.restcomm-jss7-ra.dir}" failonerror="false" />
 		<delete dir="${checkout.restcomm-map-ra.dir}" failonerror="false" />
 		<unzip src="${restcomm-map-ra.distro.docs.path}" dest="${checkout.restcomm-jss7-ra.dir}"/>
-		<unzip src="${checkout.restcomm-jss7-ra.dir}/MAP/generated-docs.zip" dest="${checkout.restcomm-map-ra.dir}"/>
+		<unzip src="${checkout.restcomm-jss7-ra.dir}/RA_docs/MAP/generated-docs.zip" dest="${checkout.restcomm-map-ra.dir}"/>
 	</target>
 
 	<available file="${restcomm-slee-sip11.distro.zip.path}" property="got-restcomm-sip-ra" />
@@ -535,15 +545,12 @@
 			</fileset>
 		</copy>
 
-		<copy file="${checkout.restcomm-diam.dir}/resources/base/diameter-restcomm-slee-ra-diameter-base-ra-DU-${restcomm-diam.resources.version}.jar" 
+		<!--
+		<copy file="${checkout.restcomm-diam.dir}/resources/base/diameter-restcomm-slee-ra-diameter-base-ra-DU-${restcomm-diam.resources.version}.jar"
 			todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
 		<copy file="${checkout.restcomm-diam.dir}/resources/base/diameter-restcomm-slee-ra-diameter-base-ra-DU-${restcomm-diam.resources.version}.jar" 
 			todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
-		<copy file="${checkout.restcomm-diam.dir}/resources/ro/diameter-restcomm-slee-ra-diameter-ro-ra-DU-${restcomm-diam.resources.version}.jar" 
-			todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
-		<copy file="${checkout.restcomm-diam.dir}/resources/ro/diameter-restcomm-slee-ra-diameter-ro-ra-DU-${restcomm-diam.resources.version}.jar" 
-			todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
-
+		-->
 		
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">

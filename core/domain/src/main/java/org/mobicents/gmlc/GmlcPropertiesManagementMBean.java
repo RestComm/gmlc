@@ -22,30 +22,49 @@
 package org.mobicents.gmlc;
 
 /**
- *
  * @author <a href="mailto:abhayani@gmail.com"> Amit Bhayani </a>
- *
+ * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
 public interface GmlcPropertiesManagementMBean {
 
-  public String getGmlcGt();
+  String getGmlcGt();
 
-  public void setGmlcGt(String serviceCenterGt);
+  void setGmlcGt(String serviceCenterGt);
 
-  public int getGmlcSsn();
+  int getGmlcSsn();
 
-  public void setGmlcSsn(int serviceCenterSsn);
+  void setGmlcSsn(int serviceCenterSsn);
 
-  public int getHlrSsn();
+  int getHlrSsn();
 
-  public void setHlrSsn(int hlrSsn);
+  void setHlrSsn(int hlrSsn);
 
-  public int getMscSsn();
+  int getMscSsn();
 
-  public void setMscSsn(int mscSsn);
+  void setMscSsn(int mscSsn);
 
-  public int getMaxMapVersion();
+  int getMaxMapVersion();
 
-  public void setMaxMapVersion(int maxMapVersion);
+  void setMaxMapVersion(int maxMapVersion);
+
+  long getDialogTimeout();
+
+  void setDialogTimeout(long dialogTimeout);
+
+  int getMaxActivityCount();
+
+  void setMaxActivityCount(int maxActivityCount);
+
+  String getServerOverloadedMessage() ;
+
+  void setServerOverloadedMessage(String serverOverloadedMessage);
+
+  String getServerErrorMessage();
+
+  void setServerErrorMessage(String serverErrorMessage);
+
+  String getDialogTimeoutErrorMessage();
+
+  void setDialogTimeoutErrorMessage(String dialogTimeoutErrorMessage);
 
 }

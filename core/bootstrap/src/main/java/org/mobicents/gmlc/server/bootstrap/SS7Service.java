@@ -77,7 +77,7 @@ public class SS7Service extends ServiceMBeanSupport implements SS7ServiceMBean {
         if (version != null) {
             return version;
         } else {
-            return "7.0";
+            return "7.4";
         }
     }
 

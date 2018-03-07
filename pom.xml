@@ -32,17 +32,19 @@
 		<log4j.version>1.2.14</log4j.version>
 		<junit.version>3.8.1</junit.version>
 		<!-- restcomm properties -->
-		<jss7.restcomm.version>7.0.1383</jss7.restcomm.version>
+		<jss7.restcomm.version>7.4.0-102</jss7.restcomm.version>
 		<dialogic.version>6.7.1</dialogic.version>
 		<ts.slee.version>2.8.10</ts.slee.version>
 		<jslee.ext.version>3.0.7</jslee.ext.version>
-		<restcomm.resources.map.version>2.8.26</restcomm.resources.map.version>
+		<restcomm.resources.map.version>7.3.72</restcomm.resources.map.version>
 		<restcomm.resources.sip.version>2.8.20</restcomm.resources.sip.version>
-		<jdiameter.version>2.8.21</jdiameter.version>
+		<jdiameter.version>7.1.18</jdiameter.version>
 		<concurrent.version>1.3.4</concurrent.version>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-		<restcomm.resources.http.servlet.version>2.8.5</restcomm.resources.http.servlet.version>
+		<restcomm.resources.http.servlet.version>7.1.25</restcomm.resources.http.servlet.version>
 		<jixb.version>1.3.1</jixb.version>
+		<jodatime.version>2.9.6</jodatime.version>
+		<netty.version>3.9.0.Final</netty.version>
 	</properties>
 
 	<modules>
@@ -187,6 +189,17 @@
 				<role>Active Developer</role>
 			</roles>
 			<timezone>+7</timezone>
+		</developer>
+		<developer>
+			<id>anatolysatanovskiy-mobius</id>
+			<name>Anatoly Satanovskiy</name>
+			<email>anatoly.satanovskiy@telestax.com</email>
+			<organization>TeleStax</organization>
+			<organizationUrl>http://telestax.com/</organizationUrl>
+			<roles>
+				<role>Active Developer</role>
+			</roles>
+			<timezone>+2</timezone>
 		</developer>
 	</developers>
 

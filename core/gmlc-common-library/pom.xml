@@ -37,6 +37,12 @@
             <artifactId>javolution</artifactId>
             <version>${javolution.version}</version>
         </dependency>
+        <!-- jodatime -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
+        </dependency>
     </dependencies>
 
     <profiles>
